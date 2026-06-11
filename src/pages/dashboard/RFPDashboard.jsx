@@ -6,6 +6,31 @@ import Modal from "../../components/dashboard/ReminderModal";
 import KanbanCard from "../../components/dashboard/KanbanCard";
 import { KPI_CARDS, KANBAN_COLUMNS } from "../../services/mockData";
 
+// ─── KANBAN BOARD ─────────────────────────────────────────────────────────────
+
+const KanbanBoard = () => (
+  <div style={{ display:"flex", gap:14, minWidth:"max-content", paddingBottom:8, alignItems:"flex-start" }}>
+    {KANBAN_COLUMNS.map(col => (
+      <div key={col.id} style={{ width:260, flexShrink:0 }}>
+        <div style={{ background:col.color, borderRadius:"10px 10px 0 0",
+          padding:"10px 14px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+            <span style={{ fontSize:13, fontWeight:600, color:"#333" }}>{col.title}</span>
+            <span style={{ background:col.countBg, color:"#fff",
+              fontSize:11, fontWeight:700, borderRadius:12, padding:"1px 8px" }}>{col.count}</span>
+          </div>
+          <button style={{ background:"none", border:"none", fontSize:11,
+            color:"#666", cursor:"pointer", fontFamily:"inherit" }}>👁 View All</button>
+        </div>
+        <div style={{ background:"#EAECF0", borderRadius:"0 0 10px 10px",
+          padding:"10px 8px 8px", minHeight:80 }}>
+          {col.cards.map((card, idx) => <KanbanCard key={idx} card={card} />)}
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
 // ─── MAIN DASHBOARD ───────────────────────────────────────────────────────────
 
 const RFPDashboard = () => {
@@ -17,6 +42,7 @@ const RFPDashboard = () => {
   const [statusFilter,      setStatusFilter]      = useState("All Status");
   const [deadlineFilter, setDeadlineFilter]       = useState("By Deadline");
   const [tabFilter,         setTabFilter]         = useState("All");
+  const [kanbanFullscreen,  setKanbanFullscreen]  = useState(false);
 
   // Auto-show Pre-Bid reminder on load
   useEffect(() => {
@@ -153,12 +179,7 @@ const RFPDashboard = () => {
             </select>
           ))}
           <div style={{ flex:1 }} />
-          <button style={{ background:"#fff", border:"1px solid #E2E8F0", borderRadius:8,
-            padding:"7px 14px", fontSize:13, color:"#555", cursor:"pointer",
-            display:"flex", alignItems:"center", gap:6, fontFamily:"inherit" }}>
-            ⚙️ Filters
-          </button>
-          <button style={{ background:"#fff", border:"1px solid #E2E8F0", borderRadius:8,
+          <button onClick={() => setKanbanFullscreen(true)} style={{ background:"#fff", border:"1px solid #E2E8F0", borderRadius:8,
             padding:"7px 14px", fontSize:13, color:"#555", cursor:"pointer",
             display:"flex", alignItems:"center", gap:6, fontFamily:"inherit" }}>
             👁 View
@@ -167,31 +188,36 @@ const RFPDashboard = () => {
 
         {/* Kanban board */}
         <div style={{ flex:1, overflowX:"auto", padding:"0 28px 28px" }}>
-          <div style={{ display:"flex", gap:14, minWidth:"max-content", paddingBottom:8, alignItems:"flex-start" }}>
-            {KANBAN_COLUMNS.map(col => (
-              <div key={col.id} style={{ width:260, flexShrink:0 }}>
-                {/* Column header */}
-                <div style={{ background:col.color, borderRadius:"10px 10px 0 0",
-                  padding:"10px 14px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-                  <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                    <span style={{ fontSize:13, fontWeight:600, color:"#333" }}>{col.title}</span>
-                    <span style={{ background:col.countBg, color:"#fff",
-                      fontSize:11, fontWeight:700, borderRadius:12, padding:"1px 8px" }}>{col.count}</span>
-                  </div>
-                  <button style={{ background:"none", border:"none", fontSize:11,
-                    color:"#666", cursor:"pointer", fontFamily:"inherit" }}>👁 View All</button>
-                </div>
-
-                {/* Cards area */}
-                <div style={{ background:"#EAECF0", borderRadius:"0 0 10px 10px",
-                  padding:"10px 8px 8px", minHeight:80 }}>
-                  {col.cards.map((card,idx) => <KanbanCard key={idx} card={card} />)}
-                </div>
-              </div>
-            ))}
-          </div>
+          <KanbanBoard />
         </div>
       </div>
+
+      {/* Fullscreen Kanban overlay */}
+      {kanbanFullscreen && (
+        <div style={{ position:"fixed", inset:0, zIndex:950, background:"#F7F8FA",
+          display:"flex", flexDirection:"column", fontFamily:"'Inter','Segoe UI',sans-serif" }}>
+
+          {/* Fullscreen header */}
+          <div style={{ padding:"16px 28px", background:"#fff", borderBottom:"1px solid #E2E8F0",
+            display:"flex", alignItems:"center", justifyContent:"space-between", flexShrink:0 }}>
+            <div>
+              <h2 style={{ fontSize:16, fontWeight:700, color:"#111", margin:0 }}>RFP Analysis Board</h2>
+              <p style={{ fontSize:12, color:"#888", margin:"2px 0 0" }}>Fullscreen view</p>
+            </div>
+            <button onClick={() => setKanbanFullscreen(false)} style={{
+              background:"#fff", border:"1px solid #E2E8F0", borderRadius:8,
+              padding:"7px 14px", fontSize:13, color:"#555", cursor:"pointer",
+              display:"flex", alignItems:"center", gap:6, fontFamily:"inherit" }}>
+              ✕ Exit Fullscreen
+            </button>
+          </div>
+
+          {/* Fullscreen board */}
+          <div style={{ flex:1, overflowX:"auto", padding:"20px 28px 28px" }}>
+            <KanbanBoard />
+          </div>
+        </div>
+      )}
 
       {/* Notification panel */}
       {showNotifications && (

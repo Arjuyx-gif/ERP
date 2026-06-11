@@ -1,6 +1,3 @@
-// ─── REMINDER MODAL ───────────────────────────────────────────────────────────
-
-
 const Modal = ({ modal, onClose }) => {
   if (!modal) return null;
   return (
