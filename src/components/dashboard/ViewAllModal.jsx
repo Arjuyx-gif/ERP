@@ -93,22 +93,6 @@ const StatusPill = ({ text }) => {
     </span>
   );
 };
-const TD = (highlight) => ({
-  padding: "12px 16px",
-  fontSize: 13,
-  color: "#333",
-  borderBottom: "1px solid #EAECF0",
-  borderRight: "1px solid #EAECF0",
-  textAlign: "center",
-  background: ROW_BG[highlight] ?? ROW_BG.default,
-  whiteSpace: "nowrap",
-});
-
-// ─── Tiny reusable bits ────────────────────────────────────────────────────────
-const LinkText = ({ href = "#", children }) => (
-  <a href={href} style={{ color: "#2979FF", fontWeight: 600, textDecoration: "none" }}
-    onClick={e => e.preventDefault()}>{children}</a>
-);
 
 // ─── Shared tiny components ────────────────────────────────────────────────────
 const LinkText = ({ href = "#", children }) => (
@@ -171,7 +155,7 @@ const RfpAnalysisTable = ({ rows }) => (
           <TDMeta   bg={bg}>{r.preBidDate}</TDMeta>
           <TDMeta   bg={bg}>{r.preBidTime}</TDMeta>
           <td style={cell(bg)}>
-            {r.venue}{" "}<LinkText href={r.venueLink ?? "#"}>(Link)</LinkText>
+            {r.venue} / <LinkText>(Link)</LinkText>
           </td>
           <TDAction bg={bg}><ActionBtn label="View RFP Form" /></TDAction>
         </tr>
@@ -408,10 +392,8 @@ const ViewAllModal = ({ col, onClose }) => {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    if (!col?.id) { return; }
-    getRows(col.id).then(fetchedRows => {
-      setRows(fetchedRows);
-    });
+    if (!col?.id) { setRows([]); return; }
+    getViewAllRows(col.id).then(setRows);
   }, [col?.id]);
 
   if (!col) return null;
@@ -422,7 +404,7 @@ const ViewAllModal = ({ col, onClose }) => {
       position: "fixed", inset: 0, zIndex: 1100,
       display: "flex", alignItems: "center", justifyContent: "center",
       backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
-      background: "rgba(0,0,0,0.25)",
+      background: "rgba(0,0,0,0.28)",
       fontFamily: "'Inter','Segoe UI',sans-serif",
     }}>
       <div onClick={onClose} style={{ position: "absolute", inset: 0 }} />
@@ -434,7 +416,7 @@ const ViewAllModal = ({ col, onClose }) => {
         boxShadow: "0 24px 64px rgba(0,0,0,0.20)",
         overflow: "hidden",
       }}>
-        {/* Modal header */}
+        {/* Header */}
         <div style={{
           padding: "16px 24px", borderBottom: "1px solid #E5E7EB",
           display: "flex", justifyContent: "space-between", alignItems: "center",
