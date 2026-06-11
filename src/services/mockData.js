@@ -245,11 +245,11 @@ const r = extra => ({ ...BASE_ROW, ...extra });
 
 export const VIEW_ALL_ROWS = {
   rfp_analysis: [
-    r({ preBidDate: "Today",       preBidTime: "2:00 P.M", venue: "Venue/ [Link]", variant: "warning" }),
-    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue/ [Link]" }),
-    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue/ [Link]" }),
-    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue/ [Link]" }),
-    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue/ [Link]" }),
+    r({ preBidDate: "Today",       preBidTime: "2:00 P.M", venue: "Venue", variant: "warning" }),
+    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue" }),
+    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue" }),
+    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue" }),
+    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue" }),
   ],
   awaiting_approval: [
     r({ status: "Approved", variant: "success" }),
