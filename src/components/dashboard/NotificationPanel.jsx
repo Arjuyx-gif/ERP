@@ -1,6 +1,8 @@
-import { NOTIFICATIONS } from "../../services/mockData";
+// ─── NotificationPanel ────────────────────────────────────────────────────────
+// Receives notifications as a prop so the data source is fully decoupled from
+// the component. The parent (RFPDashboard) supplies data from useDashboard().
 
-const NotificationPanel = ({ onClose }) => (
+const NotificationPanel = ({ notifications = [], onClose }) => (
   <div style={{ position:"fixed", top:0, right:0, bottom:0, width:400, zIndex:900,
     background:"#fff", boxShadow:"-4px 0 24px rgba(0,0,0,0.13)",
     display:"flex", flexDirection:"column" }}>
@@ -23,11 +25,11 @@ const NotificationPanel = ({ onClose }) => (
 
     <div style={{ overflowY:"auto", flex:1 }}>
       <div style={{ padding:"10px 20px 4px", fontSize:12, color:"#888", fontWeight:500 }}>Notifications</div>
-      {NOTIFICATIONS.map(n => (
+      {notifications.map(n => (
         <div key={n.id} style={{ padding:"14px 20px", borderBottom:"1px solid #f5f5f5" }}>
           <div style={{ display:"flex", gap:12 }}>
             <span style={{ fontSize:20, flexShrink:0, marginTop:1 }}>
-              {n.type==="success"?"✅": n.type==="info"?"📄":"🔴"}
+              {n.type==="success" ? "✅" : n.type==="info" ? "📄" : "🔴"}
             </span>
             <div style={{ flex:1 }}>
               <div style={{ fontWeight:600, fontSize:13, color:"#111", marginBottom:4 }}>{n.title}</div>

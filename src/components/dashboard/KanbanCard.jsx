@@ -2,8 +2,7 @@ import { useState } from "react";
 import Badge from "../ui/Badge";
 import Tag from "../ui/Tag";
 
-const btnStyle = { padding:"7px 0", borderRadius:6, fontSize:12, fontWeight:600, cursor:"pointer", width:"100%" };
-const linkBtn  = { background:"none", border:"none", color:"#2979FF", fontSize:11, fontWeight:500, cursor:"pointer", textAlign:"left", padding:"2px 0", display:"block" };
+const btnStyle = { padding:"7px 0", borderRadius:6, fontSize:12, fontWeight:600, cursor:"pointer", width:"100%", fontFamily:"inherit" };
 
 const KanbanCard = ({ card }) => {
   const [checked, setChecked] = useState(card.checkedNotify || []);
@@ -31,7 +30,7 @@ const KanbanCard = ({ card }) => {
       {/* Tags */}
       {card.tags?.length > 0 && (
         <div style={{ marginBottom:8 }}>
-          {card.tags.map(t => <Tag key={t} label={t} colors={card.tagColors} />)}
+          {card.tags.map((t, i) => <Tag key={i} label={t} colors={card.tagColors} />)}
         </div>
       )}
 
@@ -53,7 +52,10 @@ const KanbanCard = ({ card }) => {
         {card.details?.preBidVenue&&<div>&nbsp;&nbsp; Pre Bid - Venue: {card.details.preBidVenue}</div>}
         {card.details?.dueDate   && <div>📅 Due Date: {card.details.dueDate}</div>}
         {card.details?.dueTime   && <div>🕐 Due Time: {card.details.dueTime}</div>}
-        {card.details?.deadline  && <div>📅 Deadline: <strong>{card.details.deadline}</strong></div>}
+        {card.details?.remark    && <div>👤 Remark: {card.details.remark}</div>}
+        {card.details?.deadline  && (
+          <div>📅 Deadline: <strong style={{ color: card.details.deadlineColor }}>{card.details.deadline}</strong></div>
+        )}
       </div>
 
       {/* Status badge */}
@@ -86,20 +88,27 @@ const KanbanCard = ({ card }) => {
 
       {/* PO actions */}
       {card.poActions && (
-        <div style={{ display:"flex", flexDirection:"column", gap:4, marginBottom:6 }}>
-          <button style={linkBtn}>🔔 PO Received</button>
-          <button style={linkBtn}>→ Start SOF - Action Required</button>
-          <button style={linkBtn}>📤 Upload PO</button>
-          <button style={linkBtn}>📄 Additional Documents &amp; GeM Charges</button>
-          <button style={linkBtn}>👁 View Comparison Sheet</button>
+        <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:6 }}>
+          <button style={{ ...btnStyle, background:"#111", color:"#fff", border:"none" }}>
+            ⬆️ Upload PO
+          </button>
+          <button style={{ ...btnStyle, background:"#F7F8FA", color:"#333", border:"1px solid #E2E8F0" }}>
+            ⬇️ Additional Documents & GeM Charges
+          </button>
         </div>
       )}
 
       {/* Lost actions */}
       {card.lostActions && (
-        <div style={{ display:"flex", flexDirection:"column", gap:4, marginBottom:6 }}>
-          <button style={linkBtn}>🔔 Notify for EMD Return</button>
-          <button style={linkBtn}>👁 View Comparison Sheet</button>
+        <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:6 }}>
+          <button style={{ ...btnStyle, background:"#fff", color:"#333", border:"1px solid #E2E8F0",
+            display:"flex", alignItems:"center", justifyContent:"center", gap:6 }}>
+            ↗️ Notify for EMD Return
+          </button>
+          <button style={{ ...btnStyle, background:"#fff", color:"#333", border:"1px solid #E2E8F0",
+            display:"flex", alignItems:"center", justifyContent:"center", gap:6 }}>
+            👁 View Comparison Sheet
+          </button>
         </div>
       )}
 
