@@ -217,19 +217,19 @@ export const NOTIFICATIONS = [
 
 // ─── Sidebar Navigation ───────────────────────────────────────────────────────
 export const SIDEBAR_NAV = [
-  { iconName: "dashboard",    label: "Dashboard" },
-  { iconName: "clipboard",    label: "Sales & Pre-sales", expandable: true, active: true,
+  { iconName: "dashboard",    label: "Dashboard",          path: "/dashboard" },
+  { iconName: "clipboard",    label: "Sales & Pre-sales",  expandable: true,
     children: [
-      { label: "RFP Dashboard", active: true },
+      { label: "RFP Dashboard",       path: "/rfp-dashboard" },
       { label: "RFP Analysis Form" },
       { label: "Pre-sales Checklist" },
       { label: "Comparison Sheet" },
       { label: "SOF" },
     ],
   },
-  { iconName: "users",        label: "Sales Coordinator", expandable: true },
-  { iconName: "inbox",        label: "Task Inbox",        expandable: true },
-  { iconName: "trending-up",  label: "Tacker",            expandable: true },
+  { iconName: "users",        label: "Sales Coordinator",  expandable: true },
+  { iconName: "inbox",        label: "Task Inbox",         expandable: true },
+  { iconName: "trending-up",  label: "Tacker",             expandable: true },
   { iconName: "bar-chart",    label: "Reports" },
   { iconName: "database",     label: "Master Data" },
   { iconName: "settings",     label: "Settings" },
@@ -294,3 +294,75 @@ export const VIEW_ALL_ROWS = {
     r({ status: "EMD Return Received", action1: "View Docs",             action1Icon: "eye",            action2: "View Comparison Sheet",     action2Icon: "eye"  }),
   ],
 };
+
+// ─── Main Dashboard Data ───────────────────────────────────────────────────────
+
+export const MAIN_KPI_TOP = [
+  { label: "Active RFPs",         value: 12, sub: "3 closing this week",    color: "#1565C0", bar: "#2979FF", barPct: 75 },
+  { label: "Active SOFs",         value: 24, sub: "5 pending validations",  color: "#0097A7", bar: "#00BCD4", barPct: 60 },
+  { label: "EMD Pending",         value: 3,  sub: "1 awaiting refund",      color: "#E65100", bar: "#FF9800", barPct: 28 },
+  { label: "Active Procurement",  value: 18, sub: "4 delayed",              color: "#2E7D32", bar: "#4CAF50", barPct: 82 },
+];
+
+export const MAIN_KPI_BOT = [
+  { label: "Delayed Orders",        value: 6,  sub: "3 vendor delays",   cardBg: "#FFFBEB", color: "#92400E", bar: "#F59E0B", barPct: 45 },
+  { label: "Installation Scheduled",value: 14, sub: "4 this week",       cardBg: "#F0FDF4", color: "#166534", bar: "#22C55E", barPct: 68 },
+  { label: "Pending Invoices",      value: 9,  sub: "3 overdue",         cardBg: "#FAF5FF", color: "#6B21A8", bar: "#A855F7", barPct: 55 },
+];
+
+export const WORKFLOW_PIPELINE = [
+  { label: "RFP",           active: 12, delayed: 2 },
+  { label: "Bid Submitted", active: 8,  delayed: 1 },
+  { label: "PO Received",   active: 15, delayed: null, cancelled: 1 },
+  { label: "SOF Validation",active: 12, delayed: 3 },
+  { label: "Procurement",   active: 10, delayed: 4 },
+];
+
+export const PRIORITY_ALERTS = [
+  { icon: "alert-circle", iconColor: "#EF4444", title: "BG Expiring in 48 hrs",       sub: "ORDER ID ——————————",               days: "2 Days" },
+  { icon: "alert",        iconColor: "#F97316", title: "Query Response Due Today",     sub: "TND-042, TND-041, TND-039",         days: "2 Days" },
+  { icon: "warning",      iconColor: "#F59E0B", title: "Material Delay",               sub: "PO-1245, PO-1238 stuck in transit", days: "7 Days" },
+  { icon: "clock",        iconColor: "#F59E0B", title: "EMD Return Pending",           sub: "4 returns pending",                 days: "3 Days" },
+  { icon: "alert",        iconColor: "#F97316", title: "Vendor Payment Pending",       sub: "3 payments awaiting approval",      days: "3 Days" },
+];
+
+export const TENDER_STATUS_DATA = [
+  { label: "Active",           value: 27, color: "#2979FF", count: 24 },
+  { label: "Awarded",          value: 34, color: "#10B981", count: 31 },
+  { label: "Under Evaluation", value: 18, color: "#F59E0B", count: 16 },
+  { label: "Delayed",          value: 6,  color: "#EF4444", count: 5  },
+  { label: "Lost",             value: 16, color: "#9CA3AF", count: 14 },
+];
+
+export const DEPT_WORKLOAD_DATA = [
+  { label: "Purchase",        value: 32, color: "#2979FF" },
+  { label: "SOF Operations",  value: 24, color: "#10B981" },
+  { label: "Accounts",        value: 18, color: "#F59E0B" },
+  { label: "Service",         value: 14, color: "#EC4899" },
+  { label: "Sales",           value: 12, color: "#8B5CF6" },
+];
+
+export const ACTIVITY_TIMELINE = [
+  { icon: "tick",        iconColor: "#10B981", title: "RFP Approved",      id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
+  { icon: "tick",        iconColor: "#10B981", title: "EMD Submitted",     id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
+  { icon: "alert-circle",iconColor: "#2979FF", title: "Query Raised",      id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
+  { icon: "document",    iconColor: "#6B7280", title: "Bid Submitted",     id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
+  { icon: "tick",        iconColor: "#10B981", title: "Material Received", id: "ORD-045", meta: "Person/ Dept Name", time: "2 min ago" },
+  { icon: "tick",        iconColor: "#10B981", title: "Billing Done",      id: "ORD-045", meta: "Person/ Dept Name", time: "2 min ago" },
+];
+
+export const MAIN_NOTIFICATIONS = [
+  { icon: "alert-circle", iconBg: "#FEF2F2", iconColor: "#EF4444", title: "Query Response Due Today", sub: "TND-038 requires response before 5 PM", time: "2 hours left" },
+  { icon: "warning",      iconBg: "#FFFBEB", iconColor: "#F59E0B", title: "BG Expiring in 3 Days",    sub: "2 Bank Guarantees are Expiring",          time: "2 hours left" },
+  { icon: "alert",        iconBg: "#FFF7ED", iconColor: "#F97316", title: "SOF Pending",               sub: "5 SOF Pending to be completed",            time: "2 days ago"  },
+  { icon: "alert",        iconBg: "#FFF7ED", iconColor: "#F97316", title: "Material Delay",            sub: "ORD-1234 shipment delayed by vendor",      time: "1 days ago"  },
+];
+
+export const QUICK_ACCESS = [
+  { icon: "document",  label: "RFP Tracker",                  color: "#2979FF", bg: "#EFF6FF" },
+  { icon: "inbox",     label: "SOF Dashboard",                color: "#059669", bg: "#ECFDF5" },
+  { icon: "users",     label: "Sales Coordinator Dashboard",  color: "#7C3AED", bg: "#F5F3FF" },
+  { icon: "clipboard", label: "Tracker",                      color: "#EA580C", bg: "#FFF7ED" },
+  { icon: "inbox",     label: "Task Inbox",                   color: "#DC2626", bg: "#FEF2F2" },
+  { icon: "bar-chart", label: "Reports",                      color: "#2563EB", bg: "#EFF6FF" },
+];
