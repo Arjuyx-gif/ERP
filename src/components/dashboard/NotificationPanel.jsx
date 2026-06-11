@@ -1,0 +1,61 @@
+import { NOTIFICATIONS } from "../../services/mockData";
+
+// ─── NOTIFICATIONS PANEL ──────────────────────────────────────────────────────
+
+const NotificationPanel = ({ onClose }) => (
+  <div style={{ position:"fixed", top:0, right:0, bottom:0, width:400, zIndex:900,
+    background:"#fff", boxShadow:"-4px 0 24px rgba(0,0,0,0.13)",
+    display:"flex", flexDirection:"column" }}>
+
+    <div style={{ padding:"20px 20px 12px", borderBottom:"1px solid #f0f0f0" }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:4 }}>
+        <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+          <span style={{ fontSize:18 }}>🔔</span>
+          <strong style={{ fontSize:15, color:"#111" }}>Notifications</strong>
+        </div>
+        <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+          <button style={{ background:"none", border:"none", fontSize:12, color:"#2979FF", cursor:"pointer", fontWeight:500 }}>
+            ✓ Mark all as read
+          </button>
+          <button onClick={onClose} style={{ background:"none", border:"none", fontSize:20, color:"#888", cursor:"pointer" }}>×</button>
+        </div>
+      </div>
+      <p style={{ fontSize:12, color:"#888", margin:0 }}>Workflow alerts, tasks &amp; updates</p>
+    </div>
+
+    <div style={{ overflowY:"auto", flex:1 }}>
+      <div style={{ padding:"10px 20px 4px", fontSize:12, color:"#888", fontWeight:500 }}>Notifications</div>
+      {NOTIFICATIONS.map(n => (
+        <div key={n.id} style={{ padding:"14px 20px", borderBottom:"1px solid #f5f5f5" }}>
+          <div style={{ display:"flex", gap:12 }}>
+            <span style={{ fontSize:20, flexShrink:0, marginTop:1 }}>
+              {n.type==="success"?"✅": n.type==="info"?"📄":"🔴"}
+            </span>
+            <div style={{ flex:1 }}>
+              <div style={{ fontWeight:600, fontSize:13, color:"#111", marginBottom:4 }}>{n.title}</div>
+              <div style={{ fontSize:12, color:"#555", lineHeight:1.7 }}>
+                Tender ID: {n.rfpId}<br/>
+                Amount: {n.amount}<br/>
+                {n.firm     && <span>Firm: {n.firm}<br/></span>}
+                {n.deadline && <span>Deadline: {n.deadline}<br/></span>}
+                {n.date     && <span>Date: {n.date}<br/></span>}
+                {n.meetTime && <span>Time: {n.meetTime}<br/></span>}
+                {n.customer && <span>Customer: {n.customer}<br/></span>}
+              </div>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginTop:8 }}>
+                <span style={{ fontSize:11, color:"#aaa" }}>{n.time}</span>
+                <button style={{ background:"#111", color:"#fff", border:"none", borderRadius:6,
+                  padding:"5px 12px", fontSize:11, fontWeight:600, cursor:"pointer",
+                  display:"flex", alignItems:"center", gap:4, fontFamily:"inherit" }}>
+                  {n.action} →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+export default NotificationPanel;
