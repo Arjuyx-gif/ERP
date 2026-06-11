@@ -1,261 +1,298 @@
-// ─── ViewAllModal ──────────────────────────────────────────────────────────────
-// Renders a blurred-backdrop modal with a per-column table.
-// Row data is fetched through the service layer — no direct mockData imports.
-
+// src/pages/dashboard/ViewAllModal.jsx
 import { useState, useEffect } from "react";
-import { getViewAllRows } from "../../services/dashboardService";
 
-// ─── Variant → visual style map ───────────────────────────────────────────────
-// Colour decisions stay in the UI layer; data only carries semantic intent.
-const VARIANT = {
-  success: { rowBg: "#F1FDF4", textColor: "#2E7D32" },
-  error:   { rowBg: "#FFF0F0", textColor: "#C62828" },
-  warning: { rowBg: "#FFFDE7", textColor: "#F57F17" },
-  default: { rowBg: "#ffffff", textColor: "#333333" },
+// ─── Mock row generator (replace with real service call) ──────────────────────
+const MOCK_ROWS = {
+  rfp_analysis: [
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", deadline:"25/04/2026", firm:"Firm Name", preBidDate:"Today",  preBidTime:"2:00 P.M", venue:"Venue", venueLink:"#", variant:"warning" },
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", deadline:"25/04/2026", firm:"Firm Name", preBidDate:"Date",   preBidTime:"Time",     venue:"Venue", venueLink:"#" },
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", deadline:"25/04/2026", firm:"Firm Name", preBidDate:"Date",   preBidTime:"Time",     venue:"Venue", venueLink:"#" },
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", deadline:"25/04/2026", firm:"Firm Name", preBidDate:"Date",   preBidTime:"Time",     venue:"Venue", venueLink:"#" },
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", deadline:"25/04/2026", firm:"Firm Name", preBidDate:"Date",   preBidTime:"Time",     venue:"Venue", venueLink:"#" },
+  ],
+  awaiting_approval: [
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", deadline:"25/04/2026", firm:"Firm Name", status:"MD Office - Approval Waiting", variant:"warning" },
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", deadline:"25/04/2026", firm:"Firm Name", status:"Approval Pending" },
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", deadline:"25/04/2026", firm:"Firm Name", status:"Approval Pending" },
+  ],
+  alert_notify: [
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", deadline:"25/04/2026", firm:"Firm Name", notifiedTeams:"Pre-sales, Accounts", variant:"warning" },
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", deadline:"25/04/2026", firm:"Firm Name", notifiedTeams:"Pre-sales, Sales-coordinator, Accounts" },
+  ],
+  approved: [
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", deadline:"25/04/2026", firm:"Firm Name", status:"In Progress", documents:"OEM Docs Pending", actionIcon:"✅", actionLabel:"Complete Tasks", variant:"warning" },
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", deadline:"25/04/2026", firm:"Firm Name", status:"In Progress", documents:"EMD Pending",      actionIcon:"✅", actionLabel:"Complete Tasks" },
+  ],
+  bid_submitted: [
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", deadline:"25/04/2026", firm:"Firm Name", status:"Bid Submitted", variant:"warning" },
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", deadline:"25/04/2026", firm:"Firm Name", status:"Bid Submitted" },
+  ],
+  query_response: [
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", dueDate:"25/04/2026", dueTime:"2:00 PM", firm:"Firm Name", status:"Docs Pending", actionLabel:"Complete Tasks", variant:"warning" },
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", dueDate:"25/04/2026", dueTime:"Time",    firm:"Firm Name", status:"Docs Pending", actionLabel:"Complete Tasks" },
+  ],
+  result_awaited: [
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", dateSubmitted:"25/04/2026", firm:"Firm Name", status:"Result Awaited", resultType:"confirm", variant:"warning" },
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", dateSubmitted:"25/04/2026", firm:"Firm Name", status:"Result Awaited", resultType:"won",     variant:"success" },
+  ],
+  won: [
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", firm:"Firm Name", status:"PO Awaiting",  actionLabel:"PO Received",  variant:"warning" },
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", firm:"Firm Name", status:"Bid Cancelled",actionLabel:"View Details",  variant:"error" },
+  ],
+  po_received: [
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", firm:"Firm Name", status:"PO Received", actionIcon:"📤", actionLabel:"Upload PO", variant:"success" },
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", firm:"Firm Name", status:"PO Received", actionIcon:"📤", actionLabel:"Upload PO" },
+  ],
+  lost: [
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", firm:"Firm Name", status:"Lost", action1:"Notify for EMD Return", action1Icon:"🔔", action2:"View Comparison Sheet", action2Icon:"👁", variant:"error" },
+    { id:"TND-2026-045", title:"Tender Title", customer:"Customer Name", value:"₹2 Cr.", firm:"Firm Name", status:"Lost", action1:"Notify for EMD Return", action1Icon:"🔔", action2:"View Comparison Sheet", action2Icon:"👁" },
+  ],
 };
-const v = variant => VARIANT[variant] ?? VARIANT.default;
 
-// ─── Shared table micro-styles ────────────────────────────────────────────────
-const cellS = {
-  padding: "10px 14px", fontSize: 12.5, color: "#333",
-  borderBottom: "1px solid #EAECF0", whiteSpace: "nowrap",
-};
-const headS = {
-  padding: "10px 14px", fontSize: 11.5, fontWeight: 600, color: "#888",
-  background: "#F8FAFC", borderBottom: "1px solid #E2E8F0",
-  textAlign: "left", whiteSpace: "nowrap",
+const getRows = (colId) => Promise.resolve(MOCK_ROWS[colId] ?? []);
+
+// ─── Row highlight colours ─────────────────────────────────────────────────────
+const ROW_BG = {
+  warning: "#FDF3E7",   // warm beige  — today / urgent
+  success: "#F1FDF4",   // soft green  — won
+  error:   "#FFF0F0",   // soft red    — lost / cancelled
+  default: "#ffffff",
 };
 
-// ─── Reusable sub-components ──────────────────────────────────────────────────
+// ─── Shared style tokens ───────────────────────────────────────────────────────
+const TH = {
+  padding: "13px 16px",
+  fontSize: 13,
+  fontWeight: 600,
+  color: "#444",
+  background: "#fff",
+  borderBottom: "1.5px solid #E2E8F0",
+  borderRight: "1px solid #E2E8F0",
+  textAlign: "center",
+  whiteSpace: "nowrap",
+};
+const TD = (highlight) => ({
+  padding: "12px 16px",
+  fontSize: 13,
+  color: "#333",
+  borderBottom: "1px solid #EAECF0",
+  borderRight: "1px solid #EAECF0",
+  textAlign: "center",
+  background: ROW_BG[highlight] ?? ROW_BG.default,
+  whiteSpace: "nowrap",
+});
+
+// ─── Tiny reusable bits ────────────────────────────────────────────────────────
+const LinkText = ({ href = "#", children }) => (
+  <a href={href} style={{ color: "#2979FF", fontWeight: 600, textDecoration: "none" }}
+    onClick={e => e.preventDefault()}>{children}</a>
+);
+
 const ActionBtn = ({ icon = "👁", label, color = "#2979FF" }) => (
   <button style={{
-    background: "none", border: "none", color, fontSize: 12, fontWeight: 600,
+    background: "none", border: "none", color, fontSize: 13, fontWeight: 600,
     cursor: "pointer", padding: 0, fontFamily: "inherit",
-    display: "inline-flex", alignItems: "center", gap: 4,
+    display: "inline-flex", alignItems: "center", gap: 5,
   }}>
-    {icon} {label}
+    <span>{icon}</span>{label}
   </button>
 );
 
-const Table = ({ headers, children }) => (
-  <table style={{ width: "100%", borderCollapse: "collapse" }}>
+const ConfirmBtn = () => (
+  <button style={{
+    padding: "5px 12px", border: "1px solid #E2E8F0", borderRadius: 6,
+    background: "#fff", fontSize: 12, cursor: "pointer",
+    fontFamily: "inherit", color: "#333",
+  }}>Confirm Status</button>
+);
+
+// ─── Column-specific tables ────────────────────────────────────────────────────
+
+const StyledTable = ({ headers, rows, renderRow }) => (
+  <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "auto" }}>
     <thead>
-      <tr>{headers.map(h => <th key={h} style={headS}>{h}</th>)}</tr>
+      <tr style={{ background: "#fff" }}>
+        {headers.map((h, i) => (
+          <th key={i} style={{ ...TH, borderLeft: i === 0 ? "1px solid #E2E8F0" : "none" }}>{h}</th>
+        ))}
+      </tr>
     </thead>
-    <tbody>{children}</tbody>
+    <tbody>
+      {rows.map((r, i) => renderRow(r, i))}
+    </tbody>
   </table>
 );
 
-// ─── Per-column table renderers ───────────────────────────────────────────────
-// Each renderer accepts `rows` from the service layer. Shape details are in
-// VIEW_ALL_ROWS (mockData.js) — swap the source without touching these renderers.
-
 const RfpAnalysisTable = ({ rows }) => (
-  <Table headers={["Tender ID","Tender Title","Customer","Value","Deadline","Firm Name","Pre-Bid Date","Pre-Bid Time","Pre-Bid Venue","Actions"]}>
-    {rows.map((r, i) => (
-      <tr key={i} style={{ background: v(r.variant).rowBg }}>
-        <td style={cellS}>{r.id}</td>
-        <td style={cellS}>{r.title}</td>
-        <td style={cellS}>{r.customer}</td>
-        <td style={cellS}>{r.value}</td>
-        <td style={cellS}>{r.deadline}</td>
-        <td style={cellS}>{r.firm}</td>
-        <td style={cellS}>{r.preBidDate}</td>
-        <td style={cellS}>{r.preBidTime}</td>
-        <td style={cellS}><span style={{ color: "#2979FF" }}>{r.venue}</span></td>
-        <td style={cellS}><ActionBtn label="View RFP Form" /></td>
+  <StyledTable
+    headers={["Tender ID","Tender Title","Customer","Value","Deadline","Firm Name","Pre-Bid Date","Pre-Bid Time","Pre-Bid Venue","Actions"]}
+    rows={rows}
+    renderRow={(r, i) => (
+      <tr key={i}>
+        {["id","title","customer","value","deadline","firm","preBidDate","preBidTime"].map((k, ci) => (
+          <td key={k} style={{ ...TD(r.variant), borderLeft: ci === 0 ? "1px solid #EAECF0" : "none" }}>{r[k]}</td>
+        ))}
+        <td style={{ ...TD(r.variant), borderLeft: "none" }}>
+          {r.venue}/ <LinkText href={r.venueLink}>(Link)</LinkText>
+        </td>
+        <td style={{ ...TD(r.variant), borderLeft: "none" }}>
+          <ActionBtn label="View RFP Form" />
+        </td>
       </tr>
-    ))}
-  </Table>
+    )}
+  />
 );
 
 const AwaitingApprovalTable = ({ rows }) => (
-  <Table headers={["Tender ID","Tender Title","Customer","Value","Deadline","Firm Name","Status","Actions"]}>
-    {rows.map((r, i) => {
-      const { rowBg, textColor } = v(r.variant);
-      const cs = { ...cellS, color: r.variant !== "default" && r.variant ? textColor : cellS.color };
-      return (
-        <tr key={i} style={{ background: rowBg }}>
-          <td style={cs}>{r.id}</td>
-          <td style={cs}>{r.title}</td>
-          <td style={cs}>{r.customer}</td>
-          <td style={cs}>{r.value}</td>
-          <td style={cs}>{r.deadline}</td>
-          <td style={cs}>{r.firm}</td>
-          <td style={{ ...cs, fontWeight: 600 }}>{r.status}</td>
-          <td style={cellS}><ActionBtn label="View RFP Form" /></td>
-        </tr>
-      );
-    })}
-  </Table>
+  <StyledTable
+    headers={["Tender ID","Tender Title","Customer","Value","Deadline","Firm Name","Status","Actions"]}
+    rows={rows}
+    renderRow={(r, i) => (
+      <tr key={i}>
+        {["id","title","customer","value","deadline","firm"].map((k, ci) => (
+          <td key={k} style={{ ...TD(r.variant), borderLeft: ci === 0 ? "1px solid #EAECF0" : "none" }}>{r[k]}</td>
+        ))}
+        <td style={{ ...TD(r.variant), fontWeight: 600, borderLeft: "none" }}>{r.status}</td>
+        <td style={{ ...TD(r.variant), borderLeft: "none" }}><ActionBtn label="View RFP Form" /></td>
+      </tr>
+    )}
+  />
 );
 
 const AlertNotifyTable = ({ rows }) => (
-  <Table headers={["Tender ID","Tender Title","Customer","Value","Deadline","Firm Name","Notified Teams","View Remarks","Actions"]}>
-    {rows.map((r, i) => (
-      <tr key={i} style={{ background: "#fff" }}>
-        <td style={cellS}>{r.id}</td>
-        <td style={cellS}>{r.title}</td>
-        <td style={cellS}>{r.customer}</td>
-        <td style={cellS}>{r.value}</td>
-        <td style={cellS}>{r.deadline}</td>
-        <td style={cellS}>{r.firm}</td>
-        <td style={cellS}>{r.notifiedTeams}</td>
-        <td style={cellS}><ActionBtn label="View Remarks" /></td>
-        <td style={cellS}><ActionBtn label="View RFP Form" /></td>
+  <StyledTable
+    headers={["Tender ID","Tender Title","Customer","Value","Deadline","Firm Name","Notified Teams","Remarks","Actions"]}
+    rows={rows}
+    renderRow={(r, i) => (
+      <tr key={i}>
+        {["id","title","customer","value","deadline","firm","notifiedTeams"].map((k, ci) => (
+          <td key={k} style={{ ...TD(r.variant), borderLeft: ci === 0 ? "1px solid #EAECF0" : "none" }}>{r[k]}</td>
+        ))}
+        <td style={{ ...TD(r.variant), borderLeft: "none" }}><ActionBtn label="View Remarks" /></td>
+        <td style={{ ...TD(r.variant), borderLeft: "none" }}><ActionBtn label="View RFP Form" /></td>
       </tr>
-    ))}
-  </Table>
+    )}
+  />
 );
 
 const ApprovedPreBidTable = ({ rows }) => (
-  <Table headers={["Tender ID","Tender Title","Customer","Value","Deadline","Firm Name","Status","Documents","Actions"]}>
-    {rows.map((r, i) => (
-      <tr key={i} style={{ background: "#fff" }}>
-        <td style={cellS}>{r.id}</td>
-        <td style={cellS}>{r.title}</td>
-        <td style={cellS}>{r.customer}</td>
-        <td style={cellS}>{r.value}</td>
-        <td style={cellS}>{r.deadline}</td>
-        <td style={cellS}>{r.firm}</td>
-        <td style={cellS}>{r.status}</td>
-        <td style={cellS}>{r.documents}</td>
-        <td style={cellS}><ActionBtn icon={r.actionIcon} label={r.actionLabel} /></td>
+  <StyledTable
+    headers={["Tender ID","Tender Title","Customer","Value","Deadline","Firm Name","Status","Documents","Actions"]}
+    rows={rows}
+    renderRow={(r, i) => (
+      <tr key={i}>
+        {["id","title","customer","value","deadline","firm","status","documents"].map((k, ci) => (
+          <td key={k} style={{ ...TD(r.variant), borderLeft: ci === 0 ? "1px solid #EAECF0" : "none" }}>{r[k]}</td>
+        ))}
+        <td style={{ ...TD(r.variant), borderLeft: "none" }}>
+          <ActionBtn icon={r.actionIcon} label={r.actionLabel} />
+        </td>
       </tr>
-    ))}
-  </Table>
+    )}
+  />
 );
 
 const BidSubmittedTable = ({ rows }) => (
-  <Table headers={["Tender ID","Tender Title","Customer","Value","Deadline","Firm Name","Status","Actions"]}>
-    {rows.map((r, i) => (
-      <tr key={i} style={{ background: "#fff" }}>
-        <td style={cellS}>{r.id}</td>
-        <td style={cellS}>{r.title}</td>
-        <td style={cellS}>{r.customer}</td>
-        <td style={cellS}>{r.value}</td>
-        <td style={cellS}>{r.deadline}</td>
-        <td style={cellS}>{r.firm}</td>
-        <td style={cellS}>{r.status}</td>
-        <td style={cellS}><ActionBtn icon="📄" label="View Docs" /></td>
+  <StyledTable
+    headers={["Tender ID","Tender Title","Customer","Value","Deadline","Firm Name","Status","Actions"]}
+    rows={rows}
+    renderRow={(r, i) => (
+      <tr key={i}>
+        {["id","title","customer","value","deadline","firm","status"].map((k, ci) => (
+          <td key={k} style={{ ...TD(r.variant), borderLeft: ci === 0 ? "1px solid #EAECF0" : "none" }}>{r[k]}</td>
+        ))}
+        <td style={{ ...TD(r.variant), borderLeft: "none" }}><ActionBtn icon="📄" label="View Docs" /></td>
       </tr>
-    ))}
-  </Table>
+    )}
+  />
 );
 
 const QueryResponseTable = ({ rows }) => (
-  <Table headers={["Tender ID","Tender Title","Customer","Value","Due Date","Due Time","Firm Name","Query & Response","Status","Actions"]}>
-    {rows.map((r, i) => (
-      <tr key={i} style={{ background: "#fff" }}>
-        <td style={cellS}>{r.id}</td>
-        <td style={cellS}>{r.title}</td>
-        <td style={cellS}>{r.customer}</td>
-        <td style={cellS}>{r.value}</td>
-        <td style={cellS}>{r.dueDate}</td>
-        <td style={cellS}>{r.dueTime}</td>
-        <td style={cellS}>{r.firm}</td>
-        <td style={cellS}><ActionBtn label="View PDF" /></td>
-        <td style={cellS}>{r.status}</td>
-        <td style={cellS}><ActionBtn icon="📄" label={r.actionLabel} /></td>
+  <StyledTable
+    headers={["Tender ID","Tender Title","Customer","Value","Due Date","Due Time","Firm Name","Query PDF","Status","Actions"]}
+    rows={rows}
+    renderRow={(r, i) => (
+      <tr key={i}>
+        {["id","title","customer","value","dueDate","dueTime","firm"].map((k, ci) => (
+          <td key={k} style={{ ...TD(r.variant), borderLeft: ci === 0 ? "1px solid #EAECF0" : "none" }}>{r[k]}</td>
+        ))}
+        <td style={{ ...TD(r.variant), borderLeft: "none" }}><ActionBtn label="View PDF" /></td>
+        <td style={{ ...TD(r.variant), borderLeft: "none" }}>{r.status}</td>
+        <td style={{ ...TD(r.variant), borderLeft: "none" }}><ActionBtn label={r.actionLabel} /></td>
       </tr>
-    ))}
-  </Table>
-);
-
-const ConfirmStatusBtn = () => (
-  <button style={{
-    padding: "4px 10px", border: "1px solid #E2E8F0", borderRadius: 6,
-    background: "#fff", fontSize: 12, cursor: "pointer", fontFamily: "inherit", color: "#333",
-  }}>
-    Confirm Status
-  </button>
+    )}
+  />
 );
 
 const ResultAwaitedTable = ({ rows }) => (
-  <Table headers={["Tender ID","Tender Title","Customer","Value","Date Submitted","Firm Name","Status","Result"]}>
-    {rows.map((r, i) => {
-      const { rowBg, textColor } = v(r.variant);
-      const cs = r.variant === "success" ? { ...cellS, color: textColor } : cellS;
-      return (
-        <tr key={i} style={{ background: rowBg }}>
-          <td style={cs}>{r.id}</td>
-          <td style={cs}>{r.title}</td>
-          <td style={cs}>{r.customer}</td>
-          <td style={cs}>{r.value}</td>
-          <td style={cellS}>{r.dateSubmitted}</td>
-          <td style={cs}>{r.firm}</td>
-          <td style={cellS}>{r.status}</td>
-          <td style={{ ...cellS, fontWeight: r.resultType === "won" ? 700 : 400, color: r.resultType === "won" ? textColor : cellS.color }}>
-            {r.resultType === "confirm" ? <ConfirmStatusBtn /> : "Won"}
-          </td>
-        </tr>
-      );
-    })}
-  </Table>
+  <StyledTable
+    headers={["Tender ID","Tender Title","Customer","Value","Date Submitted","Firm Name","Status","Result"]}
+    rows={rows}
+    renderRow={(r, i) => (
+      <tr key={i}>
+        {["id","title","customer","value","dateSubmitted","firm","status"].map((k, ci) => (
+          <td key={k} style={{ ...TD(r.variant), borderLeft: ci === 0 ? "1px solid #EAECF0" : "none" }}>{r[k]}</td>
+        ))}
+        <td style={{ ...TD(r.variant), fontWeight: 600, borderLeft: "none" }}>
+          {r.resultType === "confirm" ? <ConfirmBtn /> : <span style={{ color: "#2E7D32" }}>Won</span>}
+        </td>
+      </tr>
+    )}
+  />
 );
 
 const WonTable = ({ rows }) => (
-  <Table headers={["Tender ID","Tender Title","Customer","Value","Firm Name","Status","Action"]}>
-    {rows.map((r, i) => {
-      const { rowBg, textColor } = v(r.variant);
-      const colored = r.variant === "success";
-      const cs = { ...cellS, color: colored ? textColor : cellS.color };
-      return (
-        <tr key={i} style={{ background: rowBg }}>
-          <td style={cs}>{r.id}</td>
-          <td style={cs}>{r.title}</td>
-          <td style={cs}>{r.customer}</td>
-          <td style={cs}>{r.value}</td>
-          <td style={cs}>{r.firm}</td>
-          <td style={{ ...cs, fontWeight: 500 }}>{r.status}</td>
-          <td style={cellS}>{r.actionLabel ? <ActionBtn label={r.actionLabel} /> : "—"}</td>
-        </tr>
-      );
-    })}
-  </Table>
+  <StyledTable
+    headers={["Tender ID","Tender Title","Customer","Value","Firm Name","Status","Action"]}
+    rows={rows}
+    renderRow={(r, i) => (
+      <tr key={i}>
+        {["id","title","customer","value","firm","status"].map((k, ci) => (
+          <td key={k} style={{ ...TD(r.variant), borderLeft: ci === 0 ? "1px solid #EAECF0" : "none" }}>{r[k]}</td>
+        ))}
+        <td style={{ ...TD(r.variant), borderLeft: "none" }}>
+          {r.actionLabel ? <ActionBtn label={r.actionLabel} /> : "—"}
+        </td>
+      </tr>
+    )}
+  />
 );
 
 const PoReceivedTable = ({ rows }) => (
-  <Table headers={["Tender ID","Tender Title","Customer","Value","Firm Name","Status","Action"]}>
-    {rows.map((r, i) => {
-      const { rowBg, textColor } = v(r.variant);
-      const colored = r.variant === "success";
-      const cs = { ...cellS, color: colored ? textColor : cellS.color };
-      return (
-        <tr key={i} style={{ background: rowBg }}>
-          <td style={cs}>{r.id}</td>
-          <td style={cs}>{r.title}</td>
-          <td style={cs}>{r.customer}</td>
-          <td style={cs}>{r.value}</td>
-          <td style={cs}>{r.firm}</td>
-          <td style={{ ...cs, fontWeight: 500 }}>{r.status}</td>
-          <td style={cellS}>
-            <ActionBtn icon={r.actionIcon} label={r.actionLabel} color={colored ? textColor : "#2979FF"} />
-          </td>
-        </tr>
-      );
-    })}
-  </Table>
+  <StyledTable
+    headers={["Tender ID","Tender Title","Customer","Value","Firm Name","Status","Action"]}
+    rows={rows}
+    renderRow={(r, i) => (
+      <tr key={i}>
+        {["id","title","customer","value","firm"].map((k, ci) => (
+          <td key={k} style={{ ...TD(r.variant), borderLeft: ci === 0 ? "1px solid #EAECF0" : "none" }}>{r[k]}</td>
+        ))}
+        <td style={{ ...TD(r.variant), fontWeight: 500, borderLeft: "none" }}>{r.status}</td>
+        <td style={{ ...TD(r.variant), borderLeft: "none" }}>
+          <ActionBtn icon={r.actionIcon} label={r.actionLabel} color={r.variant === "success" ? "#2E7D32" : "#2979FF"} />
+        </td>
+      </tr>
+    )}
+  />
 );
 
 const LostTable = ({ rows }) => (
-  <Table headers={["Tender ID","Tender Title","Customer","Value","Firm Name","Status","Action","Action"]}>
-    {rows.map((r, i) => (
-      <tr key={i} style={{ background: "#fff" }}>
-        <td style={cellS}>{r.id}</td>
-        <td style={cellS}>{r.title}</td>
-        <td style={cellS}>{r.customer}</td>
-        <td style={cellS}>{r.value}</td>
-        <td style={cellS}>{r.firm}</td>
-        <td style={cellS}>{r.status}</td>
-        <td style={cellS}><ActionBtn icon={r.action1Icon} label={r.action1} /></td>
-        <td style={cellS}><ActionBtn icon={r.action2Icon} label={r.action2} /></td>
+  <StyledTable
+    headers={["Tender ID","Tender Title","Customer","Value","Firm Name","Status","Action 1","Action 2"]}
+    rows={rows}
+    renderRow={(r, i) => (
+      <tr key={i}>
+        {["id","title","customer","value","firm","status"].map((k, ci) => (
+          <td key={k} style={{ ...TD(r.variant), borderLeft: ci === 0 ? "1px solid #EAECF0" : "none" }}>{r[k]}</td>
+        ))}
+        <td style={{ ...TD(r.variant), borderLeft: "none" }}><ActionBtn icon={r.action1Icon} label={r.action1} /></td>
+        <td style={{ ...TD(r.variant), borderLeft: "none" }}><ActionBtn icon={r.action2Icon} label={r.action2} /></td>
       </tr>
-    ))}
-  </Table>
+    )}
+  />
 );
 
-// ─── Column id → table renderer map ──────────────────────────────────────────
+// ─── Column → renderer map ─────────────────────────────────────────────────────
 const TABLE_MAP = {
   rfp_analysis:      RfpAnalysisTable,
   awaiting_approval: AwaitingApprovalTable,
@@ -269,17 +306,18 @@ const TABLE_MAP = {
   lost:              LostTable,
 };
 
-// ─── Modal shell ──────────────────────────────────────────────────────────────
+// ─── Modal shell ───────────────────────────────────────────────────────────────
 const ViewAllModal = ({ col, onClose }) => {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    if (!col?.id) { setRows([]); return; }
-    getViewAllRows(col.id).then(setRows);
+    if (!col?.id) { return; }
+    getRows(col.id).then(fetchedRows => {
+      setRows(fetchedRows);
+    });
   }, [col?.id]);
 
   if (!col) return null;
-
   const Content = TABLE_MAP[col.id];
 
   return (
@@ -287,36 +325,44 @@ const ViewAllModal = ({ col, onClose }) => {
       position: "fixed", inset: 0, zIndex: 1100,
       display: "flex", alignItems: "center", justifyContent: "center",
       backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
-      background: "rgba(0,0,0,0.28)",
+      background: "rgba(0,0,0,0.25)",
       fontFamily: "'Inter','Segoe UI',sans-serif",
     }}>
-      {/* Click-outside backdrop */}
+      {/* Click-outside */}
       <div onClick={onClose} style={{ position: "absolute", inset: 0 }} />
 
       <div style={{
-        position: "relative", background: "#fff", borderRadius: 12,
-        width: "min(92vw, 1140px)", maxHeight: "80vh",
+        position: "relative", background: "#f5f6fa", borderRadius: 14,
+        width: "min(94vw, 1200px)", maxHeight: "82vh",
         display: "flex", flexDirection: "column",
-        boxShadow: "0 24px 64px rgba(0,0,0,0.22)",
+        boxShadow: "0 24px 64px rgba(0,0,0,0.18)",
+        overflow: "hidden",
       }}>
-        {/* Header */}
+        {/* Modal header */}
         <div style={{
-          padding: "16px 20px 14px", borderBottom: "1px solid #EAECF0",
+          padding: "18px 24px 16px", borderBottom: "1px solid #E2E8F0",
           display: "flex", justifyContent: "space-between", alignItems: "center",
-          flexShrink: 0,
+          background: "#fff", flexShrink: 0,
         }}>
-          <span style={{ fontSize: 15, fontWeight: 700, color: "#111" }}>{col.title}</span>
+          <span style={{ fontSize: 15, fontWeight: 700, color: "#111" }}>
+            List layout tender list
+          </span>
           <button onClick={onClose} style={{
-            background: "none", border: "none", fontSize: 22,
-            color: "#888", cursor: "pointer", lineHeight: 1, padding: 0,
+            background: "none", border: "none", fontSize: 24,
+            color: "#555", cursor: "pointer", lineHeight: 1, padding: 0,
           }}>×</button>
         </div>
 
-        {/* Scrollable table */}
-        <div style={{ overflowX: "auto", overflowY: "auto", flex: 1 }}>
+        {/* Table area */}
+        <div style={{
+          overflowX: "auto", overflowY: "auto", flex: 1,
+          background: "#fff", margin: 16, borderRadius: 10,
+          border: "1px solid #E2E8F0",
+          boxShadow: "0 1px 6px rgba(0,0,0,0.05)",
+        }}>
           {Content
             ? <Content rows={rows} />
-            : <p style={{ padding: 20, color: "#888", fontSize: 13 }}>No table defined for this column.</p>}
+            : <p style={{ padding: 24, color: "#888", fontSize: 13 }}>No table defined for this column.</p>}
         </div>
       </div>
     </div>
