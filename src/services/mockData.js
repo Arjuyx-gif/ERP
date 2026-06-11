@@ -315,7 +315,11 @@ export const WORKFLOW_PIPELINE = [
   { label: "Bid Submitted", active: 8,  delayed: 1 },
   { label: "PO Received",   active: 15, delayed: null, cancelled: 1 },
   { label: "SOF Validation",active: 12, delayed: 3 },
-  { label: "Procurement",   active: 10, delayed: 4 },
+  { label: "Procurement",   active: 12, delayed: 4 },
+  { label: "Dispatch",      active: 14, delayed: 2 },
+  { label: "Billing",       active: 9,  delayed: 1 },
+  { label: "Installation",  active: 6 },
+  { label: "Completion",    active: 22 },
 ];
 
 export const PRIORITY_ALERTS = [

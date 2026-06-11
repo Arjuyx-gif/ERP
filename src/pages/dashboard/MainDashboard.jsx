@@ -53,10 +53,16 @@ const PieChart = ({ data, size = 150, donut = false }) => {
 const Card = ({ children, style = {} }) => (
   <div style={{
     background: "#fff", borderRadius: 12,
-    border: "1px solid #F0F0F0",
-    boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
+    border: "1px solid #EAECF0",
+    boxShadow: "0 1px 3px rgba(16,24,40,0.06), 0 1px 2px rgba(16,24,40,0.04)",
     ...style,
   }}>
+    {children}
+  </div>
+);
+
+const SectionLabel = ({ children }) => (
+  <div style={{ fontSize: 15, fontWeight: 700, color: "#101828", marginBottom: 12, letterSpacing: "-0.01em" }}>
     {children}
   </div>
 );
@@ -68,7 +74,7 @@ const MainDashboard = () => {
   return (
     <div style={{
       display: "flex", minHeight: "100vh",
-      fontFamily: FONT, background: "#F7F8FA",
+      fontFamily: FONT, background: "#F8F9FB",
     }}>
       <Sidebar />
 
@@ -77,16 +83,16 @@ const MainDashboard = () => {
         {/* ── Top bar ── */}
         <div style={{
           position: "sticky", top: 0, zIndex: 50,
-          background: "#fff", borderBottom: "1px solid #E5E7EB",
-          padding: "10px 24px",
-          display: "flex", alignItems: "center", gap: 12,
+          background: "#fff", borderBottom: "1px solid #EAECF0",
+          padding: "12px 28px",
+          display: "flex", alignItems: "center", gap: 10,
         }}>
           <div style={{ flex: 1, position: "relative" }}>
             <span style={{
               position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)",
               display: "flex", alignItems: "center",
             }}>
-              <Search size={14} color="#aaa" />
+              <Search size={14} color="#9CA3AF" />
             </span>
             <input
               type="text"
@@ -95,162 +101,185 @@ const MainDashboard = () => {
               onChange={e => setSearch(e.target.value)}
               style={{
                 width: "100%", padding: "8px 12px 8px 34px",
-                border: "1px solid #E2E8F0", borderRadius: 8,
-                fontSize: 13, color: "#333", background: "#F8FAFC",
+                border: "1px solid #EAECF0", borderRadius: 8,
+                fontSize: 13, color: "#344054", background: "#F9FAFB",
                 outline: "none", fontFamily: FONT, boxSizing: "border-box",
               }}
             />
           </div>
           <button style={{
-            background: "#fff", border: "1px solid #E2E8F0", borderRadius: 8,
-            width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center",
+            background: "#fff", border: "1px solid #EAECF0", borderRadius: 8,
+            width: 38, height: 38, display: "flex", alignItems: "center", justifyContent: "center",
             cursor: "pointer", flexShrink: 0, position: "relative",
           }}>
-            <Bell size={16} color="#555" />
+            <Bell size={16} color="#667085" />
             <span style={{
-              position: "absolute", top: 7, right: 7,
-              width: 7, height: 7, background: "#EF4444",
+              position: "absolute", top: 8, right: 8,
+              width: 7, height: 7, background: "#F04438",
               borderRadius: "50%", border: "1.5px solid #fff",
             }} />
           </button>
           <button style={{
-            background: "#fff", border: "1px solid #E2E8F0", borderRadius: 8,
-            padding: "7px 14px", fontSize: 13, color: "#374151", cursor: "pointer",
+            background: "#fff", border: "1px solid #EAECF0", borderRadius: 8,
+            padding: "7px 14px", fontSize: 13, color: "#344054", cursor: "pointer",
             display: "flex", alignItems: "center", gap: 6, fontFamily: FONT, fontWeight: 500,
             flexShrink: 0,
           }}>
-            <SlidersHorizontal size={14} color="#6B7280" /> Filters
+            <SlidersHorizontal size={14} color="#667085" /> Filters
           </button>
         </div>
 
-        <div style={{ padding: "20px 24px 32px", display: "flex", flexDirection: "column", gap: 20 }}>
+        <div style={{ padding: "24px 28px 36px", display: "flex", flexDirection: "column", gap: 24 }}>
 
           {/* ── KPI Row 1 ── */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
             {MAIN_KPI_TOP.map(kpi => (
-              <Card key={kpi.label} style={{ padding: "16px 16px 0", overflow: "hidden" }}>
-                <div style={{ fontSize: 11, color: "#6B7280", fontWeight: 500, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+              <Card key={kpi.label} style={{ padding: "18px 20px 0", overflow: "hidden" }}>
+                <div style={{ fontSize: 11, color: "#667085", fontWeight: 500, marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.06em" }}>
                   {kpi.label}
                 </div>
-                <div style={{ fontSize: 32, fontWeight: 700, color: kpi.color, lineHeight: 1, marginBottom: 4 }}>
+                <div style={{ fontSize: 34, fontWeight: 700, color: kpi.color, lineHeight: 1, marginBottom: 6 }}>
                   {kpi.value}
                 </div>
-                <div style={{ fontSize: 11, color: "#9CA3AF", marginBottom: 14 }}>{kpi.sub}</div>
-                <div style={{ height: 3, background: "#F3F4F6", margin: "0 -16px" }}>
-                  <div style={{ height: "100%", width: `${kpi.barPct}%`, background: kpi.bar }} />
+                <div style={{ fontSize: 12, color: "#9CA3AF", marginBottom: 16 }}>{kpi.sub}</div>
+                <div style={{ height: 3, background: "#F2F4F7", margin: "0 -20px" }}>
+                  <div style={{ height: "100%", width: `${kpi.barPct}%`, background: kpi.bar, borderRadius: "0 2px 2px 0" }} />
                 </div>
               </Card>
             ))}
           </div>
 
           {/* ── KPI Row 2 ── */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
             {MAIN_KPI_BOT.map(kpi => (
               <div key={kpi.label} style={{
                 background: kpi.cardBg, borderRadius: 12,
                 border: "1px solid rgba(0,0,0,0.05)",
-                padding: "16px 16px 0", overflow: "hidden",
+                padding: "18px 20px 0", overflow: "hidden",
               }}>
-                <div style={{ fontSize: 11, color: kpi.color, fontWeight: 600, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                <div style={{ fontSize: 11, color: kpi.color, fontWeight: 600, marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.06em" }}>
                   {kpi.label}
                 </div>
-                <div style={{ fontSize: 32, fontWeight: 700, color: kpi.color, lineHeight: 1, marginBottom: 4 }}>
+                <div style={{ fontSize: 34, fontWeight: 700, color: kpi.color, lineHeight: 1, marginBottom: 6 }}>
                   {kpi.value}
                 </div>
-                <div style={{ fontSize: 11, color: kpi.color, opacity: 0.65, marginBottom: 14 }}>{kpi.sub}</div>
-                <div style={{ height: 3, background: "rgba(0,0,0,0.08)", margin: "0 -16px" }}>
-                  <div style={{ height: "100%", width: `${kpi.barPct}%`, background: kpi.bar }} />
+                <div style={{ fontSize: 12, color: kpi.color, opacity: 0.6, marginBottom: 16 }}>{kpi.sub}</div>
+                <div style={{ height: 3, background: "rgba(0,0,0,0.08)", margin: "0 -20px" }}>
+                  <div style={{ height: "100%", width: `${kpi.barPct}%`, background: kpi.bar, borderRadius: "0 2px 2px 0" }} />
                 </div>
               </div>
             ))}
           </div>
 
           {/* ── Live Workflow Pipeline ── */}
-          <Card style={{ padding: "18px 20px" }}>
-            <div style={{ fontSize: 14, fontWeight: 700, color: "#111827", marginBottom: 14 }}>Live Workflow Pipeline</div>
-            <div style={{ display: "flex", alignItems: "center", gap: 6, overflowX: "auto", paddingBottom: 4 }}>
-              {WORKFLOW_PIPELINE.map((stage, i) => (
-                <div key={stage.label} style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
-                  <div style={{
-                    background: "#F9FAFB", border: "1px solid #E5E7EB", borderRadius: 10,
-                    padding: "12px 18px", minWidth: 130,
-                  }}>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: "#374151", marginBottom: 8 }}>{stage.label}</div>
-                    <div style={{ fontSize: 12, color: "#6B7280", marginBottom: 2 }}>
-                      Active{" "}<span style={{ color: "#2979FF", fontWeight: 700 }}>{stage.active}</span>
-                    </div>
-                    <div style={{ fontSize: 12, color: "#6B7280", marginBottom: stage.cancelled != null ? 2 : 0 }}>
-                      Delayed{" "}<span style={{ color: "#EF4444", fontWeight: 700 }}>{stage.delayed ?? 0}</span>
-                    </div>
-                    {stage.cancelled != null && (
-                      <div style={{ fontSize: 12, color: "#6B7280" }}>
-                        Cancelled{" "}<span style={{ color: "#EF4444", fontWeight: 700 }}>{stage.cancelled}</span>
+          <div>
+            <SectionLabel>Live Workflow Pipeline</SectionLabel>
+            <Card style={{ padding: "18px 20px" }}>
+              {/* overflow: hidden on outer clips the shadow; scroll is on inner */}
+              <div
+                className="no-scrollbar"
+                style={{ overflowX: "auto", paddingBottom: 2 }}
+              >
+                <div style={{ display: "flex", alignItems: "stretch", gap: 0, width: "max-content" }}>
+                  {WORKFLOW_PIPELINE.map((stage, i) => (
+                    <div key={stage.label} style={{ display: "flex", alignItems: "center", gap: 0 }}>
+                      {/* Stage card */}
+                      <div style={{
+                        background: "#fff", border: "1px solid #E4E7EC", borderRadius: 10,
+                        padding: "12px 18px", minWidth: 130,
+                      }}>
+                        <div style={{
+                          fontSize: 12, fontWeight: 700, color: "#101828",
+                          marginBottom: 10, whiteSpace: "nowrap",
+                        }}>
+                          {stage.label}
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                          <span style={{ fontSize: 12, color: "#667085" }}>Active</span>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: "#2979FF" }}>{stage.active}</span>
+                        </div>
+                        {(stage.delayed != null || stage.delayed === 0) && stage.delayed !== undefined && (
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: stage.cancelled != null ? 4 : 0 }}>
+                            <span style={{ fontSize: 12, color: "#667085" }}>Delayed</span>
+                            <span style={{ fontSize: 13, fontWeight: 700, color: "#F04438" }}>{stage.delayed}</span>
+                          </div>
+                        )}
+                        {stage.cancelled != null && (
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <span style={{ fontSize: 12, color: "#667085" }}>Cancelled</span>
+                            <span style={{ fontSize: 13, fontWeight: 700, color: "#F04438" }}>{stage.cancelled}</span>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  {i < WORKFLOW_PIPELINE.length - 1 && (
-                    <ChevronRight size={18} color="#D1D5DB" />
-                  )}
+
+                      {/* Arrow */}
+                      <div style={{ padding: "0 6px", color: "#D0D5DD", flexShrink: 0 }}>
+                        <ChevronRight size={16} color="#D0D5DD" />
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-              <ChevronRight size={18} color="#D1D5DB" style={{ flexShrink: 0 }} />
-            </div>
-          </Card>
+              </div>
+            </Card>
+          </div>
 
           {/* ── Priority Alerts ── */}
-          <Card style={{ padding: "18px 20px" }}>
-            <div style={{ fontSize: 14, fontWeight: 700, color: "#111827", marginBottom: 4 }}>Priority Alerts</div>
-            {PRIORITY_ALERTS.map((alert, i) => (
-              <div key={i} style={{
-                display: "flex", alignItems: "center", gap: 12,
-                padding: "12px 0",
-                borderBottom: i < PRIORITY_ALERTS.length - 1 ? "1px solid #F3F4F6" : "none",
-              }}>
-                <div style={{
-                  width: 34, height: 34, borderRadius: 8, flexShrink: 0,
-                  background: alert.iconColor + "18",
-                  display: "flex", alignItems: "center", justifyContent: "center",
+          <div>
+            <SectionLabel>Priority Alerts</SectionLabel>
+            <Card style={{ padding: "4px 20px" }}>
+              {PRIORITY_ALERTS.map((alert, i) => (
+                <div key={i} style={{
+                  display: "flex", alignItems: "center", gap: 14,
+                  padding: "14px 0",
+                  borderBottom: i < PRIORITY_ALERTS.length - 1 ? "1px solid #F2F4F7" : "none",
                 }}>
-                  <DynamicIcon name={alert.icon} size={16} color={alert.iconColor} />
+                  <div style={{
+                    width: 36, height: 36, borderRadius: 8, flexShrink: 0,
+                    background: alert.iconColor + "15",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <DynamicIcon name={alert.icon} size={16} color={alert.iconColor} />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#101828", marginBottom: 2 }}>{alert.title}</div>
+                    <div style={{ fontSize: 12, color: "#98A2B3" }}>{alert.sub}</div>
+                  </div>
+                  <span style={{
+                    fontSize: 11, fontWeight: 600, color: "#667085",
+                    background: "#F2F4F7", borderRadius: 6, padding: "4px 10px",
+                    flexShrink: 0, whiteSpace: "nowrap",
+                  }}>
+                    {alert.days}
+                  </span>
                 </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: "#111827" }}>{alert.title}</div>
-                  <div style={{ fontSize: 11, color: "#9CA3AF", marginTop: 2 }}>{alert.sub}</div>
-                </div>
-                <span style={{
-                  fontSize: 11, fontWeight: 600, color: "#6B7280",
-                  background: "#F3F4F6", borderRadius: 6, padding: "3px 9px", flexShrink: 0,
-                }}>
-                  {alert.days}
-                </span>
-              </div>
-            ))}
-          </Card>
+              ))}
+            </Card>
+          </div>
 
           {/* ── Operational Analytics ── */}
           <div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: "#111827", marginBottom: 12 }}>Operational Analytics</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            <SectionLabel>Operational Analytics</SectionLabel>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
 
               {/* Tender Status Distribution */}
-              <Card style={{ padding: "18px 20px" }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 16 }}>Tender Status Distribution</div>
-                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              <Card style={{ padding: "20px" }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#344054", marginBottom: 18 }}>
+                  Tender Status Distribution
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
                   <PieChart data={TENDER_STATUS_DATA} size={150} donut />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     {TENDER_STATUS_DATA.map(d => (
-                      <div key={d.label} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 7 }}>
-                        <span style={{ width: 9, height: 9, borderRadius: "50%", background: d.color, flexShrink: 0 }} />
-                        <span style={{ fontSize: 11, color: "#374151", flex: 1 }}>
-                          {d.label}{" "}<span style={{ color: "#2563EB", fontWeight: 700 }}>{d.value}%</span>
-                        </span>
+                      <div key={d.label} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: d.color, flexShrink: 0 }} />
+                        <span style={{ fontSize: 12, color: "#667085", flex: 1 }}>{d.label}</span>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: "#344054" }}>{d.value}%</span>
                       </div>
                     ))}
-                    <div style={{ borderTop: "1px solid #F3F4F6", marginTop: 10, paddingTop: 10, display: "flex", flexWrap: "wrap", gap: "4px 14px" }}>
+                    <div style={{ borderTop: "1px solid #F2F4F7", marginTop: 10, paddingTop: 10, display: "flex", flexWrap: "wrap", gap: "5px 16px" }}>
                       {TENDER_STATUS_DATA.map(d => (
-                        <span key={d.label} style={{ fontSize: 11, color: "#6B7280", display: "flex", alignItems: "center", gap: 4 }}>
-                          <span style={{ width: 7, height: 7, borderRadius: "50%", background: d.color, flexShrink: 0 }} />
-                          {d.label.split(" ")[0]}: <strong style={{ color: "#374151" }}>{d.count}</strong>
+                        <span key={d.label} style={{ fontSize: 11, color: "#667085", display: "flex", alignItems: "center", gap: 4 }}>
+                          <span style={{ fontWeight: 700, color: "#344054" }}>{d.count}</span> {d.label.split(" ")[0]}
                         </span>
                       ))}
                     </div>
@@ -259,16 +288,18 @@ const MainDashboard = () => {
               </Card>
 
               {/* Department Workload Distribution */}
-              <Card style={{ padding: "18px 20px" }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 16 }}>Department Workload Distribution</div>
-                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              <Card style={{ padding: "20px" }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#344054", marginBottom: 18 }}>
+                  Department Workload Distribution
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
                   <PieChart data={DEPT_WORKLOAD_DATA} size={150} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     {DEPT_WORKLOAD_DATA.map(d => (
-                      <div key={d.label} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 9 }}>
-                        <span style={{ width: 9, height: 9, borderRadius: "50%", background: d.color, flexShrink: 0 }} />
-                        <span style={{ fontSize: 11, color: "#374151", flex: 1 }}>{d.label}</span>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: d.color }}>{d.value}%</span>
+                      <div key={d.label} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: d.color, flexShrink: 0 }} />
+                        <span style={{ fontSize: 12, color: "#667085", flex: 1 }}>{d.label}</span>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: d.color }}>{d.value}%</span>
                       </div>
                     ))}
                   </div>
@@ -279,37 +310,37 @@ const MainDashboard = () => {
 
           {/* ── Recent Activities & Notifications ── */}
           <div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: "#111827", marginBottom: 12 }}>Recent Activities & Notifications</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            <SectionLabel>Recent Activities & Notifications</SectionLabel>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
 
               {/* Activity Timeline */}
-              <Card style={{ padding: "18px 20px" }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 14 }}>Activity Timeline</div>
+              <Card style={{ padding: "20px" }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#344054", marginBottom: 16 }}>Activity Timeline</div>
                 {ACTIVITY_TIMELINE.map((a, i) => (
-                  <div key={i} style={{ display: "flex", gap: 10, marginBottom: 12 }}>
+                  <div key={i} style={{ display: "flex", gap: 12, marginBottom: 14 }}>
                     <div style={{
-                      width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
-                      background: a.iconColor + "18",
+                      width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
+                      background: a.iconColor + "15",
                       display: "flex", alignItems: "center", justifyContent: "center",
                     }}>
-                      <DynamicIcon name={a.icon} size={13} color={a.iconColor} />
+                      <DynamicIcon name={a.icon} size={14} color={a.iconColor} />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                        <span style={{ fontSize: 13, fontWeight: 600, color: "#111827" }}>{a.title}</span>
-                        <span style={{ fontSize: 11, color: "#9CA3AF", flexShrink: 0, marginLeft: 8 }}>{a.time}</span>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>{a.title}</span>
+                        <span style={{ fontSize: 11, color: "#98A2B3", flexShrink: 0 }}>{a.time}</span>
                       </div>
-                      <div style={{ fontSize: 11, marginTop: 2 }}>
+                      <div style={{ fontSize: 12, marginTop: 2 }}>
                         <span style={{ color: "#2563EB", fontWeight: 600 }}>{a.id}</span>
-                        <span style={{ color: "#9CA3AF" }}> · {a.meta}</span>
+                        <span style={{ color: "#98A2B3" }}> · {a.meta}</span>
                       </div>
                     </div>
                   </div>
                 ))}
                 <button style={{
-                  width: "100%", padding: "9px", marginTop: 4,
-                  border: "1px solid #E5E7EB", borderRadius: 8,
-                  background: "#fff", fontSize: 12, fontWeight: 600, color: "#2979FF",
+                  width: "100%", padding: "10px", marginTop: 4,
+                  border: "1px solid #EAECF0", borderRadius: 8,
+                  background: "#fff", fontSize: 13, fontWeight: 600, color: "#2979FF",
                   cursor: "pointer", fontFamily: FONT,
                 }}>
                   View All Activities
@@ -317,33 +348,33 @@ const MainDashboard = () => {
               </Card>
 
               {/* Notifications */}
-              <Card style={{ padding: "18px 20px" }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 14 }}>Notifications</div>
+              <Card style={{ padding: "20px" }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#344054", marginBottom: 16 }}>Notifications</div>
                 {MAIN_NOTIFICATIONS.map((n, i) => (
                   <div key={i} style={{
-                    display: "flex", gap: 10, padding: "10px 12px",
-                    background: n.iconBg, borderRadius: 8, marginBottom: 8,
+                    display: "flex", gap: 12, padding: "12px 14px",
+                    background: n.iconBg, borderRadius: 8, marginBottom: 10,
                   }}>
                     <div style={{
-                      width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
-                      background: n.iconColor + "22",
+                      width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
+                      background: n.iconColor + "20",
                       display: "flex", alignItems: "center", justifyContent: "center",
                     }}>
-                      <DynamicIcon name={n.icon} size={13} color={n.iconColor} />
+                      <DynamicIcon name={n.icon} size={14} color={n.iconColor} />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: "#111827" }}>{n.title}</span>
-                        <span style={{ fontSize: 11, color: "#9CA3AF", flexShrink: 0, marginLeft: 8 }}>{n.time}</span>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>{n.title}</span>
+                        <span style={{ fontSize: 11, color: "#98A2B3", flexShrink: 0, whiteSpace: "nowrap" }}>{n.time}</span>
                       </div>
-                      <div style={{ fontSize: 11, color: "#6B7280", marginTop: 2 }}>{n.sub}</div>
+                      <div style={{ fontSize: 12, color: "#667085", marginTop: 2 }}>{n.sub}</div>
                     </div>
                   </div>
                 ))}
                 <button style={{
-                  width: "100%", padding: "9px", marginTop: 4,
-                  border: "1px solid #E5E7EB", borderRadius: 8,
-                  background: "#fff", fontSize: 12, fontWeight: 600, color: "#2979FF",
+                  width: "100%", padding: "10px", marginTop: 4,
+                  border: "1px solid #EAECF0", borderRadius: 8,
+                  background: "#fff", fontSize: 13, fontWeight: 600, color: "#2979FF",
                   cursor: "pointer", fontFamily: FONT,
                 }}>
                   View All Activities
@@ -354,22 +385,22 @@ const MainDashboard = () => {
 
           {/* ── Quick Access ── */}
           <div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: "#111827", marginBottom: 12 }}>Quick Access</div>
+            <SectionLabel>Quick Access</SectionLabel>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 12 }}>
               {QUICK_ACCESS.map(item => (
                 <button key={item.label} style={{
-                  background: "#fff", border: "1px solid #F0F0F0", borderRadius: 12,
-                  padding: "16px 8px 14px", cursor: "pointer", fontFamily: FONT,
+                  background: "#fff", border: "1px solid #EAECF0", borderRadius: 12,
+                  padding: "18px 10px 16px", cursor: "pointer", fontFamily: FONT,
                   display: "flex", flexDirection: "column", alignItems: "center", gap: 10,
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+                  boxShadow: "0 1px 3px rgba(16,24,40,0.04)",
                 }}>
                   <div style={{
-                    width: 40, height: 40, borderRadius: 10, background: item.bg,
+                    width: 42, height: 42, borderRadius: 10, background: item.bg,
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
                     <DynamicIcon name={item.icon} size={20} color={item.color} />
                   </div>
-                  <span style={{ fontSize: 11, fontWeight: 500, color: "#374151", textAlign: "center", lineHeight: 1.35 }}>
+                  <span style={{ fontSize: 11, fontWeight: 500, color: "#344054", textAlign: "center", lineHeight: 1.4 }}>
                     {item.label}
                   </span>
                 </button>
