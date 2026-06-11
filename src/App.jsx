@@ -6,14 +6,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import SignIn from "./pages/auth/SignIn";
 import SignUp from "./pages/auth/SignUp";
 import RecoverPassword from "./pages/auth/RecoverPassword";
+import RFPDashboard from "./pages/dashboard/RFPDashboard";
 
-// Placeholder for your dashboard (replace later)
-const Dashboard = () => (
-  <div style={{ padding: 40, fontFamily: "Inter, sans-serif" }}>
-    <h2>✅ Logged in! Dashboard coming soon.</h2>
-    <p style={{ color: "#888", marginTop: 8 }}>Replace this with your real Dashboard component.</p>
-  </div>
-);
+
+
 
 const App = () => {
   return (
@@ -28,7 +24,7 @@ const App = () => {
         <Route path="/recover" element={<RecoverPassword />} />
 
         {/* Protected app routes (add AppLayout wrapper here later) */}
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/Dashboard" element={<RFPDashboard />} />
 
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/login" replace />} />
