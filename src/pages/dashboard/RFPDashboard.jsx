@@ -1,50 +1,32 @@
 // src/pages/dashboard/RFPDashboard.jsx
 import { useState, useEffect } from "react";
-import Sidebar from "../../components/layout/Sidebar";
+
+import Sidebar           from "../../components/layout/Sidebar";
+import KanbanBoard       from "../../components/dashboard/KanbanBoard";
 import NotificationPanel from "../../components/dashboard/NotificationPanel";
-import Modal from "../../components/dashboard/ReminderModal";
-import KanbanCard from "../../components/dashboard/KanbanCard";
-import { KPI_CARDS, KANBAN_COLUMNS } from "../../services/mockData";
+import Modal             from "../../components/dashboard/ReminderModal";
+import ViewAllModal      from "../../components/dashboard/ViewAllModal";
+import { useDashboard }  from "../../hooks/useDashboard";
 
-// ─── KANBAN BOARD ─────────────────────────────────────────────────────────────
-
-const KanbanBoard = () => (
-  <div style={{ display:"flex", gap:14, minWidth:"max-content", paddingBottom:8, alignItems:"flex-start" }}>
-    {KANBAN_COLUMNS.map(col => (
-      <div key={col.id} style={{ width:260, flexShrink:0 }}>
-        <div style={{ background:col.color, borderRadius:"10px 10px 0 0",
-          padding:"10px 14px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-            <span style={{ fontSize:13, fontWeight:600, color:"#333" }}>{col.title}</span>
-            <span style={{ background:col.countBg, color:"#fff",
-              fontSize:11, fontWeight:700, borderRadius:12, padding:"1px 8px" }}>{col.count}</span>
-          </div>
-          <button style={{ background:"none", border:"none", fontSize:11,
-            color:"#666", cursor:"pointer", fontFamily:"inherit" }}>👁 View All</button>
-        </div>
-        <div style={{ background:"#EAECF0", borderRadius:"0 0 10px 10px",
-          padding:"10px 8px 8px", minHeight:80 }}>
-          {col.cards.map((card, idx) => <KanbanCard key={idx} card={card} />)}
-        </div>
-      </div>
-    ))}
-  </div>
-);
-
-// ─── MAIN DASHBOARD ───────────────────────────────────────────────────────────
+// ─── RFPDashboard ─────────────────────────────────────────────────────────────
 
 const RFPDashboard = () => {
+  // ── Data from service layer (swap service implementation for real API) ──────
+  const { kpiCards, columns, notifications, loading, error } = useDashboard();
+
+  // ── UI state ────────────────────────────────────────────────────────────────
   const [showNotifications, setShowNotifications] = useState(false);
   const [activeModal,       setActiveModal]       = useState(null);
   const [activeTab,         setActiveTab]         = useState("Dashboard");
   const [search,            setSearch]            = useState("");
   const [stageFilter,       setStageFilter]       = useState("All Stages");
   const [statusFilter,      setStatusFilter]      = useState("All Status");
-  const [deadlineFilter, setDeadlineFilter]       = useState("By Deadline");
+  const [deadlineFilter,    setDeadlineFilter]    = useState("By Deadline");
   const [tabFilter,         setTabFilter]         = useState("All");
   const [kanbanFullscreen,  setKanbanFullscreen]  = useState(false);
+  const [viewAllCol,        setViewAllCol]        = useState(null);
 
-  // Auto-show Pre-Bid reminder on load
+  // Auto-show Pre-Bid reminder on mount
   useEffect(() => {
     const t = setTimeout(() => {
       setActiveModal({
@@ -52,11 +34,11 @@ const RFPDashboard = () => {
         subtitle: "You have 1 upcoming pre-bid meeting:",
         rfpId: "RFP-2026-006", tenderTitle: "Tender title", customer: "Customer Name",
         details: [
-          { text:"Tender ID - TND-2026-001" },
-          { text:"Apr 5, 2024",  icon:"📅" },
-          { text:"2:00 PM",      icon:"🕐" },
-          { text:"Online",       icon:"🌐" },
-          { text:"Join Meeting", highlight:true },
+          { text: "Tender ID - TND-2026-001" },
+          { text: "Apr 5, 2024",  icon: "📅" },
+          { text: "2:00 PM",      icon: "🕐" },
+          { text: "Online",       icon: "🌐" },
+          { text: "Join Meeting", highlight: true },
         ],
       });
     }, 800);
@@ -75,6 +57,24 @@ const RFPDashboard = () => {
       setActiveModal(null);
     }
   };
+
+  // ── Loading / error guards ───────────────────────────────────────────────────
+  if (loading) return (
+    <div style={{ display:"flex", alignItems:"center", justifyContent:"center",
+      minHeight:"100vh", fontFamily:"'Inter','Segoe UI',sans-serif", color:"#888", fontSize:14 }}>
+      Loading dashboard…
+    </div>
+  );
+
+  if (error) return (
+    <div style={{ display:"flex", alignItems:"center", justifyContent:"center",
+      minHeight:"100vh", fontFamily:"'Inter','Segoe UI',sans-serif", color:"#C62828", fontSize:14 }}>
+      {error}
+    </div>
+  );
+
+  // ── Board shared between normal and fullscreen views ─────────────────────────
+  const board = <KanbanBoard columns={columns} onViewAll={setViewAllCol} />;
 
   return (
     <div style={{ display:"flex", minHeight:"100vh",
@@ -96,30 +96,34 @@ const RFPDashboard = () => {
           <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
             <div style={{ flex:1, position:"relative" }}>
               <span style={{ position:"absolute", left:12, top:"50%", transform:"translateY(-50%)", color:"#aaa" }}>🔍</span>
-              <input type="text" placeholder="Search RFP ID / Customer..."
-                value={search} onChange={e=>setSearch(e.target.value)}
+              <input
+                type="text" placeholder="Search RFP ID / Customer..."
+                value={search} onChange={e => setSearch(e.target.value)}
                 style={{ width:"100%", padding:"9px 14px 9px 36px",
                   border:"1px solid #E2E8F0", borderRadius:8,
                   fontSize:13, color:"#333", background:"#fff",
-                  outline:"none", fontFamily:"inherit", boxSizing:"border-box" }} />
+                  outline:"none", fontFamily:"inherit", boxSizing:"border-box" }}
+              />
             </div>
 
-            <button onClick={()=>setShowNotifications(v=>!v)} style={{
+            <button onClick={() => setShowNotifications(v => !v)} style={{
               position:"relative", background:"#fff", border:"1px solid #E2E8F0",
               borderRadius:8, width:40, height:40,
               display:"flex", alignItems:"center", justifyContent:"center",
               cursor:"pointer", fontSize:18, flexShrink:0 }}>
               🔔
-              <span style={{ position:"absolute", top:7, right:7, width:8, height:8,
-                background:"#F44336", borderRadius:"50%", border:"2px solid #fff" }} />
+              {notifications.length > 0 && (
+                <span style={{ position:"absolute", top:7, right:7, width:8, height:8,
+                  background:"#F44336", borderRadius:"50%", border:"2px solid #fff" }} />
+              )}
             </button>
 
-            {["All","Needs Action","Completed"].map(tab => (
-              <button key={tab} onClick={()=>setTabFilter(tab)} style={{
+            {["All", "Needs Action", "Completed"].map(tab => (
+              <button key={tab} onClick={() => setTabFilter(tab)} style={{
                 padding:"8px 14px", whiteSpace:"nowrap",
-                background: tabFilter===tab?"#2979FF":"#fff",
-                color:       tabFilter===tab?"#fff":"#555",
-                border:"1px solid "+(tabFilter===tab?"#2979FF":"#E2E8F0"),
+                background: tabFilter===tab ? "#2979FF" : "#fff",
+                color:       tabFilter===tab ? "#fff"    : "#555",
+                border: "1px solid " + (tabFilter===tab ? "#2979FF" : "#E2E8F0"),
                 borderRadius:8, fontSize:13, fontWeight:500, cursor:"pointer", fontFamily:"inherit" }}>
                 {tab}
               </button>
@@ -128,7 +132,7 @@ const RFPDashboard = () => {
 
           {/* KPI cards */}
           <div style={{ display:"flex", gap:12, marginBottom:20, flexWrap:"wrap" }}>
-            {KPI_CARDS.map(kpi => (
+            {kpiCards.map(kpi => (
               <div key={kpi.label} style={{ flex:"1 1 130px", background:"#fff", borderRadius:10,
                 padding:"14px 16px", boxShadow:"0 1px 4px rgba(0,0,0,0.06)",
                 border:"1px solid #f0f0f0", display:"flex", flexDirection:"column", gap:6 }}>
@@ -149,13 +153,13 @@ const RFPDashboard = () => {
 
           {/* Dashboard / Task Dashboard tabs */}
           <div style={{ display:"flex", borderBottom:"2px solid #E2E8F0" }}>
-            {["Dashboard","Task Dashboard"].map(tab => (
-              <button key={tab} onClick={()=>setActiveTab(tab)} style={{
+            {["Dashboard", "Task Dashboard"].map(tab => (
+              <button key={tab} onClick={() => setActiveTab(tab)} style={{
                 padding:"10px 20px", background:"none", border:"none",
-                borderBottom: activeTab===tab?"2px solid #2979FF":"2px solid transparent",
+                borderBottom: activeTab===tab ? "2px solid #2979FF" : "2px solid transparent",
                 marginBottom:"-2px",
-                color:      activeTab===tab?"#2979FF":"#888",
-                fontWeight: activeTab===tab?700:400,
+                color:      activeTab===tab ? "#2979FF" : "#888",
+                fontWeight: activeTab===tab ? 700 : 400,
                 fontSize:14, cursor:"pointer", fontFamily:"inherit" }}>
                 {tab}
               </button>
@@ -167,19 +171,20 @@ const RFPDashboard = () => {
         <div style={{ padding:"12px 28px", display:"flex", alignItems:"center", gap:10, flexWrap:"wrap" }}>
           <span style={{ color:"#888" }}>⚙️</span>
           {[
-            { val:stageFilter,  set:setStageFilter,  opts:["All Stages","RFP Analysis","Awaiting Approval","Alert/Notify","Approved", "Submitted", "Won", "PO Pending"] },
-            { val:statusFilter, set:setStatusFilter, opts:["All Status","Completed","Pending","In Progress","Under Review", "Approval Pending", "Rejected"] },
-            { val:deadlineFilter, set:setDeadlineFilter, opts:["By Deadline","Priority","Newest First", "Oldest First","Tender Value", "Last Updated" ]},
-          ].map((f,i) => (
-            <select key={i} value={f.val} onChange={e=>f.set(e.target.value)} style={{
+            { val: stageFilter,    set: setStageFilter,    opts: ["All Stages","RFP Analysis","Awaiting Approval","Alert/Notify","Approved","Submitted","Won","PO Pending"] },
+            { val: statusFilter,   set: setStatusFilter,   opts: ["All Status","Completed","Pending","In Progress","Under Review","Approval Pending","Rejected"] },
+            { val: deadlineFilter, set: setDeadlineFilter, opts: ["By Deadline","Priority","Newest First","Oldest First","Tender Value","Last Updated"] },
+          ].map((f, i) => (
+            <select key={i} value={f.val} onChange={e => f.set(e.target.value)} style={{
               padding:"7px 12px", border:"1px solid #E2E8F0", borderRadius:8,
               fontSize:13, color:"#333", background:"#fff", cursor:"pointer",
               outline:"none", fontFamily:"inherit" }}>
-              {f.opts.map(o=><option key={o}>{o}</option>)}
+              {f.opts.map(o => <option key={o}>{o}</option>)}
             </select>
           ))}
           <div style={{ flex:1 }} />
-          <button onClick={() => setKanbanFullscreen(true)} style={{ background:"#fff", border:"1px solid #E2E8F0", borderRadius:8,
+          <button onClick={() => setKanbanFullscreen(true)} style={{
+            background:"#fff", border:"1px solid #E2E8F0", borderRadius:8,
             padding:"7px 14px", fontSize:13, color:"#555", cursor:"pointer",
             display:"flex", alignItems:"center", gap:6, fontFamily:"inherit" }}>
             👁 View
@@ -188,16 +193,14 @@ const RFPDashboard = () => {
 
         {/* Kanban board */}
         <div style={{ flex:1, overflowX:"auto", padding:"0 28px 28px" }}>
-          <KanbanBoard />
+          {board}
         </div>
       </div>
 
-      {/* Fullscreen Kanban overlay */}
+      {/* ── Fullscreen Kanban overlay ── */}
       {kanbanFullscreen && (
         <div style={{ position:"fixed", inset:0, zIndex:950, background:"#F7F8FA",
           display:"flex", flexDirection:"column", fontFamily:"'Inter','Segoe UI',sans-serif" }}>
-
-          {/* Fullscreen header */}
           <div style={{ padding:"16px 28px", background:"#fff", borderBottom:"1px solid #E2E8F0",
             display:"flex", alignItems:"center", justifyContent:"space-between", flexShrink:0 }}>
             <div>
@@ -211,25 +214,27 @@ const RFPDashboard = () => {
               ✕ Exit Fullscreen
             </button>
           </div>
-
-          {/* Fullscreen board */}
           <div style={{ flex:1, overflowX:"auto", padding:"20px 28px 28px" }}>
-            <KanbanBoard />
+            {board}
           </div>
         </div>
       )}
 
-      {/* Notification panel */}
+      {/* ── Notification panel ── */}
       {showNotifications && (
         <>
-          <div onClick={()=>setShowNotifications(false)}
+          <div onClick={() => setShowNotifications(false)}
             style={{ position:"fixed", inset:0, zIndex:899 }} />
-          <NotificationPanel onClose={()=>setShowNotifications(false)} />
+          <NotificationPanel
+            notifications={notifications}
+            onClose={() => setShowNotifications(false)}
+          />
         </>
       )}
 
-      {/* Reminder modal */}
+      {/* ── Modals ── */}
       <Modal modal={activeModal} onClose={handleAcknowledge} />
+      <ViewAllModal col={viewAllCol} onClose={() => setViewAllCol(null)} />
     </div>
   );
 };
