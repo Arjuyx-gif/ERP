@@ -311,8 +311,10 @@ const ViewAllModal = ({ col, onClose }) => {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    if (!col?.id) { setRows([]); return; }
-    getRows(col.id).then(setRows);
+    if (!col?.id) { return; }
+    getRows(col.id).then(fetchedRows => {
+      setRows(fetchedRows);
+    });
   }, [col?.id]);
 
   if (!col) return null;
