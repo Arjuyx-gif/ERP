@@ -16,12 +16,13 @@ export const BASE_ROW = {
 };
 
 // ─── KPI Cards ────────────────────────────────────────────────────────────────
+// src/services/mockData.js
 export const KPI_CARDS = [
-  { label: "Total RFPs",        value: 5, icon: "📄", color: "#4A90D9" },
-  { label: "Awaiting Approval", value: 1, icon: "🕐", color: "#F5A623", iconBg: "#FFF4E0" },
-  { label: "Submitted",         value: 1, icon: "✅", color: "#4CAF50", iconBg: "#E8F5E9" },
-  { label: "Won (L1)",          value: 3, icon: "🏆", color: "#4CAF50", iconBg: "#E8F5E9" },
-  { label: "PO - Pending",      value: 1, icon: "⚠️", color: "#FF5722", iconBg: "#FBE9E7" },
+  { label: "Total RFPs",       value: 5, iconName: "document", color: "#1565C0", iconBg: "#E3F0FB" },
+  { label: "Awaiting Approval",value: 1, iconName: "timer",    color: "#F5A623", iconBg: "#FFF4E0" },
+  { label: "Submitted",        value: 1, iconName: "tick",     color: "#4CAF50", iconBg: "#E8F5E9" },
+  { label: "Won (L1)",         value: 3, iconName: "trophy",   color: "#4CAF50", iconBg: "#E8F5E9" },
+  { label: "PO - Pending",     value: 1, iconName: "alert",    color: "#FF5722", iconBg: "#FBE9E7" },
 ];
 
 // ─── Kanban Columns ───────────────────────────────────────────────────────────
@@ -152,21 +153,21 @@ export const KANBAN_COLUMNS = [
         tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
         details: { status: "PO Received", deadline: "Apr 30, 2026" },
         badge: { text: "Awarded", color: "#2E7D32", bg: "#E8F5E9" },
-        statusBadge: { text: "🔔 PO Received", color: "#F5A623", bg: "#FFF4E0" },
+        statusBadge: { text: "PO Received", iconName: "bell", color: "#F5A623", bg: "#FFF4E0" },
       },
       {
         id: "RFP-2026-017", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: [], tagColors: {},
         details: { status: "PO Awaiting", deadline: "Apr 30, 2026" },
-        statusBadge: { text: "⚠️ PO Awaiting", color: "#F5A623", bg: "#FFF4E0" },
+        statusBadge: { text: "PO Awaiting", iconName: "alert", color: "#F5A623", bg: "#FFF4E0" },
       },
       {
         id: "RFP-2026-017", status: "Bid Canceled", statusColor: "#F44336", statusBg: "#FBE9E7",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: [], tagColors: {},
         details: { status: "Bid Canceled", deadline: "Apr 30, 2026" },
-        statusBadge: { text: "⚠️ Bid Canceled", color: "#FF5722", bg: "#FFF8E1" },
+        statusBadge: { text: "Bid Canceled", iconName: "alert", color: "#FF5722", bg: "#FFF8E1" },
       },
     ],
   },
@@ -180,7 +181,7 @@ export const KANBAN_COLUMNS = [
         tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
         details: { status: "Start with SOF", deadline: "Apr 30, 2026" },
         badge: { text: "Awarded", color: "#2E7D32", bg: "#E8F5E9" },
-        statusBadge: { text: "🔔 Start SOF – Action Required", color: "#F5A623", bg: "#FFF4E0" },
+        statusBadge: { text: "Start SOF – Action Required", iconName: "bell", color: "#F5A623", bg: "#FFF4E0" },
         poActions: true,
       },
     ],
@@ -216,8 +217,8 @@ export const NOTIFICATIONS = [
 
 // ─── Sidebar Navigation ───────────────────────────────────────────────────────
 export const SIDEBAR_NAV = [
-  { icon: "⊞", label: "Dashboard" },
-  { icon: "📋", label: "Sales & Pre-sales", expandable: true, active: true,
+  { iconName: "dashboard",    label: "Dashboard" },
+  { iconName: "clipboard",    label: "Sales & Pre-sales", expandable: true, active: true,
     children: [
       { label: "RFP Dashboard", active: true },
       { label: "RFP Analysis Form" },
@@ -226,12 +227,12 @@ export const SIDEBAR_NAV = [
       { label: "SOF" },
     ],
   },
-  { icon: "👥", label: "Sales Coordinator", expandable: true },
-  { icon: "📥", label: "Task Inbox",        expandable: true },
-  { icon: "📈", label: "Tacker",            expandable: true },
-  { icon: "📊", label: "Reports" },
-  { icon: "🗄️", label: "Master Data" },
-  { icon: "⚙️", label: "Settings" },
+  { iconName: "users",        label: "Sales Coordinator", expandable: true },
+  { iconName: "inbox",        label: "Task Inbox",        expandable: true },
+  { iconName: "trending-up",  label: "Tacker",            expandable: true },
+  { iconName: "bar-chart",    label: "Reports" },
+  { iconName: "database",     label: "Master Data" },
+  { iconName: "settings",     label: "Settings" },
 ];
 
 // ─── View-All Table Rows (per column) ─────────────────────────────────────────
@@ -244,11 +245,11 @@ const r = extra => ({ ...BASE_ROW, ...extra });
 
 export const VIEW_ALL_ROWS = {
   rfp_analysis: [
-    r({ preBidDate: "Today",       preBidTime: "2:00 P.M", venue: "Venue/ [Link]", variant: "warning" }),
-    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue/ [Link]" }),
-    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue/ [Link]" }),
-    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue/ [Link]" }),
-    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue/ [Link]" }),
+    r({ preBidDate: "Today",       preBidTime: "2:00 P.M", venue: "Venue", variant: "warning" }),
+    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue" }),
+    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue" }),
+    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue" }),
+    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue" }),
   ],
   awaiting_approval: [
     r({ status: "Approved", variant: "success" }),
@@ -261,8 +262,8 @@ export const VIEW_ALL_ROWS = {
     r({ notifiedTeams: "Dept. Names" }),
   ],
   approved: [
-    r({ status: "In Progress", documents: "OEM + EMD", actionLabel: "Complete Tasks", actionIcon: "📄" }),
-    r({ status: "Completed",   documents: "OEM + EMD", actionLabel: "View Docs",      actionIcon: "📄" }),
+    r({ status: "In Progress", documents: "OEM + EMD", actionLabel: "Complete Tasks", actionIcon: "file" }),
+    r({ status: "Completed",   documents: "OEM + EMD", actionLabel: "View Docs",      actionIcon: "file" }),
   ],
   bid_submitted: [
     r({ status: "Bid Submitted - Date" }),
@@ -284,12 +285,12 @@ export const VIEW_ALL_ROWS = {
     r({ status: "Canceled",    actionLabel: null }),
   ],
   po_received: [
-    r({ status: "Pending",     actionLabel: "Upload PO + Additional", actionIcon: "⬆️" }),
-    r({ status: "Pending",     actionLabel: "Upload PO + Additional", actionIcon: "⬆️" }),
-    r({ status: "PO Received", actionLabel: "View PO + Additional",   actionIcon: "👁", variant: "success" }),
+    r({ status: "Pending",     actionLabel: "Upload PO + Additional", actionIcon: "upload" }),
+    r({ status: "Pending",     actionLabel: "Upload PO + Additional", actionIcon: "upload" }),
+    r({ status: "PO Received", actionLabel: "View PO + Additional",   actionIcon: "eye",    variant: "success" }),
   ],
   lost: [
-    r({ status: "Pending",             action1: "Notify for EMD Return", action1Icon: "↗️", action2: "Complete Comparison Sheet", action2Icon: "📄" }),
-    r({ status: "EMD Return Received", action1: "View Docs",             action1Icon: "👁",  action2: "View Comparison Sheet",     action2Icon: "👁" }),
+    r({ status: "Pending",             action1: "Notify for EMD Return", action1Icon: "arrow-up-right", action2: "Complete Comparison Sheet", action2Icon: "file" }),
+    r({ status: "EMD Return Received", action1: "View Docs",             action1Icon: "eye",            action2: "View Comparison Sheet",     action2Icon: "eye"  }),
   ],
 };
