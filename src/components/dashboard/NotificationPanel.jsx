@@ -1,7 +1,5 @@
 import { NOTIFICATIONS } from "../../services/mockData";
 
-// ─── NOTIFICATIONS PANEL ──────────────────────────────────────────────────────
-
 const NotificationPanel = ({ onClose }) => (
   <div style={{ position:"fixed", top:0, right:0, bottom:0, width:400, zIndex:900,
     background:"#fff", boxShadow:"-4px 0 24px rgba(0,0,0,0.13)",
