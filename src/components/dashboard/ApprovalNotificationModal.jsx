@@ -4,16 +4,22 @@ import { X, Plus, Send, Trash2 } from "lucide-react";
 const FONT = "'Inter','Segoe UI',sans-serif";
 
 const ApprovalNotificationModal = ({ card, onClose, onSend }) => {
-  const [sections, setSections] = useState([{ id: 1, name: "", remark: "" }]);
+  const initialSections = (card.checkedNotify && card.checkedNotify.length > 0)
+    ? card.checkedNotify.map((name, i) => ({ id: Date.now() + i, name, remark: "" }))
+    : [{ id: 1, name: "", remark: "" }];
+
+  const [sections, setSections] = useState(initialSections);
 
   const addSection    = ()            => setSections(s => [...s, { id: Date.now(), name: "", remark: "" }]);
   const removeSection = id            => setSections(s => s.filter(x => x.id !== id));
   const update        = (id, f, val)  => setSections(s => s.map(x => x.id === id ? { ...x, [f]: val } : x));
 
   const handleSend = () => {
-    const notified = sections.filter(s => s.remark.trim()).map(s => s.name.trim() || "General");
+    const notified = sections.map(s => s.name.trim()).filter(Boolean);
     onSend(notified);
   };
+
+  const ALL_DEPTS = ["Pre-sales", "Sales-coordinator", "Purchase", "Accounts", "HR", "Service", "Legal", "General"];
 
   return (
     <div style={{
@@ -61,17 +67,21 @@ const ApprovalNotificationModal = ({ card, onClose, onSend }) => {
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 6, flex: 1, minWidth: 0 }}>
                   <span style={{ fontSize: 13, fontWeight: 600, color: "#344054", whiteSpace: "nowrap" }}>Remarks -</span>
-                  <input
-                    type="text"
+                  <select
                     value={s.name}
                     onChange={e => update(s.id, "name", e.target.value)}
-                    placeholder="dept name"
                     style={{
                       border: "none", outline: "none", background: "transparent",
                       fontSize: 13, fontWeight: 600, color: "#344054", fontFamily: FONT,
-                      minWidth: 0, flex: 1,
+                      minWidth: 0, flex: 1, cursor: "pointer",
+                      WebkitAppearance: "none", MozAppearance: "none", appearance: "none",
                     }}
-                  />
+                  >
+                    <option value="" disabled>Select Dept...</option>
+                    {ALL_DEPTS.map(d => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
                   {/* Show + Add only on the last section */}

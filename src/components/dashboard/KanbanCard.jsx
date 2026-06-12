@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Calendar, Clock, User, CheckCircle, XCircle, Upload, Download,
   ArrowUpRight, Eye,
@@ -16,6 +16,10 @@ const btnStyle = {
 const KanbanCard = ({ card, onViewRFP }) => {
   const [checked, setChecked] = useState(card.checkedNotify || []);
   const toggle = (item) => setChecked(p => p.includes(item) ? p.filter(x => x !== item) : [...p, item]);
+
+  useEffect(() => {
+    setChecked(card.checkedNotify || []);
+  }, [card.checkedNotify]);
 
   const isBlue = card.action === "Send Notification";
 
@@ -135,6 +139,7 @@ const KanbanCard = ({ card, onViewRFP }) => {
               <input
                 type="checkbox" checked={checked.includes(item)} onChange={() => toggle(item)}
                 style={{ accentColor: "#2979FF", width: 13, height: 13 }}
+                disabled={card.action === "View"}
               />
               <span style={{ fontSize: 11, color: "#555" }}>Notify: {item}</span>
             </div>
@@ -188,7 +193,7 @@ const KanbanCard = ({ card, onViewRFP }) => {
       {/* CTA button */}
       {card.action && (
         <button
-          onClick={["View RFP Form", "Review Now", "Send Notification", "View"].includes(card.action) ? onViewRFP : undefined}
+          onClick={["View RFP Form", "Review Now", "Send Notification", "View"].includes(card.action) ? () => onViewRFP({ ...card, checkedNotify: checked }) : undefined}
           style={{
             width: "100%", marginTop: 4, padding: "8px 0",
             background: isBlue ? "#2979FF" : "#fff",

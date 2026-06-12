@@ -76,15 +76,6 @@ export const KANBAN_COLUMNS = [
         checkedNotify: ["Pre-sales"],
         action: "Send Notification",
       },
-      {
-        id: "RFP-2026-005", status: "Approved", statusColor: "#4CAF50", statusBg: "#E8F5E9",
-        tender: "Tender Title", customer: null, amount: "500Cr.",
-        tags: ["CIPL", "NIPL"], tagColors: { CIPL: "#E3F0FB", NIPL: "#E8F5E9" },
-        details: { status: "Send Alert", deadline: "Apr 25, 2026" },
-        notifyList: ["Pre-sales", "Sales-coordinator", "Purchase", "Accounts", "HR", "Service"],
-        checkedNotify: ["Pre-sales", "Sales-coordinator", "Accounts"],
-        action: "View",
-      },
     ],
   },
   {

@@ -49,7 +49,7 @@ const KanbanBoard = ({ columns, onViewAll, onViewRFP }) => (
           padding: "10px 8px 8px", minHeight: 80,
         }}>
           {col.cards.map((card, idx) => (
-            <KanbanCard key={idx} card={card} onViewRFP={() => onViewRFP?.(card)} />
+            <KanbanCard key={idx} card={card} onViewRFP={(augmentedCard) => onViewRFP?.(augmentedCard || card)} />
           ))}
         </div>
 

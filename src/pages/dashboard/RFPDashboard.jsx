@@ -2,15 +2,15 @@
 import { useState, useEffect } from "react";
 import { Search, Bell, SlidersHorizontal, Eye, Minimize2 } from "lucide-react";
 
-import Sidebar           from "../../components/layout/Sidebar";
-import KanbanBoard       from "../../components/dashboard/KanbanBoard";
-import TaskTable         from "../../components/dashboard/TaskTable";
-import RFPFormPanel      from "../../components/dashboard/RFPFormPanel";
+import Sidebar from "../../components/layout/Sidebar";
+import KanbanBoard from "../../components/dashboard/KanbanBoard";
+import TaskTable from "../../components/dashboard/TaskTable";
+import RFPFormPanel from "../../components/dashboard/RFPFormPanel";
 import NotificationPanel from "../../components/dashboard/NotificationPanel";
-import Modal             from "../../components/dashboard/ReminderModal";
-import ViewAllModal      from "../../components/dashboard/ViewAllModal";
-import DynamicIcon       from "../../components/ui/DynamicIcon";
-import { useDashboard }  from "../../hooks/useDashboard";
+import Modal from "../../components/dashboard/ReminderModal";
+import ViewAllModal from "../../components/dashboard/ViewAllModal";
+import DynamicIcon from "../../components/ui/DynamicIcon";
+import { useDashboard } from "../../hooks/useDashboard";
 
 // ─── RFPDashboard ─────────────────────────────────────────────────────────────
 
@@ -25,16 +25,16 @@ const RFPDashboard = () => {
 
   // ── UI state ────────────────────────────────────────────────────────────────
   const [showNotifications, setShowNotifications] = useState(false);
-  const [activeModal,       setActiveModal]       = useState(null);
-  const [activeTab,         setActiveTab]         = useState("Dashboard");
-  const [search,            setSearch]            = useState("");
-  const [stageFilter,       setStageFilter]       = useState("All Stages");
-  const [statusFilter,      setStatusFilter]      = useState("All Status");
-  const [deadlineFilter,    setDeadlineFilter]    = useState("By Deadline");
-  const [tabFilter,         setTabFilter]         = useState("All");
-  const [kanbanFullscreen,  setKanbanFullscreen]  = useState(false);
-  const [viewAllCol,        setViewAllCol]        = useState(null);
-  const [viewRFPCard,       setViewRFPCard]       = useState(null);
+  const [activeModal, setActiveModal] = useState(null);
+  const [activeTab, setActiveTab] = useState("Dashboard");
+  const [search, setSearch] = useState("");
+  const [stageFilter, setStageFilter] = useState("All Stages");
+  const [statusFilter, setStatusFilter] = useState("All Status");
+  const [deadlineFilter, setDeadlineFilter] = useState("By Deadline");
+  const [tabFilter, setTabFilter] = useState("All");
+  const [kanbanFullscreen, setKanbanFullscreen] = useState(false);
+  const [viewAllCol, setViewAllCol] = useState(null);
+  const [viewRFPCard, setViewRFPCard] = useState(null);
 
   // Auto-show Pre-Bid reminder on mount
   useEffect(() => {
@@ -45,9 +45,9 @@ const RFPDashboard = () => {
         rfpId: "RFP-2026-006", tenderTitle: "Tender title", customer: "Customer Name",
         details: [
           { text: "Tender ID - TND-2026-001" },
-          { text: "Apr 5, 2024",  icon: "calendar" },
-          { text: "2:00 PM",      icon: "timer" },
-          { text: "Online",       icon: "globe" },
+          { text: "Apr 5, 2024", icon: "calendar" },
+          { text: "2:00 PM", icon: "timer" },
+          { text: "Online", icon: "globe" },
           { text: "Join Meeting", highlight: true },
         ],
       });
@@ -71,15 +71,22 @@ const RFPDashboard = () => {
   const handleSendNotification = (card, checkedDepts) => {
     setColumns(cols => cols.map(col => ({
       ...col,
-      cards: col.cards.map(c =>
-        c.id === card.id && c.action === "Send Notification"
-          ? {
-              ...c,
-              checkedNotify: ["Pre-sales", ...checkedDepts],
-              action: "View",
-            }
-          : c
-      ),
+      cards: col.cards.flatMap(c => {
+        if (c.id === card.id && c.action === "Send Notification") {
+          const sentCard = {
+            ...c,
+            notifyList: checkedDepts,
+            checkedNotify: checkedDepts,
+            action: "View",
+          };
+          const originalCard = {
+            ...c,
+            checkedNotify: [],
+          };
+          return [originalCard, sentCard];
+        }
+        return [c];
+      }),
     })));
   };
 
@@ -189,7 +196,7 @@ const RFPDashboard = () => {
               <button key={tab} onClick={() => setTabFilter(tab)} style={{
                 padding: "8px 14px", whiteSpace: "nowrap",
                 background: tabFilter === tab ? "#2979FF" : "#fff",
-                color:       tabFilter === tab ? "#fff"    : "#555",
+                color: tabFilter === tab ? "#fff" : "#555",
                 border: "1px solid " + (tabFilter === tab ? "#2979FF" : "#E2E8F0"),
                 borderRadius: 8, fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: "inherit",
               }}>
@@ -227,7 +234,7 @@ const RFPDashboard = () => {
                 padding: "10px 20px", background: "none", border: "none",
                 borderBottom: activeTab === tab ? "2px solid #2979FF" : "2px solid transparent",
                 marginBottom: "-2px",
-                color:      activeTab === tab ? "#2979FF" : "#888",
+                color: activeTab === tab ? "#2979FF" : "#888",
                 fontWeight: activeTab === tab ? 700 : 400,
                 fontSize: 14, cursor: "pointer", fontFamily: "inherit",
               }}>
@@ -241,9 +248,9 @@ const RFPDashboard = () => {
         <div style={{ padding: "12px 28px", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
           <SlidersHorizontal size={16} color="#888" />
           {[
-            { val: stageFilter,    set: setStageFilter,    opts: ["All Stages","RFP Analysis","Awaiting Approval","Alert/Notify","Approved","Submitted","Won","PO Pending"] },
-            { val: statusFilter,   set: setStatusFilter,   opts: ["All Status","Completed","Pending","In Progress","Under Review","Approval Pending","Rejected"] },
-            { val: deadlineFilter, set: setDeadlineFilter, opts: ["By Deadline","Priority","Newest First","Oldest First","Tender Value","Last Updated"] },
+            { val: stageFilter, set: setStageFilter, opts: ["All Stages", "RFP Analysis", "Awaiting Approval", "Alert/Notify", "Approved", "Submitted", "Won", "PO Pending"] },
+            { val: statusFilter, set: setStatusFilter, opts: ["All Status", "Completed", "Pending", "In Progress", "Under Review", "Approval Pending", "Rejected"] },
+            { val: deadlineFilter, set: setDeadlineFilter, opts: ["By Deadline", "Priority", "Newest First", "Oldest First", "Tender Value", "Last Updated"] },
           ].map((f, i) => (
             <select key={i} value={f.val} onChange={e => f.set(e.target.value)} style={{
               padding: "7px 12px", border: "1px solid #E2E8F0", borderRadius: 8,
