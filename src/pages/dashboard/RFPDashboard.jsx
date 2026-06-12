@@ -4,6 +4,7 @@ import { Search, Bell, SlidersHorizontal, Eye, Minimize2 } from "lucide-react";
 
 import Sidebar           from "../../components/layout/Sidebar";
 import KanbanBoard       from "../../components/dashboard/KanbanBoard";
+import TaskTable         from "../../components/dashboard/TaskTable";
 import NotificationPanel from "../../components/dashboard/NotificationPanel";
 import Modal             from "../../components/dashboard/ReminderModal";
 import ViewAllModal      from "../../components/dashboard/ViewAllModal";
@@ -205,18 +206,20 @@ const RFPDashboard = () => {
             </select>
           ))}
           <div style={{ flex: 1 }} />
-          <button onClick={() => setKanbanFullscreen(true)} style={{
-            background: "#fff", border: "1px solid #E2E8F0", borderRadius: 8,
-            padding: "7px 14px", fontSize: 13, color: "#555", cursor: "pointer",
-            display: "flex", alignItems: "center", gap: 6, fontFamily: "inherit",
-          }}>
-            <Eye size={14} /> View
-          </button>
+          {activeTab !== "Task Dashboard" && (
+            <button onClick={() => setKanbanFullscreen(true)} style={{
+              background: "#fff", border: "1px solid #E2E8F0", borderRadius: 8,
+              padding: "7px 14px", fontSize: 13, color: "#555", cursor: "pointer",
+              display: "flex", alignItems: "center", gap: 6, fontFamily: "inherit",
+            }}>
+              <Eye size={14} /> View
+            </button>
+          )}
         </div>
 
-        {/* Kanban board */}
+        {/* Board / Table */}
         <div style={{ flex: 1, overflowX: "auto", padding: "0 28px 28px" }}>
-          {board}
+          {activeTab === "Task Dashboard" ? <TaskTable /> : board}
         </div>
       </div>
 

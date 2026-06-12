@@ -482,6 +482,18 @@ export const PANEL_NOTIFICATIONS = [
   },
 ];
 
+// ─── Task Dashboard Table ─────────────────────────────────────────────────────
+// highlight: null | "yellow" | "green"
+export const TASK_TABLE_ROWS = [
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null   },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: "yellow" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: "green"  },
+  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null   },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null   },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null   },
+  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null   },
+];
+
 export const QUICK_ACCESS = [
   { icon: "document",  label: "RFP Tracker",                  color: "#2979FF", bg: "#EFF6FF", path: "/rfp-dashboard" },
   { icon: "inbox",     label: "SOF Dashboard",                color: "#059669", bg: "#ECFDF5", path: "/sof-dashboard" },
