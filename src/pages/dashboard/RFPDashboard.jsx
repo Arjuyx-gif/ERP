@@ -5,6 +5,7 @@ import { Search, Bell, SlidersHorizontal, Eye, Minimize2 } from "lucide-react";
 import Sidebar           from "../../components/layout/Sidebar";
 import KanbanBoard       from "../../components/dashboard/KanbanBoard";
 import TaskTable         from "../../components/dashboard/TaskTable";
+import RFPFormPanel      from "../../components/dashboard/RFPFormPanel";
 import NotificationPanel from "../../components/dashboard/NotificationPanel";
 import Modal             from "../../components/dashboard/ReminderModal";
 import ViewAllModal      from "../../components/dashboard/ViewAllModal";
@@ -15,7 +16,12 @@ import { useDashboard }  from "../../hooks/useDashboard";
 
 const RFPDashboard = () => {
   // ── Data from service layer (swap service implementation for real API) ──────
-  const { kpiCards, columns, notifications, loading, error } = useDashboard();
+  const { kpiCards, columns: initialColumns, notifications, loading, error } = useDashboard();
+  const [columns, setColumns] = useState([]);
+
+  useEffect(() => {
+    if (initialColumns.length) setColumns(initialColumns);
+  }, [initialColumns]);
 
   // ── UI state ────────────────────────────────────────────────────────────────
   const [showNotifications, setShowNotifications] = useState(false);
@@ -28,6 +34,7 @@ const RFPDashboard = () => {
   const [tabFilter,         setTabFilter]         = useState("All");
   const [kanbanFullscreen,  setKanbanFullscreen]  = useState(false);
   const [viewAllCol,        setViewAllCol]        = useState(null);
+  const [viewRFPCard,       setViewRFPCard]       = useState(null);
 
   // Auto-show Pre-Bid reminder on mount
   useEffect(() => {
@@ -61,6 +68,47 @@ const RFPDashboard = () => {
     }
   };
 
+  const handleSendNotification = (card, checkedDepts) => {
+    setColumns(cols => cols.map(col => ({
+      ...col,
+      cards: col.cards.map(c =>
+        c.id === card.id && c.action === "Send Notification"
+          ? {
+              ...c,
+              checkedNotify: ["Pre-sales", ...checkedDepts],
+              action: "View",
+            }
+          : c
+      ),
+    })));
+  };
+
+  const handleReject = (card, reason) => {
+    const rejectedCard = {
+      id: card.id,
+      tender: card.tender,
+      customer: card.customer,
+      amount: card.amount,
+      tags: card.tags,
+      tagColors: card.tagColors,
+      status: "Rejected",
+      statusColor: "#F5A623",
+      statusBg: "#FFF4E0",
+      action: "Review Now",
+      rejectionRemark: reason || "Sent back for rework",
+      details: {
+        ...card.details,
+        status: "Rejected",
+        remark: reason || "Sent back for rework",
+      },
+    };
+    setColumns(cols => cols.map(col =>
+      col.id === "awaiting_approval"
+        ? { ...col, cards: [...col.cards, rejectedCard] }
+        : col
+    ));
+  };
+
   // ── Loading / error guards ───────────────────────────────────────────────────
   if (loading) return (
     <div style={{
@@ -81,7 +129,7 @@ const RFPDashboard = () => {
   );
 
   // ── Board shared between normal and fullscreen views ─────────────────────────
-  const board = <KanbanBoard columns={columns} onViewAll={setViewAllCol} />;
+  const board = <KanbanBoard columns={columns} onViewAll={setViewAllCol} onViewRFP={setViewRFPCard} />;
 
   return (
     <div style={{
@@ -268,6 +316,9 @@ const RFPDashboard = () => {
       {/* ── Modals ── */}
       <Modal modal={activeModal} onClose={handleAcknowledge} />
       <ViewAllModal col={viewAllCol} onClose={() => setViewAllCol(null)} />
+
+      {/* ── RFP Form panel ── */}
+      <RFPFormPanel card={viewRFPCard} onClose={() => setViewRFPCard(null)} onReject={handleReject} onSendNotification={handleSendNotification} />
     </div>
   );
 };

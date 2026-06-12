@@ -13,7 +13,7 @@ const btnStyle = {
   display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
 };
 
-const KanbanCard = ({ card }) => {
+const KanbanCard = ({ card, onViewRFP }) => {
   const [checked, setChecked] = useState(card.checkedNotify || []);
   const toggle = (item) => setChecked(p => p.includes(item) ? p.filter(x => x !== item) : [...p, item]);
 
@@ -187,15 +187,18 @@ const KanbanCard = ({ card }) => {
 
       {/* CTA button */}
       {card.action && (
-        <button style={{
-          width: "100%", marginTop: 4, padding: "8px 0",
-          background: isBlue ? "#2979FF" : "#fff",
-          color: isBlue ? "#fff" : "#2979FF",
-          border: isBlue ? "none" : "1px solid #2979FF",
-          borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer",
-          display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-          fontFamily: "inherit",
-        }}>
+        <button
+          onClick={["View RFP Form", "Review Now", "Send Notification", "View"].includes(card.action) ? onViewRFP : undefined}
+          style={{
+            width: "100%", marginTop: 4, padding: "8px 0",
+            background: isBlue ? "#2979FF" : "#fff",
+            color: isBlue ? "#fff" : "#2979FF",
+            border: isBlue ? "none" : "1px solid #2979FF",
+            borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+            fontFamily: "inherit",
+          }}
+        >
           <Eye size={13} /> {card.action}
         </button>
       )}
