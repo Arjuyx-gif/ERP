@@ -19,22 +19,23 @@ const FONT = "'Inter','Segoe UI',sans-serif";
 const toRad = deg => (deg - 90) * Math.PI / 180;
 
 const PieChart = ({ data, size = 150, donut = false }) => {
-  const cx = size / 2, cy = size / 2;
-  const outerR = size / 2 - 4;
+  const pad = 70;
+  const total = size + pad * 2;
+  const cx = total / 2, cy = total / 2;
+  const outerR = size / 2;
   const innerR = donut ? outerR * 0.52 : 0;
-  const total = data.reduce((s, d) => s + d.value, 0);
-  let angle = 0;
-  const slices = data.map(d => {
-    const start = angle;
-    const sweep = (d.value / total) * 360;
-    angle += sweep;
-    return { ...d, start, sweep };
-  });
+  const dataTotal = data.reduce((s, d) => s + d.value, 0);
+
+  // ESLint-safe: no mutable variable reassignment
+  const slices = data.reduce((acc, d) => {
+    const start = acc.length > 0 ? acc[acc.length - 1].start + acc[acc.length - 1].sweep : 0;
+    const sweep = (d.value / dataTotal) * 360;
+    return [...acc, { ...d, start, sweep }];
+  }, []);
 
   const arcPath = s => {
-    const gap = 1.8;
-    const a1 = toRad(s.start + gap);
-    const a2 = toRad(s.start + s.sweep - gap);
+    const a1 = toRad(s.start);
+    const a2 = toRad(s.start + s.sweep);
     const x1o = cx + outerR * Math.cos(a1), y1o = cy + outerR * Math.sin(a1);
     const x2o = cx + outerR * Math.cos(a2), y2o = cy + outerR * Math.sin(a2);
     const large = s.sweep > 180 ? 1 : 0;
@@ -46,9 +47,54 @@ const PieChart = ({ data, size = 150, donut = false }) => {
     return `M${cx},${cy} L${x1o},${y1o} A${outerR},${outerR} 0 ${large} 1 ${x2o},${y2o} Z`;
   };
 
+  const labelLine = s => {
+    const mid = toRad(s.start + s.sweep / 2);
+    const r1 = outerR + 8;
+    const r2 = outerR + 28;
+    const x1 = cx + r1 * Math.cos(mid), y1 = cy + r1 * Math.sin(mid);
+    const x2 = cx + r2 * Math.cos(mid), y2 = cy + r2 * Math.sin(mid);
+    const isRight = Math.cos(mid) > 0;
+    const x3 = x2 + (isRight ? 12 : -12);
+    return { x1, y1, x2, y2, x3, y3: y2, isRight, lx: x3, ly: y2 };
+  };
+
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ flexShrink: 0 }}>
-      {slices.map((s, i) => <path key={i} d={arcPath(s)} fill={s.color} />)}
+    <svg
+      width={total}
+      height={total}
+      viewBox={`0 0 ${total} ${total}`}
+      style={{ flexShrink: 0, overflow: "visible" }}
+    >
+      {slices.map((s, i) => (
+        <g key={i}>
+          <path d={arcPath(s)} fill={s.color} />
+          {s.sweep > 10 && (() => {
+            const { x1, y1, x2, y2, x3, y3, isRight, lx, ly } = labelLine(s);
+            return (
+              <g>
+                <polyline
+                  points={`${x1},${y1} ${x2},${y2} ${x3},${y3}`}
+                  fill="none"
+                  stroke={s.color}
+                  strokeWidth={1}
+                />
+                <text
+                  x={lx + (isRight ? 4 : -4)}
+                  y={ly}
+                  textAnchor={isRight ? "start" : "end"}
+                  dominantBaseline="middle"
+                  fontSize={10}
+                  fontWeight={600}
+                  fontFamily="Inter, sans-serif"
+                  fill={s.color}
+                >
+                  {s.label} {s.value}%
+                </text>
+              </g>
+            );
+          })()}
+        </g>
+      ))}
     </svg>
   );
 };
@@ -246,15 +292,13 @@ const MainDashboard = () => {
           <div>
             <SectionLabel>Live Workflow Pipeline</SectionLabel>
             <Card style={{ padding: "18px 20px" }}>
-              {/* overflow: hidden on outer clips the shadow; scroll is on inner */}
               <div
                 className="thin-scrollbar"
                 style={{ overflowX: "auto", paddingBottom: 6 }}
               >
                 <div style={{ display: "flex", alignItems: "stretch", gap: 0, width: "max-content" }}>
-                  {WORKFLOW_PIPELINE.map((stage, i) => (
+                  {WORKFLOW_PIPELINE.map((stage) => (
                     <div key={stage.label} style={{ display: "flex", alignItems: "center", gap: 0 }}>
-                      {/* Stage card */}
                       <div style={{
                         background: "#fff", border: "1px solid #E4E7EC", borderRadius: 10,
                         padding: "12px 18px", minWidth: 130,
@@ -282,8 +326,6 @@ const MainDashboard = () => {
                           </div>
                         )}
                       </div>
-
-                      {/* Arrow */}
                       <div style={{ padding: "0 6px", color: "#D0D5DD", flexShrink: 0 }}>
                         <ChevronRight size={16} color="#D0D5DD" />
                       </div>
@@ -338,48 +380,41 @@ const MainDashboard = () => {
 
               {/* Tender Status Distribution */}
               <Card style={{ padding: "20px" }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: "#344054", marginBottom: 18 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#344054", marginBottom: 12 }}>
                   Tender Status Distribution
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                   <PieChart data={TENDER_STATUS_DATA} size={150} donut />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    {TENDER_STATUS_DATA.map(d => (
-                      <div key={d.label} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: d.color, flexShrink: 0 }} />
-                        <span style={{ fontSize: 12, color: "#667085", flex: 1 }}>{d.label}</span>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: "#344054" }}>{d.value}%</span>
-                      </div>
-                    ))}
-                    <div style={{ borderTop: "1px solid #F2F4F7", marginTop: 10, paddingTop: 10, display: "flex", flexWrap: "wrap", gap: "5px 16px" }}>
-                      {TENDER_STATUS_DATA.map(d => (
-                        <span key={d.label} style={{ fontSize: 11, color: "#667085", display: "flex", alignItems: "center", gap: 4 }}>
-                          <span style={{ fontWeight: 700, color: "#344054" }}>{d.count}</span> {d.label.split(" ")[0]}
-                        </span>
-                      ))}
+                </div>
+                <div style={{
+                  display: "grid", gridTemplateColumns: "1fr 1fr",
+                  gap: "6px 24px", marginTop: 16,
+                  borderTop: "1px solid #F2F4F7", paddingTop: 14,
+                }}>
+                  {TENDER_STATUS_DATA.map(d => (
+                    <div key={d.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{
+                        width: 8, height: 8, borderRadius: "50%",
+                        background: d.color, flexShrink: 0,
+                      }} />
+                      <span style={{ fontSize: 12, color: "#344054" }}>
+                        {d.label}: <strong>{d.count}</strong>
+                      </span>
                     </div>
-                  </div>
+                  ))}
                 </div>
               </Card>
 
               {/* Department Workload Distribution */}
               <Card style={{ padding: "20px" }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: "#344054", marginBottom: 18 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#344054", marginBottom: 12 }}>
                   Department Workload Distribution
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                   <PieChart data={DEPT_WORKLOAD_DATA} size={150} />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    {DEPT_WORKLOAD_DATA.map(d => (
-                      <div key={d.label} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: d.color, flexShrink: 0 }} />
-                        <span style={{ fontSize: 12, color: "#667085", flex: 1 }}>{d.label}</span>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: d.color }}>{d.value}%</span>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               </Card>
+
             </div>
           </div>
 

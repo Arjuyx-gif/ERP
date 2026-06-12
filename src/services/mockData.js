@@ -379,8 +379,8 @@ export const DEPT_WORKLOAD_DATA = [
   { label: "Purchase",        value: 32, color: "#2979FF" },
   { label: "SOF Operations",  value: 24, color: "#10B981" },
   { label: "Accounts",        value: 18, color: "#F59E0B" },
-  { label: "Service",         value: 14, color: "#EC4899" },
-  { label: "Sales",           value: 12, color: "#8B5CF6" },
+  { label: "Service",         value: 14, color: "#8B5CF6" },
+  { label: "Sales",           value: 12, color: "#EC4899" },
 ];
 
 export const ACTIVITY_TIMELINE = [
