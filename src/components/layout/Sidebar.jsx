@@ -23,15 +23,15 @@ const Sidebar = () => {
 
   return (
     <div style={{
-      width: 200, flexShrink: 0, background: "#2D3748",
+      width: 200, flexShrink: 0, background: "#101828",
       display: "flex", flexDirection: "column", minHeight: "100vh", fontFamily: "inherit",
     }}>
-
+      
       <div style={{ padding: "20px 16px 16px", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
         <span style={{ color: "#fff", fontWeight: 700, fontSize: 15 }}>ERP System</span>
       </div>
 
-      <div style={{ flex: 1, overflowY: "auto", padding: "8px 0" }}>
+      <div className="no-scrollbar" style={{ flex: 1, overflowY: "auto", padding: "8px 0" }}>
         {SIDEBAR_NAV.map(item => {
           const isActive = !!item.path && item.path === location.pathname;
 

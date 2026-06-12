@@ -1,12 +1,16 @@
 // src/pages/dashboard/MainDashboard.jsx
-import { useState } from "react";
-import { Search, Bell, SlidersHorizontal, ChevronRight } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Search, Bell, SlidersHorizontal, ChevronRight, ChevronDown } from "lucide-react";
+
 import Sidebar from "../../components/layout/Sidebar";
 import DynamicIcon from "../../components/ui/DynamicIcon";
+import NotificationPanel from "../../components/dashboard/NotificationPanel";
 import {
   MAIN_KPI_TOP, MAIN_KPI_BOT, WORKFLOW_PIPELINE,
   PRIORITY_ALERTS, TENDER_STATUS_DATA, DEPT_WORKLOAD_DATA,
   ACTIVITY_TIMELINE, MAIN_NOTIFICATIONS, QUICK_ACCESS,
+  PANEL_NOTIFICATIONS,
 } from "../../services/mockData";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
@@ -69,7 +73,27 @@ const SectionLabel = ({ children }) => (
 
 // ─── Main Dashboard ─────────────────────────────────────────────────────────────
 const MainDashboard = () => {
-  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
+  const [search, setSearch]                       = useState("");
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [dashFilter, setDashFilter]               = useState("All");
+  const [filterOpen, setFilterOpen]               = useState(false);
+  const filterRef                                 = useRef(null);
+
+  const DASH_FILTERS = ["All", "Active", "In Progress", "Delayed", "Pending", "Completed"];
+  const TAG_MAP = { All: "all", Active: "active", "In Progress": "in-progress", Delayed: "delayed", Pending: "pending", Completed: "completed" };
+
+  useEffect(() => {
+    const handler = e => {
+      if (filterRef.current && !filterRef.current.contains(e.target)) setFilterOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const filteredAlerts = dashFilter === "All"
+    ? PRIORITY_ALERTS
+    : PRIORITY_ALERTS.filter(a => a.tag === TAG_MAP[dashFilter]);
 
   return (
     <div style={{
@@ -107,7 +131,7 @@ const MainDashboard = () => {
               }}
             />
           </div>
-          <button style={{
+          <button onClick={() => setShowNotifications(v => !v)} style={{
             background: "#fff", border: "1px solid #EAECF0", borderRadius: 8,
             width: 38, height: 38, display: "flex", alignItems: "center", justifyContent: "center",
             cursor: "pointer", flexShrink: 0, position: "relative",
@@ -119,14 +143,53 @@ const MainDashboard = () => {
               borderRadius: "50%", border: "1.5px solid #fff",
             }} />
           </button>
-          <button style={{
-            background: "#fff", border: "1px solid #EAECF0", borderRadius: 8,
-            padding: "7px 14px", fontSize: 13, color: "#344054", cursor: "pointer",
-            display: "flex", alignItems: "center", gap: 6, fontFamily: FONT, fontWeight: 500,
-            flexShrink: 0,
-          }}>
-            <SlidersHorizontal size={14} color="#667085" /> Filters
-          </button>
+          <div ref={filterRef} style={{ position: "relative", flexShrink: 0 }}>
+            <button
+              onClick={() => setFilterOpen(v => !v)}
+              style={{
+                background: dashFilter !== "All" ? "#EFF6FF" : "#fff",
+                border: `1px solid ${dashFilter !== "All" ? "#2979FF" : "#EAECF0"}`,
+                borderRadius: 8, padding: "7px 14px", fontSize: 13,
+                color: dashFilter !== "All" ? "#2979FF" : "#344054",
+                cursor: "pointer", display: "flex", alignItems: "center", gap: 6,
+                fontFamily: FONT, fontWeight: 500,
+              }}
+            >
+              <SlidersHorizontal size={14} color={dashFilter !== "All" ? "#2979FF" : "#667085"} />
+              {dashFilter === "All" ? "Filters" : dashFilter}
+              <ChevronDown
+                size={13}
+                color={dashFilter !== "All" ? "#2979FF" : "#667085"}
+                style={{ transform: filterOpen ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}
+              />
+            </button>
+
+            {filterOpen && (
+              <div style={{
+                position: "absolute", top: "calc(100% + 6px)", right: 0,
+                background: "#fff", border: "1px solid #E4E7EC", borderRadius: 10,
+                boxShadow: "0 8px 24px rgba(0,0,0,0.12)", zIndex: 100,
+                minWidth: 160, overflow: "hidden",
+              }}>
+                {DASH_FILTERS.map(f => (
+                  <button
+                    key={f}
+                    onClick={() => { setDashFilter(f); setFilterOpen(false); }}
+                    style={{
+                      display: "block", width: "100%", textAlign: "left",
+                      padding: "9px 16px", border: "none",
+                      background: dashFilter === f ? "#2979FF" : "#fff",
+                      color: dashFilter === f ? "#fff" : "#344054",
+                      fontSize: 13, fontWeight: dashFilter === f ? 600 : 400,
+                      cursor: "pointer", fontFamily: FONT,
+                    }}
+                  >
+                    {f}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <div style={{ padding: "24px 28px 36px", display: "flex", flexDirection: "column", gap: 24 }}>
@@ -134,18 +197,24 @@ const MainDashboard = () => {
           {/* ── KPI Row 1 ── */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
             {MAIN_KPI_TOP.map(kpi => (
-              <Card key={kpi.label} style={{ padding: "18px 20px 0", overflow: "hidden" }}>
-                <div style={{ fontSize: 11, color: "#667085", fontWeight: 500, marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                  {kpi.label}
+              <div key={kpi.label} style={{
+                background: kpi.cardBg, borderRadius: 12,
+                border: "1px solid rgba(0,0,0,0.06)",
+                overflow: "hidden", display: "flex", flexDirection: "column",
+              }}>
+                <div style={{ padding: "18px 20px 16px", flex: 1 }}>
+                  <div style={{ fontSize: 12, color: kpi.color, fontWeight: 500, marginBottom: 8, opacity: 0.8 }}>
+                    {kpi.label}
+                  </div>
+                  <div style={{ fontSize: 34, fontWeight: 700, color: kpi.color, lineHeight: 1, marginBottom: 8 }}>
+                    {kpi.value}
+                  </div>
+                  <div style={{ fontSize: 12, color: kpi.color, opacity: 0.55 }}>{kpi.sub}</div>
                 </div>
-                <div style={{ fontSize: 34, fontWeight: 700, color: kpi.color, lineHeight: 1, marginBottom: 6 }}>
-                  {kpi.value}
+                <div style={{ height: 4, background: kpi.barTrack }}>
+                  <div style={{ height: "100%", width: `${kpi.barPct}%`, background: kpi.bar }} />
                 </div>
-                <div style={{ fontSize: 12, color: "#9CA3AF", marginBottom: 16 }}>{kpi.sub}</div>
-                <div style={{ height: 3, background: "#F2F4F7", margin: "0 -20px" }}>
-                  <div style={{ height: "100%", width: `${kpi.barPct}%`, background: kpi.bar, borderRadius: "0 2px 2px 0" }} />
-                </div>
-              </Card>
+              </div>
             ))}
           </div>
 
@@ -155,17 +224,19 @@ const MainDashboard = () => {
               <div key={kpi.label} style={{
                 background: kpi.cardBg, borderRadius: 12,
                 border: "1px solid rgba(0,0,0,0.05)",
-                padding: "18px 20px 0", overflow: "hidden",
+                overflow: "hidden", display: "flex", flexDirection: "column",
               }}>
-                <div style={{ fontSize: 11, color: kpi.color, fontWeight: 600, marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                  {kpi.label}
+                <div style={{ padding: "18px 20px 16px", flex: 1 }}>
+                  <div style={{ fontSize: 12, color: kpi.color, fontWeight: 500, marginBottom: 8, opacity: 0.8 }}>
+                    {kpi.label}
+                  </div>
+                  <div style={{ fontSize: 34, fontWeight: 700, color: kpi.color, lineHeight: 1, marginBottom: 8 }}>
+                    {kpi.value}
+                  </div>
+                  <div style={{ fontSize: 12, color: kpi.color, opacity: 0.55 }}>{kpi.sub}</div>
                 </div>
-                <div style={{ fontSize: 34, fontWeight: 700, color: kpi.color, lineHeight: 1, marginBottom: 6 }}>
-                  {kpi.value}
-                </div>
-                <div style={{ fontSize: 12, color: kpi.color, opacity: 0.6, marginBottom: 16 }}>{kpi.sub}</div>
-                <div style={{ height: 3, background: "rgba(0,0,0,0.08)", margin: "0 -20px" }}>
-                  <div style={{ height: "100%", width: `${kpi.barPct}%`, background: kpi.bar, borderRadius: "0 2px 2px 0" }} />
+                <div style={{ height: 4, background: "rgba(0,0,0,0.08)" }}>
+                  <div style={{ height: "100%", width: `${kpi.barPct}%`, background: kpi.bar }} />
                 </div>
               </div>
             ))}
@@ -177,8 +248,8 @@ const MainDashboard = () => {
             <Card style={{ padding: "18px 20px" }}>
               {/* overflow: hidden on outer clips the shadow; scroll is on inner */}
               <div
-                className="no-scrollbar"
-                style={{ overflowX: "auto", paddingBottom: 2 }}
+                className="thin-scrollbar"
+                style={{ overflowX: "auto", paddingBottom: 6 }}
               >
                 <div style={{ display: "flex", alignItems: "stretch", gap: 0, width: "max-content" }}>
                   {WORKFLOW_PIPELINE.map((stage, i) => (
@@ -227,11 +298,15 @@ const MainDashboard = () => {
           <div>
             <SectionLabel>Priority Alerts</SectionLabel>
             <Card style={{ padding: "4px 20px" }}>
-              {PRIORITY_ALERTS.map((alert, i) => (
+              {filteredAlerts.length === 0 ? (
+                <div style={{ padding: "24px 0", textAlign: "center", color: "#98A2B3", fontSize: 13 }}>
+                  No {dashFilter.toLowerCase()} alerts.
+                </div>
+              ) : filteredAlerts.map((alert, i) => (
                 <div key={i} style={{
                   display: "flex", alignItems: "center", gap: 14,
                   padding: "14px 0",
-                  borderBottom: i < PRIORITY_ALERTS.length - 1 ? "1px solid #F2F4F7" : "none",
+                  borderBottom: i < filteredAlerts.length - 1 ? "1px solid #F2F4F7" : "none",
                 }}>
                   <div style={{
                     width: 36, height: 36, borderRadius: 8, flexShrink: 0,
@@ -388,7 +463,7 @@ const MainDashboard = () => {
             <SectionLabel>Quick Access</SectionLabel>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 12 }}>
               {QUICK_ACCESS.map(item => (
-                <button key={item.label} style={{
+                <button key={item.label} onClick={() => navigate(item.path)} style={{
                   background: "#fff", border: "1px solid #EAECF0", borderRadius: 12,
                   padding: "18px 10px 16px", cursor: "pointer", fontFamily: FONT,
                   display: "flex", flexDirection: "column", alignItems: "center", gap: 10,
@@ -410,6 +485,13 @@ const MainDashboard = () => {
 
         </div>
       </div>
+
+      {showNotifications && (
+        <NotificationPanel
+          notifications={PANEL_NOTIFICATIONS}
+          onClose={() => setShowNotifications(false)}
+        />
+      )}
     </div>
   );
 };

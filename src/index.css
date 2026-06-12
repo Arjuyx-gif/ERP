@@ -34,3 +34,26 @@ button, input, select, textarea {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* Sleek 4px scrollbar — horizontal or vertical */
+.thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E0 transparent;
+}
+.thin-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background: #CBD5E0;
+  border-radius: 4px;
+}
+.thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+.thin-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}

@@ -208,11 +208,48 @@ export const KANBAN_COLUMNS = [
 
 // ─── Notifications ────────────────────────────────────────────────────────────
 export const NOTIFICATIONS = [
-  { id: 1, type: "success", title: "RFP Uploaded (New)",       rfpId: "TND-2026-005", amount: "₹500 Cr", firm: "Firm Name", deadline: "Apr 25, 2026", time: "3h ago", action: "View RFP" },
-  { id: 2, type: "error",   title: "Bid Lost",                 rfpId: "TND-2026-005", amount: "₹5 Cr",   firm: "Firm Name", deadline: "Apr 25, 2026", time: "3h ago", action: "View RFP" },
-  { id: 3, type: "warning", title: "Result Awaited",           rfpId: "TND-2026-005", amount: "₹5 Cr",   firm: "Firm Name", deadline: "Apr 25, 2026", time: "3h ago", action: "Update" },
-  { id: 4, type: "info",    title: "Reminder Pre-Bid Meeting", rfpId: "TND-2026-005", amount: "₹500 Cr", date: "Today", meetTime: "2:00PM", customer: "Customer Name", time: "3h ago", action: "View Link" },
-  { id: 5, type: "info",    title: "Reminder Pre-Bid Meeting", rfpId: "TND-2026-005", amount: "₹500 Cr", date: "Today", meetTime: "2:00PM", customer: "Customer Name", time: "3h ago", action: "View Link" },
+  { id: 1, type: "success", tag: "active", title: "RFP Uploaded (New)",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount",    value: "₹500 Cr" },
+      { label: "Firm",      value: "Firm Name" },
+      { label: "Deadline",  value: "Apr 25, 2026" },
+    ],
+  },
+  { id: 2, type: "alert", tag: "completed", title: "Bid Lost",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount",    value: "₹5 Cr" },
+      { label: "Firm",      value: "Firm Name" },
+      { label: "Deadline",  value: "Apr 25, 2026" },
+    ],
+  },
+  { id: 3, type: "alert", tag: "pending", title: "Result Awaited",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount",    value: "₹5 Cr" },
+      { label: "Firm",      value: "Firm Name" },
+      { label: "Deadline",  value: "Apr 25, 2026" },
+    ],
+  },
+  { id: 4, type: "info", tag: "active", title: "Reminder – Pre-Bid Meeting",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount",    value: "₹500 Cr" },
+      { label: "Date",      value: "Today" },
+      { label: "Time",      value: "2:00 PM" },
+      { label: "Customer",  value: "Customer Name" },
+    ],
+  },
+  { id: 5, type: "info", tag: "active", title: "Reminder – Pre-Bid Meeting",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount",    value: "₹500 Cr" },
+      { label: "Date",      value: "Today" },
+      { label: "Time",      value: "2:00 PM" },
+      { label: "Customer",  value: "Customer Name" },
+    ],
+  },
 ];
 
 // ─── Sidebar Navigation ───────────────────────────────────────────────────────
@@ -227,12 +264,12 @@ export const SIDEBAR_NAV = [
       { label: "SOF" },
     ],
   },
-  { iconName: "users",        label: "Sales Coordinator",  expandable: true },
-  { iconName: "inbox",        label: "Task Inbox",         expandable: true },
-  { iconName: "trending-up",  label: "Tacker",             expandable: true },
-  { iconName: "bar-chart",    label: "Reports" },
-  { iconName: "database",     label: "Master Data" },
-  { iconName: "settings",     label: "Settings" },
+  { iconName: "users",        label: "Sales Coordinator", expandable: true, path: "/sales-coordinator" },
+  { iconName: "inbox",        label: "Task Inbox",        expandable: true, path: "/task-inbox" },
+  { iconName: "trending-up",  label: "Tracker",           expandable: true, path: "/tracker" },
+  { iconName: "bar-chart",    label: "Reports",           path: "/reports" },
+  { iconName: "database",     label: "Master Data",       path: "/master-data" },
+  { iconName: "settings",     label: "Settings",          path: "/settings" },
 ];
 
 // ─── View-All Table Rows (per column) ─────────────────────────────────────────
@@ -298,10 +335,10 @@ export const VIEW_ALL_ROWS = {
 // ─── Main Dashboard Data ───────────────────────────────────────────────────────
 
 export const MAIN_KPI_TOP = [
-  { label: "Active RFPs",         value: 12, sub: "3 closing this week",    color: "#1565C0", bar: "#2979FF", barPct: 75 },
-  { label: "Active SOFs",         value: 24, sub: "5 pending validations",  color: "#0097A7", bar: "#00BCD4", barPct: 60 },
-  { label: "EMD Pending",         value: 3,  sub: "1 awaiting refund",      color: "#E65100", bar: "#FF9800", barPct: 28 },
-  { label: "Active Procurement",  value: 18, sub: "4 delayed",              color: "#2E7D32", bar: "#4CAF50", barPct: 82 },
+  { label: "Active RFPs",        value: 12, sub: "3 closing this week",   cardBg: "#EFF6FF", color: "#1D4ED8", bar: "#3B82F6", barTrack: "#DBEAFE", barPct: 75 },
+  { label: "Active SOFs",        value: 24, sub: "5 pending validations", cardBg: "#F5F3FF", color: "#5B21B6", bar: "#8B5CF6", barTrack: "#EDE9FE", barPct: 60 },
+  { label: "EMD Pending",        value: 3,  sub: "1 awaiting refund",     cardBg: "#FDF4FF", color: "#86198F", bar: "#C026D3", barTrack: "#FAE8FF", barPct: 28 },
+  { label: "Active Procurement", value: 18, sub: "4 delayed",             cardBg: "#F0FDF4", color: "#166534", bar: "#22C55E", barTrack: "#DCFCE7", barPct: 82 },
 ];
 
 export const MAIN_KPI_BOT = [
@@ -323,11 +360,11 @@ export const WORKFLOW_PIPELINE = [
 ];
 
 export const PRIORITY_ALERTS = [
-  { icon: "alert-circle", iconColor: "#EF4444", title: "BG Expiring in 48 hrs",       sub: "ORDER ID ——————————",               days: "2 Days" },
-  { icon: "alert",        iconColor: "#F97316", title: "Query Response Due Today",     sub: "TND-042, TND-041, TND-039",         days: "2 Days" },
-  { icon: "warning",      iconColor: "#F59E0B", title: "Material Delay",               sub: "PO-1245, PO-1238 stuck in transit", days: "7 Days" },
-  { icon: "clock",        iconColor: "#F59E0B", title: "EMD Return Pending",           sub: "4 returns pending",                 days: "3 Days" },
-  { icon: "alert",        iconColor: "#F97316", title: "Vendor Payment Pending",       sub: "3 payments awaiting approval",      days: "3 Days" },
+  { icon: "alert-circle", iconColor: "#EF4444", title: "BG Expiring in 48 hrs",       sub: "ORDER ID ——————————",               days: "2 Days", tag: "delayed"     },
+  { icon: "alert",        iconColor: "#F97316", title: "Query Response Due Today",     sub: "TND-042, TND-041, TND-039",         days: "2 Days", tag: "pending"     },
+  { icon: "warning",      iconColor: "#F59E0B", title: "Material Delay",               sub: "PO-1245, PO-1238 stuck in transit", days: "7 Days", tag: "in-progress" },
+  { icon: "clock",        iconColor: "#F59E0B", title: "EMD Return Pending",           sub: "4 returns pending",                 days: "3 Days", tag: "pending"     },
+  { icon: "alert",        iconColor: "#F97316", title: "Vendor Payment Pending",       sub: "3 payments awaiting approval",      days: "3 Days", tag: "pending"     },
 ];
 
 export const TENDER_STATUS_DATA = [
@@ -362,11 +399,94 @@ export const MAIN_NOTIFICATIONS = [
   { icon: "alert",        iconBg: "#FFF7ED", iconColor: "#F97316", title: "Material Delay",            sub: "ORD-1234 shipment delayed by vendor",      time: "1 days ago"  },
 ];
 
+// ─── Full notification panel data (Main Dashboard bell) ────────────────────────
+export const PANEL_NOTIFICATIONS = [
+  {
+    id: 1, type: "alert", tag: "pending",
+    title: "Query Response Due Today",
+    details: [
+      { label: "Tender IDs", value: "TND-2026-005, TND-2026-007, TND-2026-008" },
+      { label: "Action",     value: "Response submission before 5 PM" },
+      { label: "Priority",   value: "High" },
+      { label: "Firm",       value: "Name" },
+    ],
+  },
+  {
+    id: 2, type: "alert", tag: "delayed",
+    title: "BG Expiring in 3 Days",
+    details: [
+      { label: "Order IDs", value: "ORD-2026-005" },
+      { label: "Action",    value: "Renewal or extension" },
+      { label: "Priority",  value: "High" },
+      { label: "Firm",      value: "Name" },
+    ],
+  },
+  {
+    id: 3, type: "success", tag: "completed",
+    title: "RFP Approved – Notification Sent",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount",    value: "₹500 Cr" },
+      { label: "Deadline",  value: "Apr 25, 2026" },
+      { label: "Firm",      value: "Name" },
+    ],
+  },
+  {
+    id: 4, type: "success", tag: "completed",
+    title: "Bid Result Declared",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Status",    value: "Won" },
+      { label: "Firm",      value: "Name" },
+    ],
+  },
+  {
+    id: 5, type: "alert", tag: "pending",
+    title: "Reminder – EMD Submission",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount",    value: "₹5 Cr" },
+      { label: "Deadline",  value: "Apr 25, 2026" },
+      { label: "Firm",      value: "Name" },
+    ],
+  },
+  {
+    id: 6, type: "info", tag: "pending",
+    title: "Vendor Payment Pending",
+    details: [
+      { label: "Count",      value: "3 payments awaiting approval" },
+      { label: "Department", value: "Accounts" },
+      { label: "Vendor",     value: "Vendor Name" },
+      { label: "Deadline",   value: "Apr 25, 2026" },
+      { label: "Firm",       value: "Name" },
+    ],
+  },
+  {
+    id: 7, type: "info", tag: "active",
+    title: "Pre-Bid Meeting Scheduled",
+    details: [
+      { label: "Tender ID", value: "TND-2026-009" },
+      { label: "Date",      value: "Apr 28, 2026" },
+      { label: "Time",      value: "2:00 PM" },
+      { label: "Firm",      value: "Name" },
+    ],
+  },
+  {
+    id: 8, type: "alert", tag: "in-progress",
+    title: "Material Delay",
+    details: [
+      { label: "Order IDs", value: "PO-1245, PO-1238" },
+      { label: "Action",    value: "Stuck in transit — follow up required" },
+      { label: "Firm",      value: "Name" },
+    ],
+  },
+];
+
 export const QUICK_ACCESS = [
-  { icon: "document",  label: "RFP Tracker",                  color: "#2979FF", bg: "#EFF6FF" },
-  { icon: "inbox",     label: "SOF Dashboard",                color: "#059669", bg: "#ECFDF5" },
-  { icon: "users",     label: "Sales Coordinator Dashboard",  color: "#7C3AED", bg: "#F5F3FF" },
-  { icon: "clipboard", label: "Tracker",                      color: "#EA580C", bg: "#FFF7ED" },
-  { icon: "inbox",     label: "Task Inbox",                   color: "#DC2626", bg: "#FEF2F2" },
-  { icon: "bar-chart", label: "Reports",                      color: "#2563EB", bg: "#EFF6FF" },
+  { icon: "document",  label: "RFP Tracker",                  color: "#2979FF", bg: "#EFF6FF", path: "/rfp-dashboard" },
+  { icon: "inbox",     label: "SOF Dashboard",                color: "#059669", bg: "#ECFDF5", path: "/sof-dashboard" },
+  { icon: "users",     label: "Sales Coordinator Dashboard",  color: "#7C3AED", bg: "#F5F3FF", path: "/sales-coordinator" },
+  { icon: "clipboard", label: "Tracker",                      color: "#EA580C", bg: "#FFF7ED", path: "/tracker" },
+  { icon: "inbox",     label: "Task Inbox",                   color: "#DC2626", bg: "#FEF2F2", path: "/task-inbox" },
+  { icon: "bar-chart", label: "Reports",                      color: "#2563EB", bg: "#EFF6FF", path: "/reports" },
 ];
