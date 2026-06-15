@@ -85,7 +85,7 @@ const ApprovalNotificationModal = ({ card, onClose, onSend, viewMode = false, sa
     </div>
   );
 
-  const ALL_DEPTS = ["Pre-sales", "Sales-coordinator", "Purchase", "Accounts", "HR", "Service", "Legal", "General"];
+  const ALL_DEPTS = ["Pre-sales", "Sales-coordinator", "Purchase", "Accounts", "HR", "Service",];
 
   return (
     <div style={{
