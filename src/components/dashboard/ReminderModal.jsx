@@ -8,7 +8,7 @@ const Modal = ({ modal, onClose }) => {
       position: "fixed", inset: 0, zIndex: 1000,
       display: "flex", alignItems: "center", justifyContent: "center",
     }}>
-      <div onClick={onClose} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.2)" }} />
+      <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.2)" }} />
       <div style={{
         position: "relative", zIndex: 1, background: "#fff", borderRadius: 12,
         padding: "24px 28px 20px", width: 430, maxWidth: "90vw",
