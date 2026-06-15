@@ -27,7 +27,7 @@ const QueryResponseModal = ({ card, onClose }) => {
         style={{
           position: "fixed",
           top: "50%",
-          left: "50%",
+          left: "60%",
           transform: "translate(-50%, -50%)",
           zIndex: 971,
           width: 540,
@@ -83,13 +83,13 @@ const QueryResponseModal = ({ card, onClose }) => {
 
         {/* ── Body ── */}
         <div className="thin-scrollbar" style={{ flex: 1, overflowY: "auto", padding: "22px 28px 10px", display: "flex", flexDirection: "column", gap: 20 }}>
-          
+
           {/* Query Document */}
           <div>
             <label style={{ fontSize: 14, fontWeight: 600, color: "#111827", display: "block", marginBottom: 8 }}>
               Query Document
             </label>
-            <div style={{ 
+            <div style={{
               border: "1px solid #D1D5DB", borderRadius: 8, padding: "16px",
               display: "flex", alignItems: "flex-start", gap: 12, background: "#F9FAFB"
             }}>
