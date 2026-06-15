@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { Bell, Check, X, CheckCircle, AlertCircle, FileText, SlidersHorizontal, ChevronDown } from "lucide-react";
+import { Bell, Check, X, CheckCircle, AlertCircle, FileText, SlidersHorizontal, ChevronDown, Clock, ArrowRight } from "lucide-react";
 
 // ─── Icon config per notification type ────────────────────────────────────────
 const TYPE_STYLE = {
   alert:   { icon: AlertCircle,  iconColor: "#EF4444", iconBg: "#FEF2F2" },
   success: { icon: CheckCircle,  iconColor: "#16A34A", iconBg: "#DCFCE7" },
   info:    { icon: FileText,     iconColor: "#2563EB", iconBg: "#DBEAFE" },
+  warning: { icon: Clock,        iconColor: "#F59E0B", iconBg: "#FEF3C7" },
 };
 
 const FILTERS = ["All", "Active", "In Progress", "Delayed", "Pending", "Completed"];
@@ -169,6 +170,27 @@ const NotificationPanel = ({ notifications = [], onClose }) => {
                         <span style={{ fontWeight: 500 }}>{d.value}</span>
                       </div>
                     ))}
+                  </div>
+
+                  {/* Time & Action Button */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
+                    <div style={{ fontSize: 11, color: "#98A2B3", fontWeight: 500 }}>
+                      {n.time || "Just now"}
+                    </div>
+                    {n.actionText && (
+                      <button style={{
+                        display: "inline-flex", alignItems: "center", gap: 6,
+                        padding: "8px 14px", border: "none", borderRadius: 6,
+                        background: "#000", color: "#fff", fontSize: 12, fontWeight: 500,
+                        cursor: "pointer", fontFamily: "'Inter',system-ui,sans-serif",
+                        transition: "opacity 0.15s"
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
+                      onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+                      >
+                        {n.actionText} <ArrowRight size={14} color="#fff" />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

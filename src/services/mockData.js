@@ -7,22 +7,22 @@
 // ─── Shared base row (mock helper only) ───────────────────────────────────────
 // In production each API response returns complete row objects; BASE_ROW is not needed.
 export const BASE_ROW = {
-  id:       "TND-2026-045",
-  title:    "Tender Title",
+  id: "TND-2026-045",
+  title: "Tender Title",
   customer: "Customer Name",
-  value:    "₹2 Cr.",
+  value: "₹2 Cr.",
   deadline: "25/04/2026",
-  firm:     "Firm Name",
+  firm: "Firm Name",
 };
 
 // ─── KPI Cards ────────────────────────────────────────────────────────────────
 // src/services/mockData.js
 export const KPI_CARDS = [
-  { label: "Total RFPs",       value: 5, iconName: "document", color: "#1565C0", iconBg: "#E3F0FB" },
-  { label: "Awaiting Approval",value: 1, iconName: "timer",    color: "#F5A623", iconBg: "#FFF4E0" },
-  { label: "Submitted",        value: 1, iconName: "tick",     color: "#4CAF50", iconBg: "#E8F5E9" },
-  { label: "Won (L1)",         value: 3, iconName: "trophy",   color: "#4CAF50", iconBg: "#E8F5E9" },
-  { label: "PO - Pending",     value: 1, iconName: "alert",    color: "#FF5722", iconBg: "#FBE9E7" },
+  { label: "Total RFPs", value: 5, iconName: "document", color: "#1565C0", iconBg: "#E3F0FB" },
+  { label: "Awaiting Approval", value: 1, iconName: "timer", color: "#F5A623", iconBg: "#FFF4E0" },
+  { label: "Submitted", value: 1, iconName: "tick", color: "#4CAF50", iconBg: "#E8F5E9" },
+  { label: "Won (L1)", value: 3, iconName: "trophy", color: "#4CAF50", iconBg: "#E8F5E9" },
+  { label: "PO - Pending", value: 1, iconName: "alert", color: "#FF5722", iconBg: "#FBE9E7" },
 ];
 
 // ─── Kanban Columns ───────────────────────────────────────────────────────────
@@ -89,7 +89,7 @@ export const KANBAN_COLUMNS = [
         details: { status: "Docs. Pending", deadline: "Apr 25, 2026" },
         badges: [
           { text: "OEM Docs Pending", color: "#FF9800", bg: "#FFF4E0" },
-          { text: "EMD Pending",      color: "#F44336", bg: "#FBE9E7" },
+          { text: "EMD Pending", color: "#F44336", bg: "#FBE9E7" },
         ],
         action: "Complete Tasks",
       },
@@ -187,7 +187,7 @@ export const KANBAN_COLUMNS = [
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["UVT", "Lost", "NIPL", "Lost"],
         tagColors: {
-          UVT:  "#E3F0FB",
+          UVT: "#E3F0FB",
           NIPL: "#E3F0FB",
           Lost: { bg: "#FBE9E7", color: "#C62828" },
         },
@@ -200,68 +200,65 @@ export const KANBAN_COLUMNS = [
 
 // ─── Notifications ────────────────────────────────────────────────────────────
 export const NOTIFICATIONS = [
-  { id: 1, type: "success", tag: "active", title: "RFP Uploaded (New)",
+  {
+    id: 1, type: "success", tag: "active", title: "RFP Uploaded (New)", time: "3h ago", actionText: "View RFP & Complete Checklist",
     details: [
       { label: "Tender ID", value: "TND-2026-005" },
-      { label: "Amount",    value: "₹500 Cr" },
-      { label: "Firm",      value: "Firm Name" },
-      { label: "Deadline",  value: "Apr 25, 2026" },
+      { label: "Customer", value: "Customer Name" },
+      { label: "Amount", value: "₹500 Cr" },
+      { label: "Firm", value: "Firm Name" },
+      { label: "Deadline", value: "Apr 25, 2026" },
     ],
   },
-  { id: 2, type: "alert", tag: "completed", title: "Bid Lost",
+  {
+    id: 2, type: "info", tag: "pending", title: "OEM Documents Awaited", time: "3h ago", actionText: "View & Complete Docs.",
     details: [
       { label: "Tender ID", value: "TND-2026-005" },
-      { label: "Amount",    value: "₹5 Cr" },
-      { label: "Firm",      value: "Firm Name" },
-      { label: "Deadline",  value: "Apr 25, 2026" },
+      { label: "Customer", value: "Customer Name" },
+      { label: "Amount", value: "₹500 Cr" },
+      { label: "Firm", value: "Firm Name" },
     ],
   },
-  { id: 3, type: "alert", tag: "pending", title: "Result Awaited",
+  {
+    id: 3, type: "alert", tag: "active", title: "Query Response Due Today", time: "3h ago", actionText: "Submit Response",
     details: [
       { label: "Tender ID", value: "TND-2026-005" },
-      { label: "Amount",    value: "₹5 Cr" },
-      { label: "Firm",      value: "Firm Name" },
-      { label: "Deadline",  value: "Apr 25, 2026" },
+      { label: "Amount", value: "₹5 Cr" },
+      { label: "Firm", value: "Firm Name" },
+      { label: "Deadline", value: "Apr 25, 2026" },
     ],
   },
-  { id: 4, type: "info", tag: "active", title: "Reminder – Pre-Bid Meeting",
+  {
+    id: 4, type: "warning", tag: "pending", title: "Bid Submission Tomorrow", time: "3h ago", actionText: "Check Docs.",
     details: [
       { label: "Tender ID", value: "TND-2026-005" },
-      { label: "Amount",    value: "₹500 Cr" },
-      { label: "Date",      value: "Today" },
-      { label: "Time",      value: "2:00 PM" },
-      { label: "Customer",  value: "Customer Name" },
-    ],
-  },
-  { id: 5, type: "info", tag: "active", title: "Reminder – Pre-Bid Meeting",
-    details: [
-      { label: "Tender ID", value: "TND-2026-005" },
-      { label: "Amount",    value: "₹500 Cr" },
-      { label: "Date",      value: "Today" },
-      { label: "Time",      value: "2:00 PM" },
-      { label: "Customer",  value: "Customer Name" },
+      { label: "Amount", value: "₹5 Cr" },
+      { label: "Firm", value: "Firm Name" },
+      { label: "Documents", value: "Completed" },
+      { label: "Deadline", value: "Apr 25, 2026" },
     ],
   },
 ];
 
 // ─── Sidebar Navigation ───────────────────────────────────────────────────────
 export const SIDEBAR_NAV = [
-  { iconName: "dashboard",    label: "Dashboard",          path: "/dashboard" },
-  { iconName: "clipboard",    label: "Sales & Pre-sales",  expandable: true,
+  { iconName: "dashboard", label: "Dashboard", path: "/dashboard" },
+  {
+    iconName: "clipboard", label: "Sales & Pre-sales", expandable: true,
     children: [
-      { label: "RFP Dashboard",       path: "/rfp-dashboard" },
+      { label: "RFP Dashboard", path: "/rfp-dashboard" },
       { label: "RFP Analysis Form" },
       { label: "Pre-sales Checklist" },
       { label: "Comparison Sheet" },
       { label: "SOF" },
     ],
   },
-  { iconName: "users",        label: "Sales Coordinator", expandable: true, path: "/sales-coordinator" },
-  { iconName: "inbox",        label: "Task Inbox",        expandable: true, path: "/task-inbox" },
-  { iconName: "trending-up",  label: "Tracker",           expandable: true, path: "/tracker" },
-  { iconName: "bar-chart",    label: "Reports",           path: "/reports" },
-  { iconName: "database",     label: "Master Data",       path: "/master-data" },
-  { iconName: "settings",     label: "Settings",          path: "/settings" },
+  { iconName: "users", label: "Sales Coordinator", expandable: true, path: "/sales-coordinator" },
+  { iconName: "inbox", label: "Task Inbox", expandable: true, path: "/task-inbox" },
+  { iconName: "trending-up", label: "Tracker", expandable: true, path: "/tracker" },
+  { iconName: "bar-chart", label: "Reports", path: "/reports" },
+  { iconName: "database", label: "Master Data", path: "/master-data" },
+  { iconName: "settings", label: "Settings", path: "/settings" },
 ];
 
 // ─── View-All Table Rows (per column) ─────────────────────────────────────────
@@ -274,15 +271,15 @@ const r = extra => ({ ...BASE_ROW, ...extra });
 
 export const VIEW_ALL_ROWS = {
   rfp_analysis: [
-    r({ preBidDate: "Today",       preBidTime: "2:00 P.M", venue: "Venue", variant: "warning" }),
-    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue" }),
-    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue" }),
-    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue" }),
-    r({ preBidDate: "Date",        preBidTime: "Time",     venue: "Venue" }),
+    r({ preBidDate: "Today", preBidTime: "2:00 P.M", venue: "Venue", variant: "warning" }),
+    r({ preBidDate: "Date", preBidTime: "Time", venue: "Venue" }),
+    r({ preBidDate: "Date", preBidTime: "Time", venue: "Venue" }),
+    r({ preBidDate: "Date", preBidTime: "Time", venue: "Venue" }),
+    r({ preBidDate: "Date", preBidTime: "Time", venue: "Venue" }),
   ],
   awaiting_approval: [
     r({ status: "Approved", variant: "success" }),
-    r({ status: "Pending",  variant: "default" }),
+    r({ status: "Pending", variant: "default" }),
     r({ status: "Rejected", variant: "error" }),
   ],
   alert_notify: [
@@ -292,103 +289,103 @@ export const VIEW_ALL_ROWS = {
   ],
   approved: [
     r({ status: "In Progress", documents: "OEM + EMD", actionLabel: "Complete Tasks", actionIcon: "file" }),
-    r({ status: "Completed",   documents: "OEM + EMD", actionLabel: "View Docs",      actionIcon: "file" }),
+    r({ status: "Completed", documents: "OEM + EMD", actionLabel: "View Docs", actionIcon: "file" }),
   ],
   bid_submitted: [
     r({ status: "Bid Submitted - Date" }),
     r({ status: "Bid Submitted - Date" }),
   ],
   query_response: [
-    r({ dueDate: "25/04/2026", dueTime: "Time", status: "Pending",   actionLabel: "Complete Tasks" }),
-    r({ dueDate: "25/04/2026", dueTime: "Time", status: "Pending",   actionLabel: "Complete Tasks" }),
+    r({ dueDate: "25/04/2026", dueTime: "Time", status: "Pending", actionLabel: "Complete Tasks" }),
+    r({ dueDate: "25/04/2026", dueTime: "Time", status: "Pending", actionLabel: "Complete Tasks" }),
     r({ dueDate: "25/04/2026", dueTime: "Time", status: "Completed", actionLabel: "View File" }),
   ],
   result_awaited: [
     r({ dateSubmitted: "25/04/2026", status: "Pending", resultType: "confirm" }),
     r({ dateSubmitted: "25/04/2026", status: "Pending", resultType: "confirm" }),
-    r({ dateSubmitted: "25/04/2026", status: "-",       resultType: "won",    variant: "success" }),
+    r({ dateSubmitted: "25/04/2026", status: "-", resultType: "won", variant: "success" }),
   ],
   won: [
     r({ status: "PO Received", actionLabel: "View PDF", variant: "success" }),
-    r({ status: "Pending",     actionLabel: "View PDF" }),
-    r({ status: "Canceled",    actionLabel: null }),
+    r({ status: "Pending", actionLabel: "View PDF" }),
+    r({ status: "Canceled", actionLabel: null }),
   ],
   po_received: [
-    r({ status: "Pending",     actionLabel: "Upload PO + Additional", actionIcon: "upload" }),
-    r({ status: "Pending",     actionLabel: "Upload PO + Additional", actionIcon: "upload" }),
-    r({ status: "PO Received", actionLabel: "View PO + Additional",   actionIcon: "eye",    variant: "success" }),
+    r({ status: "Pending", actionLabel: "Upload PO + Additional", actionIcon: "upload" }),
+    r({ status: "Pending", actionLabel: "Upload PO + Additional", actionIcon: "upload" }),
+    r({ status: "PO Received", actionLabel: "View PO + Additional", actionIcon: "eye", variant: "success" }),
   ],
   lost: [
-    r({ status: "Pending",             action1: "Notify for EMD Return", action1Icon: "arrow-up-right", action2: "Complete Comparison Sheet", action2Icon: "file" }),
-    r({ status: "EMD Return Received", action1: "View Docs",             action1Icon: "eye",            action2: "View Comparison Sheet",     action2Icon: "eye"  }),
+    r({ status: "Pending", action1: "Notify for EMD Return", action1Icon: "arrow-up-right", action2: "Complete Comparison Sheet", action2Icon: "file" }),
+    r({ status: "EMD Return Received", action1: "View Docs", action1Icon: "eye", action2: "View Comparison Sheet", action2Icon: "eye" }),
   ],
 };
 
 // ─── Main Dashboard Data ───────────────────────────────────────────────────────
 
 export const MAIN_KPI_TOP = [
-  { label: "Active RFPs",        value: 12, sub: "3 closing this week",   cardBg: "#EFF6FF", color: "#1D4ED8", bar: "#3B82F6", barTrack: "#DBEAFE", barPct: 75 },
-  { label: "Active SOFs",        value: 24, sub: "5 pending validations", cardBg: "#F5F3FF", color: "#5B21B6", bar: "#8B5CF6", barTrack: "#EDE9FE", barPct: 60 },
-  { label: "EMD Pending",        value: 3,  sub: "1 awaiting refund",     cardBg: "#FDF4FF", color: "#86198F", bar: "#C026D3", barTrack: "#FAE8FF", barPct: 28 },
-  { label: "Active Procurement", value: 18, sub: "4 delayed",             cardBg: "#F0FDF4", color: "#166534", bar: "#22C55E", barTrack: "#DCFCE7", barPct: 82 },
+  { label: "Active RFPs", value: 12, sub: "3 closing this week", cardBg: "#EFF6FF", color: "#1D4ED8", bar: "#3B82F6", barTrack: "#DBEAFE", barPct: 75 },
+  { label: "Active SOFs", value: 24, sub: "5 pending validations", cardBg: "#F5F3FF", color: "#5B21B6", bar: "#8B5CF6", barTrack: "#EDE9FE", barPct: 60 },
+  { label: "EMD Pending", value: 3, sub: "1 awaiting refund", cardBg: "#FDF4FF", color: "#86198F", bar: "#C026D3", barTrack: "#FAE8FF", barPct: 28 },
+  { label: "Active Procurement", value: 18, sub: "4 delayed", cardBg: "#F0FDF4", color: "#166534", bar: "#22C55E", barTrack: "#DCFCE7", barPct: 82 },
 ];
 
 export const MAIN_KPI_BOT = [
-  { label: "Delayed Orders",        value: 6,  sub: "3 vendor delays",   cardBg: "#FFFBEB", color: "#92400E", bar: "#F59E0B", barPct: 45 },
-  { label: "Installation Scheduled",value: 14, sub: "4 this week",       cardBg: "#F0FDF4", color: "#166534", bar: "#22C55E", barPct: 68 },
-  { label: "Pending Invoices",      value: 9,  sub: "3 overdue",         cardBg: "#FAF5FF", color: "#6B21A8", bar: "#A855F7", barPct: 55 },
+  { label: "Delayed Orders", value: 6, sub: "3 vendor delays", cardBg: "#FFFBEB", color: "#92400E", bar: "#F59E0B", barPct: 45 },
+  { label: "Installation Scheduled", value: 14, sub: "4 this week", cardBg: "#F0FDF4", color: "#166534", bar: "#22C55E", barPct: 68 },
+  { label: "Pending Invoices", value: 9, sub: "3 overdue", cardBg: "#FAF5FF", color: "#6B21A8", bar: "#A855F7", barPct: 55 },
 ];
 
 export const WORKFLOW_PIPELINE = [
-  { label: "RFP",           active: 12, delayed: 2 },
-  { label: "Bid Submitted", active: 8,  delayed: 1 },
-  { label: "PO Received",   active: 15, delayed: null, cancelled: 1 },
-  { label: "SOF Validation",active: 12, delayed: 3 },
-  { label: "Procurement",   active: 12, delayed: 4 },
-  { label: "Dispatch",      active: 14, delayed: 2 },
-  { label: "Billing",       active: 9,  delayed: 1 },
-  { label: "Installation",  active: 6 },
-  { label: "Completion",    active: 22 },
+  { label: "RFP", active: 12, delayed: 2 },
+  { label: "Bid Submitted", active: 8, delayed: 1 },
+  { label: "PO Received", active: 15, delayed: null, cancelled: 1 },
+  { label: "SOF Validation", active: 12, delayed: 3 },
+  { label: "Procurement", active: 12, delayed: 4 },
+  { label: "Dispatch", active: 14, delayed: 2 },
+  { label: "Billing", active: 9, delayed: 1 },
+  { label: "Installation", active: 6 },
+  { label: "Completion", active: 22 },
 ];
 
 export const PRIORITY_ALERTS = [
-  { icon: "alert-circle", iconColor: "#EF4444", title: "BG Expiring in 48 hrs",       sub: "ORDER ID ——————————",               days: "2 Days", tag: "delayed"     },
-  { icon: "alert",        iconColor: "#F97316", title: "Query Response Due Today",     sub: "TND-042, TND-041, TND-039",         days: "2 Days", tag: "pending"     },
-  { icon: "warning",      iconColor: "#F59E0B", title: "Material Delay",               sub: "PO-1245, PO-1238 stuck in transit", days: "7 Days", tag: "in-progress" },
-  { icon: "clock",        iconColor: "#F59E0B", title: "EMD Return Pending",           sub: "4 returns pending",                 days: "3 Days", tag: "pending"     },
-  { icon: "alert",        iconColor: "#F97316", title: "Vendor Payment Pending",       sub: "3 payments awaiting approval",      days: "3 Days", tag: "pending"     },
+  { icon: "alert-circle", iconColor: "#EF4444", title: "BG Expiring in 48 hrs", sub: "ORDER ID ——————————", days: "2 Days", tag: "delayed" },
+  { icon: "alert", iconColor: "#F97316", title: "Query Response Due Today", sub: "TND-042, TND-041, TND-039", days: "2 Days", tag: "pending" },
+  { icon: "warning", iconColor: "#F59E0B", title: "Material Delay", sub: "PO-1245, PO-1238 stuck in transit", days: "7 Days", tag: "in-progress" },
+  { icon: "clock", iconColor: "#F59E0B", title: "EMD Return Pending", sub: "4 returns pending", days: "3 Days", tag: "pending" },
+  { icon: "alert", iconColor: "#F97316", title: "Vendor Payment Pending", sub: "3 payments awaiting approval", days: "3 Days", tag: "pending" },
 ];
 
 export const TENDER_STATUS_DATA = [
-  { label: "Active",           value: 27, color: "#2979FF", count: 24 },
-  { label: "Awarded",          value: 34, color: "#10B981", count: 31 },
+  { label: "Active", value: 27, color: "#2979FF", count: 24 },
+  { label: "Awarded", value: 34, color: "#10B981", count: 31 },
   { label: "Under Evaluation", value: 18, color: "#F59E0B", count: 16 },
-  { label: "Delayed",          value: 6,  color: "#EF4444", count: 5  },
-  { label: "Lost",             value: 16, color: "#9CA3AF", count: 14 },
+  { label: "Delayed", value: 6, color: "#EF4444", count: 5 },
+  { label: "Lost", value: 16, color: "#9CA3AF", count: 14 },
 ];
 
 export const DEPT_WORKLOAD_DATA = [
-  { label: "Purchase",        value: 32, color: "#2979FF" },
-  { label: "SOF Operations",  value: 24, color: "#10B981" },
-  { label: "Accounts",        value: 18, color: "#F59E0B" },
-  { label: "Service",         value: 14, color: "#8B5CF6" },
-  { label: "Sales",           value: 12, color: "#EC4899" },
+  { label: "Purchase", value: 32, color: "#2979FF" },
+  { label: "SOF Operations", value: 24, color: "#10B981" },
+  { label: "Accounts", value: 18, color: "#F59E0B" },
+  { label: "Service", value: 14, color: "#8B5CF6" },
+  { label: "Sales", value: 12, color: "#EC4899" },
 ];
 
 export const ACTIVITY_TIMELINE = [
-  { icon: "tick",        iconColor: "#10B981", title: "RFP Approved",      id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
-  { icon: "tick",        iconColor: "#10B981", title: "EMD Submitted",     id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
-  { icon: "alert-circle",iconColor: "#2979FF", title: "Query Raised",      id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
-  { icon: "document",    iconColor: "#6B7280", title: "Bid Submitted",     id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
-  { icon: "tick",        iconColor: "#10B981", title: "Material Received", id: "ORD-045", meta: "Person/ Dept Name", time: "2 min ago" },
-  { icon: "tick",        iconColor: "#10B981", title: "Billing Done",      id: "ORD-045", meta: "Person/ Dept Name", time: "2 min ago" },
+  { icon: "tick", iconColor: "#10B981", title: "RFP Approved", id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
+  { icon: "tick", iconColor: "#10B981", title: "EMD Submitted", id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
+  { icon: "alert-circle", iconColor: "#2979FF", title: "Query Raised", id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
+  { icon: "document", iconColor: "#6B7280", title: "Bid Submitted", id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
+  { icon: "tick", iconColor: "#10B981", title: "Material Received", id: "ORD-045", meta: "Person/ Dept Name", time: "2 min ago" },
+  { icon: "tick", iconColor: "#10B981", title: "Billing Done", id: "ORD-045", meta: "Person/ Dept Name", time: "2 min ago" },
 ];
 
 export const MAIN_NOTIFICATIONS = [
   { icon: "alert-circle", iconBg: "#FEF2F2", iconColor: "#EF4444", title: "Query Response Due Today", sub: "TND-038 requires response before 5 PM", time: "2 hours left" },
-  { icon: "warning",      iconBg: "#FFFBEB", iconColor: "#F59E0B", title: "BG Expiring in 3 Days",    sub: "2 Bank Guarantees are Expiring",          time: "2 hours left" },
-  { icon: "alert",        iconBg: "#FFF7ED", iconColor: "#F97316", title: "SOF Pending",               sub: "5 SOF Pending to be completed",            time: "2 days ago"  },
-  { icon: "alert",        iconBg: "#FFF7ED", iconColor: "#F97316", title: "Material Delay",            sub: "ORD-1234 shipment delayed by vendor",      time: "1 days ago"  },
+  { icon: "warning", iconBg: "#FFFBEB", iconColor: "#F59E0B", title: "BG Expiring in 3 Days", sub: "2 Bank Guarantees are Expiring", time: "2 hours left" },
+  { icon: "alert", iconBg: "#FFF7ED", iconColor: "#F97316", title: "SOF Pending", sub: "5 SOF Pending to be completed", time: "2 days ago" },
+  { icon: "alert", iconBg: "#FFF7ED", iconColor: "#F97316", title: "Material Delay", sub: "ORD-1234 shipment delayed by vendor", time: "1 days ago" },
 ];
 
 // ─── Full notification panel data (Main Dashboard bell) ────────────────────────
@@ -398,9 +395,9 @@ export const PANEL_NOTIFICATIONS = [
     title: "Query Response Due Today",
     details: [
       { label: "Tender IDs", value: "TND-2026-005, TND-2026-007, TND-2026-008" },
-      { label: "Action",     value: "Response submission before 5 PM" },
-      { label: "Priority",   value: "High" },
-      { label: "Firm",       value: "Name" },
+      { label: "Action", value: "Response submission before 5 PM" },
+      { label: "Priority", value: "High" },
+      { label: "Firm", value: "Name" },
     ],
   },
   {
@@ -408,9 +405,9 @@ export const PANEL_NOTIFICATIONS = [
     title: "BG Expiring in 3 Days",
     details: [
       { label: "Order IDs", value: "ORD-2026-005" },
-      { label: "Action",    value: "Renewal or extension" },
-      { label: "Priority",  value: "High" },
-      { label: "Firm",      value: "Name" },
+      { label: "Action", value: "Renewal or extension" },
+      { label: "Priority", value: "High" },
+      { label: "Firm", value: "Name" },
     ],
   },
   {
@@ -418,9 +415,9 @@ export const PANEL_NOTIFICATIONS = [
     title: "RFP Approved – Notification Sent",
     details: [
       { label: "Tender ID", value: "TND-2026-005" },
-      { label: "Amount",    value: "₹500 Cr" },
-      { label: "Deadline",  value: "Apr 25, 2026" },
-      { label: "Firm",      value: "Name" },
+      { label: "Amount", value: "₹500 Cr" },
+      { label: "Deadline", value: "Apr 25, 2026" },
+      { label: "Firm", value: "Name" },
     ],
   },
   {
@@ -428,8 +425,8 @@ export const PANEL_NOTIFICATIONS = [
     title: "Bid Result Declared",
     details: [
       { label: "Tender ID", value: "TND-2026-005" },
-      { label: "Status",    value: "Won" },
-      { label: "Firm",      value: "Name" },
+      { label: "Status", value: "Won" },
+      { label: "Firm", value: "Name" },
     ],
   },
   {
@@ -437,20 +434,20 @@ export const PANEL_NOTIFICATIONS = [
     title: "Reminder – EMD Submission",
     details: [
       { label: "Tender ID", value: "TND-2026-005" },
-      { label: "Amount",    value: "₹5 Cr" },
-      { label: "Deadline",  value: "Apr 25, 2026" },
-      { label: "Firm",      value: "Name" },
+      { label: "Amount", value: "₹5 Cr" },
+      { label: "Deadline", value: "Apr 25, 2026" },
+      { label: "Firm", value: "Name" },
     ],
   },
   {
     id: 6, type: "info", tag: "pending",
     title: "Vendor Payment Pending",
     details: [
-      { label: "Count",      value: "3 payments awaiting approval" },
+      { label: "Count", value: "3 payments awaiting approval" },
       { label: "Department", value: "Accounts" },
-      { label: "Vendor",     value: "Vendor Name" },
-      { label: "Deadline",   value: "Apr 25, 2026" },
-      { label: "Firm",       value: "Name" },
+      { label: "Vendor", value: "Vendor Name" },
+      { label: "Deadline", value: "Apr 25, 2026" },
+      { label: "Firm", value: "Name" },
     ],
   },
   {
@@ -458,9 +455,9 @@ export const PANEL_NOTIFICATIONS = [
     title: "Pre-Bid Meeting Scheduled",
     details: [
       { label: "Tender ID", value: "TND-2026-009" },
-      { label: "Date",      value: "Apr 28, 2026" },
-      { label: "Time",      value: "2:00 PM" },
-      { label: "Firm",      value: "Name" },
+      { label: "Date", value: "Apr 28, 2026" },
+      { label: "Time", value: "2:00 PM" },
+      { label: "Firm", value: "Name" },
     ],
   },
   {
@@ -468,8 +465,8 @@ export const PANEL_NOTIFICATIONS = [
     title: "Material Delay",
     details: [
       { label: "Order IDs", value: "PO-1245, PO-1238" },
-      { label: "Action",    value: "Stuck in transit — follow up required" },
-      { label: "Firm",      value: "Name" },
+      { label: "Action", value: "Stuck in transit — follow up required" },
+      { label: "Firm", value: "Name" },
     ],
   },
 ];
@@ -477,20 +474,20 @@ export const PANEL_NOTIFICATIONS = [
 // ─── Task Dashboard Table ─────────────────────────────────────────────────────
 // highlight: null | "yellow" | "green"
 export const TASK_TABLE_ROWS = [
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null   },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null },
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: "yellow" },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: "green"  },
-  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null   },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null   },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null   },
-  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null   },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: "green" },
+  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null },
+  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null },
 ];
 
 export const QUICK_ACCESS = [
-  { icon: "document",  label: "RFP Tracker",                  color: "#2979FF", bg: "#EFF6FF", path: "/rfp-dashboard" },
-  { icon: "inbox",     label: "SOF Dashboard",                color: "#059669", bg: "#ECFDF5", path: "/sof-dashboard" },
-  { icon: "users",     label: "Sales Coordinator Dashboard",  color: "#7C3AED", bg: "#F5F3FF", path: "/sales-coordinator" },
-  { icon: "clipboard", label: "Tracker",                      color: "#EA580C", bg: "#FFF7ED", path: "/tracker" },
-  { icon: "inbox",     label: "Task Inbox",                   color: "#DC2626", bg: "#FEF2F2", path: "/task-inbox" },
-  { icon: "bar-chart", label: "Reports",                      color: "#2563EB", bg: "#EFF6FF", path: "/reports" },
+  { icon: "document", label: "RFP Tracker", color: "#2979FF", bg: "#EFF6FF", path: "/rfp-dashboard" },
+  { icon: "inbox", label: "SOF Dashboard", color: "#059669", bg: "#ECFDF5", path: "/sof-dashboard" },
+  { icon: "users", label: "Sales Coordinator Dashboard", color: "#7C3AED", bg: "#F5F3FF", path: "/sales-coordinator" },
+  { icon: "clipboard", label: "Tracker", color: "#EA580C", bg: "#FFF7ED", path: "/tracker" },
+  { icon: "inbox", label: "Task Inbox", color: "#DC2626", bg: "#FEF2F2", path: "/task-inbox" },
+  { icon: "bar-chart", label: "Reports", color: "#2563EB", bg: "#EFF6FF", path: "/reports" },
 ];
