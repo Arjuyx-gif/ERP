@@ -222,9 +222,11 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
   const formRef = useRef(null);
   const [showRejectModal,   setShowRejectModal]   = useState(false);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
+  const [showViewModal,     setShowViewModal]     = useState(false);
 
   useEffect(() => {
     setShowApprovalModal(card?.action === "Send Notification");
+    setShowViewModal(!!(card?.action === "View" && card?.notificationSections?.length));
   }, [card]);
 
   if (!card) return null;
@@ -507,11 +509,20 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
         <ApprovalNotificationModal
           card={card}
           onClose={() => { setShowApprovalModal(false); onClose?.(); }}
-          onSend={checkedDepts => {
+          onSend={(checkedDepts, sections) => {
             setShowApprovalModal(false);
-            onSendNotification?.(card, checkedDepts);
+            onSendNotification?.(card, checkedDepts, sections);
             onClose?.();
           }}
+        />
+      )}
+
+      {showViewModal && (
+        <ApprovalNotificationModal
+          card={card}
+          viewMode
+          savedSections={card.notificationSections}
+          onClose={() => { setShowViewModal(false); onClose?.(); }}
         />
       )}
     </>

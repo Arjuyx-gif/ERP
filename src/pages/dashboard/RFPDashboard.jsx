@@ -68,7 +68,7 @@ const RFPDashboard = () => {
     }
   };
 
-  const handleSendNotification = (card, checkedDepts) => {
+  const handleSendNotification = (card, checkedDepts, notificationSections) => {
     setColumns(cols => cols.map(col => ({
       ...col,
       cards: col.cards.flatMap(c => {
@@ -78,11 +78,9 @@ const RFPDashboard = () => {
             notifyList: checkedDepts,
             checkedNotify: checkedDepts,
             action: "View",
+            notificationSections,
           };
-          const originalCard = {
-            ...c,
-            checkedNotify: [],
-          };
+          const originalCard = { ...c, checkedNotify: [] };
           return [originalCard, sentCard];
         }
         return [c];

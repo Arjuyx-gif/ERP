@@ -3,7 +3,7 @@ import { X, Plus, Send, Trash2 } from "lucide-react";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
-const ApprovalNotificationModal = ({ card, onClose, onSend }) => {
+const ApprovalNotificationModal = ({ card, onClose, onSend, viewMode = false, savedSections = [] }) => {
   const initialSections = (card.checkedNotify && card.checkedNotify.length > 0)
     ? card.checkedNotify.map((name, i) => ({ id: Date.now() + i, name, remark: "" }))
     : [{ id: 1, name: "", remark: "" }];
@@ -16,8 +16,74 @@ const ApprovalNotificationModal = ({ card, onClose, onSend }) => {
 
   const handleSend = () => {
     const notified = sections.map(s => s.name.trim()).filter(Boolean);
-    onSend(notified);
+    onSend(notified, sections);
   };
+
+  // ── Read-only view shown when clicking "View" on a post-send card ────────────
+  if (viewMode) return (
+    <div style={{
+      position: "fixed", top: 0, right: 0, bottom: 0, width: "68%",
+      zIndex: 975,
+      display: "flex", alignItems: "center", justifyContent: "center",
+      background: "rgba(0,0,0,0.30)",
+    }}>
+      <div style={{
+        background: "#fff", borderRadius: 16, width: 490,
+        boxShadow: "0 12px 48px rgba(0,0,0,0.18)",
+        fontFamily: FONT, overflow: "hidden",
+        maxHeight: "88vh", display: "flex", flexDirection: "column",
+      }}>
+        <div style={{ padding: "18px 22px 14px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <span style={{ fontSize: 16, fontWeight: 700, color: "#101828" }}>Approval Notification</span>
+          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "#667085", padding: 4, borderRadius: 6, display: "flex" }}>
+            <X size={17} />
+          </button>
+        </div>
+        <div style={{ padding: "0 22px 14px" }}>
+          <div style={{ fontSize: 13, color: "#344054", marginBottom: 4 }}>
+            <span style={{ color: "#667085" }}>Tender ID: </span><strong>{card.id}</strong>
+            <span style={{ marginLeft: 20, color: "#667085" }}>Customer: </span><strong>{card.customer || "Customer Name"}</strong>
+          </div>
+          <div style={{ fontSize: 13, color: "#344054" }}>
+            <span style={{ color: "#667085" }}>Firm Name: </span><strong>{card.tags?.join(" , ") || "—"}</strong>
+          </div>
+        </div>
+        <div style={{ borderTop: "1px solid #EAECF0" }} />
+        <div style={{ padding: "16px 22px", overflowY: "auto", flex: 1, display: "flex", flexDirection: "column", gap: 16 }}>
+          {savedSections.map((s, i) => (
+            <div key={i}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: "#344054", marginBottom: 8 }}>
+                Remarks - {s.name || "dept name"}
+              </div>
+              <textarea
+                rows={4}
+                readOnly
+                value={s.remark}
+                style={{
+                  width: "100%", border: "1.5px solid #E5E7EB", borderRadius: 12,
+                  padding: "12px 14px", fontSize: 13, color: "#374151", fontFamily: FONT,
+                  boxSizing: "border-box", outline: "none", background: "#F3F4F6",
+                  resize: "none", lineHeight: 1.6, cursor: "default",
+                }}
+              />
+            </div>
+          ))}
+        </div>
+        <div style={{ padding: "14px 22px 20px", borderTop: "1px solid #EAECF0" }}>
+          <button
+            onClick={onClose}
+            style={{
+              width: "100%", padding: "11px 0", border: "1px solid #D1D5DB",
+              borderRadius: 10, background: "#fff", fontSize: 14, fontWeight: 500,
+              color: "#344054", cursor: "pointer", fontFamily: FONT,
+            }}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   const ALL_DEPTS = ["Pre-sales", "Sales-coordinator", "Purchase", "Accounts", "HR", "Service", "Legal", "General"];
 
