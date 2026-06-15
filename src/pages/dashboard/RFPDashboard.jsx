@@ -133,7 +133,6 @@ const RFPDashboard = () => {
     </div>
   );
 
-  // ── Board shared between normal and fullscreen views ─────────────────────────
   const board = <KanbanBoard columns={columns} onViewAll={setViewAllCol} onViewRFP={setViewRFPCard} />;
 
   return (

@@ -1,0 +1,827 @@
+import { useState, useRef } from "react";
+import { X, Paperclip, ChevronRight, FileText, Trash2, ChevronLeft } from "lucide-react";
+
+const FONT = "'Inter','Segoe UI',sans-serif";
+
+// ─── OEM Docs Table Data ───────────────────────────────────────────────────────
+const OEM_DOCS_COLUMNS = [
+  "S.No",
+  "Firm Name",
+  "OEM",
+  "Product",
+  "BOQ",
+  "Tender ID / Submission Details / EMD / MOC",
+  "Invoice Value",
+  "OEM Status",
+  "OEM Certificate / Authorization",
+  "OEM Compliance Statement",
+  "Product Spec / Data Sheet",
+  "License / Subscription Details",
+  "OEM Support / Warranty / SLA Letter",
+  "OEM BOM (Bill of Materials)",
+  "Factory Acceptance Test (FAT) Certificate",
+  "Country of Origin / Make in India Certificate",
+  "Compliance / Undertaking",
+  "Additional OEM Documents / Remarks",
+];
+
+const OEM_DOCS_ROWS = [
+  {
+    sno: "1",
+    firm: "CIPL",
+    oem: "OEM Name",
+    product: "Product A",
+    boq: "Ref",
+    tender: "TND-2026-045 / Details / ₹5L / MOC",
+    invoice: "₹15,00,000",
+    status: "Submitted",
+    certificate: "✓",
+    compliance: "✓",
+    spec: "✓",
+    license: "N/A",
+    support: "✓",
+    bom: "✓",
+    fat: "Pending",
+    origin: "✓",
+    undertaking: "✓",
+    additional: "—",
+  },
+  {
+    sno: "2",
+    firm: "UVT",
+    oem: "OEM Name",
+    product: "Product B",
+    boq: "Ref",
+    tender: "TND-2026-045 / Details / ₹3L / MOC",
+    invoice: "₹8,50,000",
+    status: "Pending",
+    certificate: "Pending",
+    compliance: "Pending",
+    spec: "✓",
+    license: "✓",
+    support: "Pending",
+    bom: "✓",
+    fat: "N/A",
+    origin: "✓",
+    undertaking: "Pending",
+    additional: "Follow up required",
+  },
+];
+
+// ─── OEM Docs Full-Screen View ─────────────────────────────────────────────────
+const OEMDocsView = ({ onBack }) => {
+  const thStyle = {
+    padding: "10px 14px",
+    fontSize: 10.5,
+    fontWeight: 700,
+    letterSpacing: "0.04em",
+    textTransform: "uppercase",
+    color: "#6B7280",
+    background: "#F8FAFC",
+    borderBottom: "2px solid #E5E7EB",
+    whiteSpace: "nowrap",
+    textAlign: "left",
+    position: "sticky",
+    top: 0,
+    zIndex: 2,
+    minWidth: 100,
+  };
+
+  const tdStyle = (isEven) => ({
+    padding: "10px 14px",
+    fontSize: 12,
+    color: "#374151",
+    borderBottom: "1px solid #F3F4F6",
+    verticalAlign: "middle",
+    background: isEven ? "#F9FAFB" : "#fff",
+    whiteSpace: "nowrap",
+  });
+
+  const statusPill = (text) => {
+    const isSubmitted = /submitted|✓/i.test(text);
+    const isPending = /pending/i.test(text);
+    return (
+      <span style={{
+        display: "inline-block",
+        padding: "2px 8px",
+        borderRadius: 10,
+        fontSize: 11,
+        fontWeight: 600,
+        background: isSubmitted ? "#DCFCE7" : isPending ? "#FEF3C7" : "#F1F5F9",
+        color: isSubmitted ? "#15803D" : isPending ? "#B45309" : "#475569",
+      }}>
+        {text}
+      </span>
+    );
+  };
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        onClick={onBack}
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 980,
+          background: "rgba(0,0,0,0.28)",
+          backdropFilter: "blur(4px)",
+          WebkitBackdropFilter: "blur(4px)",
+        }}
+      />
+
+      {/* Full-width modal */}
+      <div
+        style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          zIndex: 981,
+          width: "min(96vw, 1400px)",
+          maxHeight: "86vh",
+          background: "#fff",
+          borderRadius: 14,
+          boxShadow: "0 24px 64px rgba(0,0,0,0.20)",
+          fontFamily: FONT,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          animation: "oemSlideIn 0.2s ease-out",
+        }}
+      >
+        {/* Header */}
+        <div
+          style={{
+            padding: "16px 24px",
+            borderBottom: "1px solid #E5E7EB",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            background: "#fff",
+            flexShrink: 0,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <button
+              onClick={onBack}
+              style={{
+                background: "#F3F4F6",
+                border: "none",
+                borderRadius: 8,
+                width: 34,
+                height: 34,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                transition: "background 0.15s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "#E5E7EB")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "#F3F4F6")}
+            >
+              <ChevronLeft size={18} color="#374151" />
+            </button>
+            <div>
+              <p
+                style={{
+                  margin: "0 0 2px",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: "#9CA3AF",
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                }}
+              >
+                OEM Documents
+              </p>
+              <span style={{ fontSize: 15, fontWeight: 700, color: "#111827" }}>
+                OEM Documentation Status
+              </span>
+            </div>
+          </div>
+          <button
+            onClick={onBack}
+            style={{
+              background: "#F3F4F6",
+              border: "none",
+              borderRadius: 8,
+              width: 32,
+              height: 32,
+              color: "#6B7280",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Scrollable table */}
+        <div
+          style={{
+            overflowX: "auto",
+            overflowY: "auto",
+            flex: 1,
+            margin: 16,
+            borderRadius: 10,
+            border: "1px solid #E5E7EB",
+            boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+          }}
+        >
+          <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "auto" }}>
+            <thead>
+              <tr>
+                {OEM_DOCS_COLUMNS.map((h, i) => (
+                  <th key={i} style={thStyle}>
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {OEM_DOCS_ROWS.map((r, i) => (
+                <tr key={i}>
+                  <td style={tdStyle(i % 2 === 0)}>{r.sno}</td>
+                  <td style={{ ...tdStyle(i % 2 === 0), fontWeight: 600, color: "#2563EB" }}>{r.firm}</td>
+                  <td style={tdStyle(i % 2 === 0)}>{r.oem}</td>
+                  <td style={tdStyle(i % 2 === 0)}>{r.product}</td>
+                  <td style={tdStyle(i % 2 === 0)}>{r.boq}</td>
+                  <td style={{ ...tdStyle(i % 2 === 0), maxWidth: 200, whiteSpace: "normal", lineHeight: 1.4 }}>{r.tender}</td>
+                  <td style={{ ...tdStyle(i % 2 === 0), fontWeight: 600 }}>{r.invoice}</td>
+                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.status)}</td>
+                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.certificate)}</td>
+                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.compliance)}</td>
+                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.spec)}</td>
+                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.license)}</td>
+                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.support)}</td>
+                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.bom)}</td>
+                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.fat)}</td>
+                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.origin)}</td>
+                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.undertaking)}</td>
+                  <td style={{ ...tdStyle(i % 2 === 0), color: "#6B7280", fontStyle: "italic" }}>{r.additional}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Footer */}
+        <div
+          style={{
+            padding: "12px 24px 16px",
+            borderTop: "1px solid #E5E7EB",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexShrink: 0,
+            background: "#fff",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 16, fontSize: 12, color: "#667085" }}>
+            <span>✅ Overall: <strong style={{ color: "#15803D" }}>1 Submitted</strong></span>
+            <span>⏳ <strong style={{ color: "#B45309" }}>1 Pending</strong></span>
+          </div>
+          <div style={{ display: "flex", gap: 10 }}>
+            <button
+              onClick={onBack}
+              style={{
+                padding: "9px 24px",
+                border: "1px solid #D1D5DB",
+                borderRadius: 8,
+                background: "#fff",
+                fontSize: 13,
+                fontWeight: 500,
+                color: "#374151",
+                cursor: "pointer",
+                fontFamily: FONT,
+              }}
+            >
+              ← Back
+            </button>
+            <button
+              style={{
+                padding: "9px 24px",
+                border: "none",
+                borderRadius: 8,
+                background: "#2979FF",
+                fontSize: 13,
+                fontWeight: 600,
+                color: "#fff",
+                cursor: "pointer",
+                fontFamily: FONT,
+              }}
+            >
+              📥 Download Report
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes oemSlideIn {
+          from { opacity: 0; transform: translate(-50%, -48%); }
+          to   { opacity: 1; transform: translate(-50%, -50%); }
+        }
+      `}</style>
+    </>
+  );
+};
+
+// ─── CompleteTaskModal ─────────────────────────────────────────────────────────
+
+const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
+  const [status, setStatus] = useState("");
+  const [remarks, setRemarks] = useState("");
+  const [files, setFiles] = useState([]);
+  const [oemStatus, setOemStatus] = useState("100% Completed");
+  const [showOEMDocs, setShowOEMDocs] = useState(false);
+  const fileInputRef = useRef(null);
+
+  if (!card) return null;
+
+  const handleFileChange = (e) => {
+    const newFiles = Array.from(e.target.files);
+    setFiles((prev) => [...prev, ...newFiles]);
+    e.target.value = "";
+  };
+
+  const removeFile = (idx) => {
+    setFiles((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleUpdate = () => {
+    onUpdate?.({
+      cardId: card.id,
+      status,
+      remarks,
+      files,
+      oemStatus,
+    });
+    onClose?.();
+  };
+
+  // If OEM Docs are open, render them instead
+  if (showOEMDocs) {
+    return <OEMDocsView onBack={() => setShowOEMDocs(false)} />;
+  }
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        onClick={onClose}
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 970,
+          background: "rgba(0,0,0,0.22)",
+        }}
+      />
+
+      {/* Modal — right-aligned over the RFP form panel */}
+      <div
+        style={{
+          position: "fixed",
+          top: "50%",
+          right: "20%",
+          transform: "translateY(-50%)",
+          zIndex: 971,
+          width: 480,
+          maxWidth: "42vw",
+          maxHeight: "88vh",
+          background: "#fff",
+          borderRadius: 14,
+          boxShadow:
+            "0 20px 60px rgba(0,0,0,0.18), 0 4px 20px rgba(0,0,0,0.08)",
+          fontFamily: FONT,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          animation: "ctmFadeIn 0.2s ease-out",
+        }}
+      >
+        {/* ── Header ── */}
+        <div
+          style={{
+            padding: "22px 28px 14px",
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            flexShrink: 0,
+          }}
+        >
+          <div>
+            <div
+              style={{
+                fontSize: 18,
+                fontWeight: 700,
+                color: "#101828",
+                marginBottom: 4,
+              }}
+            >
+              Complete Task
+            </div>
+            <div
+              style={{
+                fontSize: 13,
+                color: "#667085",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                flexWrap: "wrap",
+              }}
+            >
+              <span>
+                Tender ID:{" "}
+                <strong style={{ color: "#101828", fontWeight: 600 }}>
+                  {card.id}
+                </strong>
+              </span>
+              <span style={{ marginLeft: 8 }}>
+                Customer:{" "}
+                <strong style={{ color: "#101828", fontWeight: 600 }}>
+                  {card.customer || "Customer Name"}
+                </strong>
+              </span>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              color: "#98A2B3",
+              padding: 4,
+              borderRadius: 6,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Divider */}
+        <div
+          style={{
+            height: 1,
+            background: "#EAECF0",
+            margin: "0 28px",
+          }}
+        />
+
+        {/* ── Body ── */}
+        <div
+          className="thin-scrollbar"
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            padding: "22px 28px 10px",
+          }}
+        >
+          {/* Status */}
+          <div style={{ marginBottom: 20 }}>
+            <label
+              style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: "#101828",
+                display: "block",
+                marginBottom: 8,
+              }}
+            >
+              Status
+            </label>
+            <input
+              type="text"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              style={{
+                width: "100%",
+                border: "1px solid #D0D5DD",
+                borderRadius: 8,
+                padding: "12px 14px",
+                fontSize: 14,
+                color: "#101828",
+                fontFamily: FONT,
+                boxSizing: "border-box",
+                outline: "none",
+                background: "#fff",
+                transition: "border-color 0.15s, box-shadow 0.15s",
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = "#2979FF";
+                e.target.style.boxShadow = "0 0 0 3px rgba(41,121,255,0.10)";
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = "#D0D5DD";
+                e.target.style.boxShadow = "none";
+              }}
+            />
+          </div>
+
+          {/* Remarks */}
+          <div style={{ marginBottom: 20 }}>
+            <label
+              style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: "#101828",
+                display: "block",
+                marginBottom: 8,
+              }}
+            >
+              Remarks
+            </label>
+            <textarea
+              rows={5}
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
+              placeholder="Add your remarks here..."
+              style={{
+                width: "100%",
+                border: "1px solid #D0D5DD",
+                borderRadius: 8,
+                padding: "12px 14px",
+                fontSize: 14,
+                color: "#101828",
+                fontFamily: FONT,
+                boxSizing: "border-box",
+                outline: "none",
+                resize: "vertical",
+                background: "#fff",
+                lineHeight: 1.6,
+                transition: "border-color 0.15s, box-shadow 0.15s",
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = "#2979FF";
+                e.target.style.boxShadow = "0 0 0 3px rgba(41,121,255,0.10)";
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = "#D0D5DD";
+                e.target.style.boxShadow = "none";
+              }}
+            />
+          </div>
+
+          {/* Attach Files */}
+          <div style={{ marginBottom: 20 }}>
+            <label
+              style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: "#101828",
+                display: "block",
+                marginBottom: 8,
+              }}
+            >
+              Attach Files<span style={{ color: "#F04438" }}>*</span>
+            </label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              style={{
+                width: "100%",
+                border: "1px solid #D0D5DD",
+                borderRadius: 8,
+                padding: "14px 16px",
+                background: "#F9FAFB",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                fontFamily: FONT,
+                transition: "border-color 0.15s, background 0.15s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "#2979FF";
+                e.currentTarget.style.background = "#F5F8FF";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "#D0D5DD";
+                e.currentTarget.style.background = "#F9FAFB";
+              }}
+            >
+              <Paperclip size={18} color="#667085" />
+              <span style={{ fontSize: 13, color: "#98A2B3" }}>
+                Click to attach files...
+              </span>
+            </button>
+
+            {/* Attached file list */}
+            {files.length > 0 && (
+              <div
+                style={{
+                  marginTop: 10,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 6,
+                }}
+              >
+                {files.map((file, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      padding: "8px 12px",
+                      background: "#F9FAFB",
+                      borderRadius: 8,
+                      border: "1px solid #EAECF0",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: 6,
+                        background: "#EFF6FF",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <FileText size={14} color="#2979FF" />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div
+                        style={{
+                          fontSize: 12.5,
+                          fontWeight: 500,
+                          color: "#344054",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {file.name}
+                      </div>
+                      <div style={{ fontSize: 11, color: "#98A2B3" }}>
+                        {(file.size / 1024).toFixed(1)} KB
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeFile(idx)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: 4,
+                        borderRadius: 6,
+                        display: "flex",
+                        color: "#F04438",
+                      }}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* OEM Status — clickable arrow opens OEM docs */}
+          <div style={{ marginBottom: 12 }}>
+            <button
+              type="button"
+              onClick={() => setShowOEMDocs(true)}
+              style={{
+                width: "100%",
+                border: "none",
+                background: "none",
+                padding: "10px 0",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                fontFamily: FONT,
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: "#101828",
+                }}
+              >
+                OEM Status
+              </span>
+              <ChevronRight
+                size={18}
+                color="#667085"
+                style={{ transition: "transform 0.2s ease" }}
+              />
+            </button>
+
+            {/* OEM Status value */}
+            <div
+              style={{
+                border: "1px solid #D0D5DD",
+                borderRadius: 8,
+                padding: "12px 14px",
+                background: "#F9FAFB",
+                fontSize: 14,
+                color: "#101828",
+                marginTop: 4,
+              }}
+            >
+              {oemStatus}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Footer ── */}
+        <div
+          style={{
+            padding: "16px 28px 22px",
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            justifyContent: "flex-end",
+            flexShrink: 0,
+          }}
+        >
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              padding: "11px 32px",
+              border: "1px solid #D0D5DD",
+              borderRadius: 8,
+              background: "#fff",
+              fontSize: 14,
+              fontWeight: 500,
+              color: "#344054",
+              cursor: "pointer",
+              fontFamily: FONT,
+              transition: "background 0.15s",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background = "#F9FAFB")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background = "#fff")
+            }
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleUpdate}
+            style={{
+              padding: "11px 40px",
+              border: "none",
+              borderRadius: 8,
+              background: "#2979FF",
+              fontSize: 14,
+              fontWeight: 700,
+              color: "#fff",
+              cursor: "pointer",
+              fontFamily: FONT,
+              boxShadow: "0 2px 8px rgba(41,121,255,0.28)",
+              transition: "background 0.15s, box-shadow 0.15s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#1565C0";
+              e.currentTarget.style.boxShadow =
+                "0 4px 14px rgba(41,121,255,0.4)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "#2979FF";
+              e.currentTarget.style.boxShadow =
+                "0 2px 8px rgba(41,121,255,0.28)";
+            }}
+          >
+            Update
+          </button>
+        </div>
+      </div>
+
+      {/* Animations */}
+      <style>{`
+        @keyframes ctmFadeIn {
+          from { opacity: 0; transform: translateY(-48%); }
+          to   { opacity: 1; transform: translateY(-50%); }
+        }
+      `}</style>
+    </>
+  );
+};
+
+export default CompleteTaskModal;

@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
-import { X, XCircle, CheckCircle } from "lucide-react";
+import { X, XCircle, CheckCircle, Paperclip } from "lucide-react";
 import ApprovalNotificationModal from "./ApprovalNotificationModal";
+import CompleteTaskModal from "./CompleteTaskModal";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -223,6 +224,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
   const [showRejectModal,   setShowRejectModal]   = useState(false);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showViewModal,     setShowViewModal]     = useState(false);
+  const [showCompleteTask,  setShowCompleteTask]  = useState(false);
 
   useEffect(() => {
     setShowApprovalModal(card?.action === "Send Notification");
@@ -413,6 +415,38 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
               </Section>
             )}
 
+            {/* Attach File button — only for "Complete Tasks" action */}
+            {card.action === "Complete Tasks" && (
+              <div style={{ marginTop: 4, marginBottom: 14 }}>
+                <button
+                  type="button"
+                  onClick={() => setShowCompleteTask(true)}
+                  style={{
+                    width: "100%",
+                    padding: "14px 0",
+                    border: "none",
+                    borderRadius: 8,
+                    background: "#111",
+                    color: "#fff",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    fontFamily: FONT,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    transition: "background 0.15s",
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = "#222"}
+                  onMouseLeave={e => e.currentTarget.style.background = "#111"}
+                >
+                  <Paperclip size={16} />
+                  Attach File
+                </button>
+              </div>
+            )}
+
           </div>
 
           {/* Sticky footer */}
@@ -523,6 +557,17 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
           viewMode
           savedSections={card.notificationSections}
           onClose={() => setShowViewModal(false)}
+        />
+      )}
+
+      {showCompleteTask && (
+        <CompleteTaskModal
+          card={card}
+          onClose={() => setShowCompleteTask(false)}
+          onUpdate={(data) => {
+            console.log("Complete Task updated:", data);
+            setShowCompleteTask(false);
+          }}
         />
       )}
     </>
