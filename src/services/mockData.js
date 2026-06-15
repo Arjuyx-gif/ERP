@@ -474,13 +474,13 @@ export const PANEL_NOTIFICATIONS = [
 // ─── Task Dashboard Table ─────────────────────────────────────────────────────
 // highlight: null | "yellow" | "green"
 export const TASK_TABLE_ROWS = [
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: "yellow" },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: "green" },
-  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null },
-  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", highlight: null },
+  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "SOF - Pending", statusColor: "#F59E0B", statusBg: "#FEF3C7", updated: "Yesterday", completion: 0, actionLabel: "Start SOF", actionIcon: "edit", highlight: null },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Doc. Uploaded\nQuery & Response", statusColor: "#2563EB", statusBg: "#DBEAFE", updated: "Yesterday", completion: 0, actionLabel: "Upload", actionIcon: "upload", highlight: "yellow" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Submitted for\nApproval", statusColor: "#16A34A", statusBg: "#DCFCE7", updated: "Yesterday", completion: 100, actionLabel: "View", actionIcon: "eye", highlight: "green" },
+  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Order Placed", statusColor: "#16A34A", statusBg: "#DCFCE7", updated: "Today", completion: 80, actionLabel: "View SOF", actionIcon: "eye", highlight: null },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Draft", statusColor: "#6B7280", statusBg: "#F3F4F6", updated: "Today", completion: 0, actionLabel: "Continue", actionIcon: "edit", highlight: null },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "In Progress", statusColor: "#2563EB", statusBg: "#DBEAFE", updated: "2 hrs ago", completion: 60, actionLabel: "Continue RFP", actionIcon: "edit", highlight: null },
+  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "EMD Completed\n& Uploaded", statusColor: "#16A34A", statusBg: "#DCFCE7", updated: "Today", completion: 80, actionLabel: "View SOF", actionIcon: "eye", highlight: null },
 ];
 
 export const QUICK_ACCESS = [

@@ -1,6 +1,6 @@
 // src/pages/dashboard/RFPDashboard.jsx
 import { useState, useEffect } from "react";
-import { Search, Bell, SlidersHorizontal, Eye, Minimize2 } from "lucide-react";
+import { Search, Bell, SlidersHorizontal, Eye, Minimize2, Plus } from "lucide-react";
 
 import Sidebar from "../../components/layout/Sidebar";
 import KanbanBoard from "../../components/dashboard/KanbanBoard";
@@ -158,10 +158,33 @@ const RFPDashboard = () => {
 
         {/* Header */}
         <div style={{ padding: "20px 28px 0", background: "#F7F8FA" }}>
-          <h1 style={{ fontSize: 20, fontWeight: 700, color: "#111", margin: "0 0 2px" }}>
-            RFP Analysis Board - Dashboard
-          </h1>
-          <p style={{ fontSize: 12, color: "#888", margin: "0 0 16px" }}>Last updated: 2 hours ago</p>
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 2 }}>
+            <div>
+              <h1 style={{ fontSize: 20, fontWeight: 700, color: "#111", margin: "0 0 2px" }}>
+                RFP Analysis Board
+              </h1>
+              <p style={{ fontSize: 12, color: "#888", margin: "0 0 16px" }}>Last updated: 2 hours ago</p>
+            </div>
+            <button style={{
+              display: "flex", alignItems: "center", gap: 6,
+              padding: "9px 20px", border: "none", borderRadius: 8,
+              background: "#2563EB", color: "#fff", fontSize: 13, fontWeight: 600,
+              cursor: "pointer", fontFamily: "'Inter','Segoe UI',sans-serif",
+              boxShadow: "0 2px 8px rgba(37,99,235,0.25)",
+              transition: "background 0.15s, box-shadow 0.15s",
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = "#1D4ED8";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = "#2563EB";
+              e.currentTarget.style.boxShadow = "0 2px 8px rgba(37,99,235,0.25)";
+            }}
+            >
+              <Plus size={16} /> Create RFP
+            </button>
+          </div>
 
           {/* Search + bell + tab filters */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
@@ -199,17 +222,27 @@ const RFPDashboard = () => {
               )}
             </button>
 
-            {["All", "Needs Action", "Completed"].map(tab => (
-              <button key={tab} onClick={() => setTabFilter(tab)} style={{
-                padding: "8px 14px", whiteSpace: "nowrap",
-                background: tabFilter === tab ? "#2979FF" : "#fff",
-                color: tabFilter === tab ? "#fff" : "#555",
-                border: "1px solid " + (tabFilter === tab ? "#2979FF" : "#E2E8F0"),
-                borderRadius: 8, fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: "inherit",
-              }}>
-                {tab}
-              </button>
-            ))}
+            <div style={{
+              display: "flex", alignItems: "center", gap: 4,
+              background: "#F1F5F9", padding: 4, borderRadius: 10,
+            }}>
+              {["All", "Needs Action", "Completed"].map(tab => {
+                const isActive = tabFilter === tab;
+                return (
+                  <button key={tab} onClick={() => setTabFilter(tab)} style={{
+                    padding: "6px 14px", whiteSpace: "nowrap",
+                    background: isActive ? "#fff" : "transparent",
+                    color: isActive ? "#0F172A" : "#475569",
+                    border: "none",
+                    boxShadow: isActive ? "0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06)" : "none",
+                    borderRadius: 6, fontSize: 13, fontWeight: isActive ? 600 : 500,
+                    cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s ease"
+                  }}>
+                    {tab}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* KPI cards */}
@@ -255,7 +288,6 @@ const RFPDashboard = () => {
         <div style={{ padding: "12px 28px", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
           <SlidersHorizontal size={16} color="#888" />
           {[
-            { val: stageFilter, set: setStageFilter, opts: ["All Stages", "RFP Analysis", "Awaiting Approval", "Alert/Notify", "Approved", "Submitted", "Won", "PO Pending"] },
             { val: statusFilter, set: setStatusFilter, opts: ["All Status", "Completed", "Pending", "In Progress", "Under Review", "Approval Pending", "Rejected"] },
             { val: deadlineFilter, set: setDeadlineFilter, opts: ["By Deadline", "Priority", "Newest First", "Oldest First", "Tender Value", "Last Updated"] },
           ].map((f, i) => (
@@ -268,15 +300,13 @@ const RFPDashboard = () => {
             </select>
           ))}
           <div style={{ flex: 1 }} />
-          {activeTab !== "Task Dashboard" && (
-            <button onClick={() => setKanbanFullscreen(true)} style={{
-              background: "#fff", border: "1px solid #E2E8F0", borderRadius: 8,
-              padding: "7px 14px", fontSize: 13, color: "#555", cursor: "pointer",
-              display: "flex", alignItems: "center", gap: 6, fontFamily: "inherit",
-            }}>
-              <Eye size={14} /> View
-            </button>
-          )}
+          <button onClick={() => activeTab !== "Task Dashboard" && setKanbanFullscreen(true)} style={{
+            background: "#fff", border: "1px solid #E2E8F0", borderRadius: 8,
+            padding: "7px 14px", fontSize: 13, color: "#555", cursor: "pointer",
+            display: "flex", alignItems: "center", gap: 6, fontFamily: "inherit",
+          }}>
+            <Eye size={14} /> View
+          </button>
         </div>
 
         {/* Board / Table */}
