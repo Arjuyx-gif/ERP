@@ -6,6 +6,7 @@ import Sidebar from "../../components/layout/Sidebar";
 import KanbanBoard from "../../components/dashboard/KanbanBoard";
 import TaskTable from "../../components/dashboard/TaskTable";
 import RFPFormPanel from "../../components/dashboard/RFPFormPanel";
+import BidSubmissionModal from "../../components/dashboard/BidSubmissionModal";
 import NotificationPanel from "../../components/dashboard/NotificationPanel";
 import Modal from "../../components/dashboard/ReminderModal";
 import ViewAllModal from "../../components/dashboard/ViewAllModal";
@@ -35,6 +36,7 @@ const RFPDashboard = () => {
   const [kanbanFullscreen, setKanbanFullscreen] = useState(false);
   const [viewAllCol, setViewAllCol] = useState(null);
   const [viewRFPCard, setViewRFPCard] = useState(null);
+  const [bidSubmittedCard, setBidSubmittedCard] = useState(null);
 
   // Auto-show Pre-Bid reminder on mount
   useEffect(() => {
@@ -133,7 +135,15 @@ const RFPDashboard = () => {
     </div>
   );
 
-  const board = <KanbanBoard columns={columns} onViewAll={setViewAllCol} onViewRFP={setViewRFPCard} />;
+  const handleViewRFP = (card) => {
+    if (card?.action === "Bid Submitted") {
+      setBidSubmittedCard(card);
+    } else {
+      setViewRFPCard(card);
+    }
+  };
+
+  const board = <KanbanBoard columns={columns} onViewAll={setViewAllCol} onViewRFP={handleViewRFP} />;
 
   return (
     <div style={{
@@ -323,6 +333,9 @@ const RFPDashboard = () => {
 
       {/* ── RFP Form panel ── */}
       <RFPFormPanel card={viewRFPCard} onClose={() => setViewRFPCard(null)} onReject={handleReject} onSendNotification={handleSendNotification} />
+
+      {/* ── Bid Submission modal ── */}
+      <BidSubmissionModal card={bidSubmittedCard} onClose={() => setBidSubmittedCard(null)} />
     </div>
   );
 };

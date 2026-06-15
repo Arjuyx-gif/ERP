@@ -193,7 +193,7 @@ const KanbanCard = ({ card, onViewRFP }) => {
       {/* CTA button */}
       {card.action && (
         <button
-          onClick={["View RFP Form", "Review Now", "Send Notification", "View", "Complete Tasks"].includes(card.action) ? () => onViewRFP({ ...card, checkedNotify: checked }) : undefined}
+          onClick={["View RFP Form", "Review Now", "Send Notification", "View", "Complete Tasks", "Bid Submitted"].includes(card.action) ? () => onViewRFP({ ...card, checkedNotify: checked }) : undefined}
           style={{
             width: "100%", marginTop: 4, padding: "8px 0",
             background: isBlue ? "#2979FF" : "#fff",
