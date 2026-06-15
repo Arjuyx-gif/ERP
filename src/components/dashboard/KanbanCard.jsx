@@ -146,7 +146,7 @@ const KanbanCard = ({ card, onViewRFP }) => {
           ))}
           <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "#555", marginTop: 4 }}>
             <User size={11} color="#888" />
-            Send By: <span style={{ borderBottom: "1px solid #999", minWidth: 60, display: "inline-block" }}>&nbsp;</span>
+            Send By: <span style={{ fontWeight: 600, color: "#333" }}>{card.sendBy || "—"}</span>
           </div>
         </div>
       )}
@@ -154,7 +154,10 @@ const KanbanCard = ({ card, onViewRFP }) => {
       {/* Won / Lost / Cancelled */}
       {card.wonLost && (
         <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 6 }}>
-          <button style={{ ...btnStyle, background: "#4CAF50", color: "#fff", border: "none" }}>
+          <button
+            onClick={() => onViewRFP?.({ ...card, action: "Update Result" })}
+            style={{ ...btnStyle, background: "#4CAF50", color: "#fff", border: "none" }}
+          >
             <CheckCircle size={13} /> Won
           </button>
           <button style={{ ...btnStyle, background: "#F44336", color: "#fff", border: "none" }}>

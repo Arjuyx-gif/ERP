@@ -74,6 +74,7 @@ export const KANBAN_COLUMNS = [
         details: { status: "Send Alert", deadline: "Apr 25, 2026" },
         notifyList: ["Pre-sales", "Sales-coordinator", "Purchase", "Accounts", "HR", "Service"],
         checkedNotify: ["Pre-sales"],
+        sendBy: "Sales Rep Name",
         action: "Send Notification",
       },
     ],

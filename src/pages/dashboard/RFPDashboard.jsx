@@ -143,7 +143,26 @@ const RFPDashboard = () => {
     }
   };
 
-  const board = <KanbanBoard columns={columns} onViewAll={setViewAllCol} onViewRFP={handleViewRFP} />;
+  const STAGE_MAP = {
+    "RFP Analysis": "rfp_analysis",
+    "Awaiting Approval": "awaiting_approval",
+    "Alert/Notify": "alert_notify",
+    "Approved": "approved",
+    "Submitted": "bid_submitted",
+    "Won": "won",
+    "PO Pending": "po_received",
+  };
+
+  const visibleColumns = columns
+    .filter(col => stageFilter === "All Stages" || col.id === STAGE_MAP[stageFilter])
+    .map(col => ({
+      ...col,
+      cards: statusFilter === "All Status"
+        ? col.cards
+        : col.cards.filter(c => c.status === statusFilter),
+    }));
+
+  const board = <KanbanBoard columns={visibleColumns} onViewAll={setViewAllCol} onViewRFP={handleViewRFP} />;
 
   return (
     <div style={{

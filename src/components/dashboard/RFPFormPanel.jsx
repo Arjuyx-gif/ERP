@@ -3,6 +3,7 @@ import { X, XCircle, CheckCircle, Paperclip } from "lucide-react";
 import ApprovalNotificationModal from "./ApprovalNotificationModal";
 import CompleteTaskModal from "./CompleteTaskModal";
 import QueryResponseModal from "./QueryResponseModal";
+import FirmWiseResultModal from "./FirmWiseResultModal";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -225,12 +226,14 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
   const [showRejectModal,   setShowRejectModal]   = useState(false);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showViewModal,     setShowViewModal]     = useState(false);
-  const [showCompleteTask,  setShowCompleteTask]  = useState(false);
-  const [showQueryModal,    setShowQueryModal]    = useState(false);
+  const [showCompleteTask,      setShowCompleteTask]      = useState(false);
+  const [showQueryModal,        setShowQueryModal]        = useState(false);
+  const [showFirmResultModal,   setShowFirmResultModal]   = useState(false);
 
   useEffect(() => {
     setShowApprovalModal(card?.action === "Send Notification");
     setShowViewModal(!!(card?.action === "View" && card?.notificationSections?.length));
+    setShowFirmResultModal(card?.action === "Update Result");
     if (card?.action === "Complete Tasks" && card?.isQuery) {
       setShowQueryModal(true);
     } else {
@@ -549,7 +552,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
       {showApprovalModal && (
         <ApprovalNotificationModal
           card={card}
-          onClose={() => { setShowApprovalModal(false); onClose?.(); }}
+          onClose={() => setShowApprovalModal(false)}
           onSend={(checkedDepts, sections) => {
             setShowApprovalModal(false);
             onSendNotification?.(card, checkedDepts, sections);
@@ -582,6 +585,14 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
         <QueryResponseModal
           card={card}
           onClose={() => setShowQueryModal(false)}
+        />
+      )}
+
+      {showFirmResultModal && (
+        <FirmWiseResultModal
+          card={card}
+          onClose={() => setShowFirmResultModal(false)}
+          onSubmit={() => setShowFirmResultModal(false)}
         />
       )}
     </>
