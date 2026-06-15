@@ -522,7 +522,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
           card={card}
           viewMode
           savedSections={card.notificationSections}
-          onClose={() => { setShowViewModal(false); onClose?.(); }}
+          onClose={() => setShowViewModal(false)}
         />
       )}
     </>
