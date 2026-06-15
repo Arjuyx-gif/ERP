@@ -27,13 +27,13 @@ const ACTION_ICON = {
   edit:   Edit3,
 };
 
-const TaskTable = () => (
+const TaskTable = ({ fullscreen = false }) => (
   <div style={{
     background: "#fff",
     borderRadius: 10,
     border: "1px solid #E2E8F0",
     overflow: "auto",
-    maxHeight: "calc(100vh - 360px)",
+    maxHeight: fullscreen ? "calc(100vh - 80px)" : "calc(100vh - 360px)",
   }}>
     <table style={{ width: "100%", minWidth: 1240, borderCollapse: "collapse" }}>
       <thead>

@@ -4,6 +4,9 @@ import ApprovalNotificationModal from "./ApprovalNotificationModal";
 import CompleteTaskModal from "./CompleteTaskModal";
 import QueryResponseModal from "./QueryResponseModal";
 import FirmWiseResultModal from "./FirmWiseResultModal";
+import UploadPOModal from "./UploadPOModal";
+import AdditionalDocsModal from "./AdditionalDocsModal";
+import EMDReturnModal from "./EMDReturnModal";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -229,11 +232,17 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
   const [showCompleteTask,      setShowCompleteTask]      = useState(false);
   const [showQueryModal,        setShowQueryModal]        = useState(false);
   const [showFirmResultModal,   setShowFirmResultModal]   = useState(false);
+  const [showUploadPOModal,     setShowUploadPOModal]     = useState(false);
+  const [showAdditionalDocs,    setShowAdditionalDocs]    = useState(false);
+  const [showEMDReturnModal,    setShowEMDReturnModal]    = useState(false);
 
   useEffect(() => {
     setShowApprovalModal(card?.action === "Send Notification");
     setShowViewModal(!!(card?.action === "View" && card?.notificationSections?.length));
     setShowFirmResultModal(card?.action === "Update Result");
+    setShowUploadPOModal(card?.action === "Upload PO");
+    setShowAdditionalDocs(card?.action === "Additional Docs");
+    setShowEMDReturnModal(card?.action === "EMD Return");
     if (card?.action === "Complete Tasks" && card?.isQuery) {
       setShowQueryModal(true);
     } else {
@@ -593,6 +602,27 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
           card={card}
           onClose={() => setShowFirmResultModal(false)}
           onSubmit={() => setShowFirmResultModal(false)}
+        />
+      )}
+
+      {showUploadPOModal && (
+        <UploadPOModal
+          card={card}
+          onClose={() => setShowUploadPOModal(false)}
+        />
+      )}
+
+      {showAdditionalDocs && (
+        <AdditionalDocsModal
+          card={card}
+          onClose={() => setShowAdditionalDocs(false)}
+        />
+      )}
+
+      {showEMDReturnModal && (
+        <EMDReturnModal
+          card={card}
+          onClose={() => setShowEMDReturnModal(false)}
         />
       )}
     </>

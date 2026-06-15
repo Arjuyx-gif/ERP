@@ -319,7 +319,7 @@ const RFPDashboard = () => {
             </select>
           ))}
           <div style={{ flex: 1 }} />
-          <button onClick={() => activeTab !== "Task Dashboard" && setKanbanFullscreen(true)} style={{
+          <button onClick={() => setKanbanFullscreen(true)} style={{
             background: "#fff", border: "1px solid #E2E8F0", borderRadius: 8,
             padding: "7px 14px", fontSize: 13, color: "#555", cursor: "pointer",
             display: "flex", alignItems: "center", gap: 6, fontFamily: "inherit",
@@ -334,7 +334,7 @@ const RFPDashboard = () => {
         </div>
       </div>
 
-      {/* ── Fullscreen Kanban overlay ── */}
+      {/* ── Fullscreen overlay (Kanban or Task Dashboard) ── */}
       {kanbanFullscreen && (
         <div style={{
           position: "fixed", inset: 0, zIndex: 950, background: "#F7F8FA",
@@ -345,7 +345,9 @@ const RFPDashboard = () => {
             display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0,
           }}>
             <div>
-              <h2 style={{ fontSize: 16, fontWeight: 700, color: "#111", margin: 0 }}>RFP Analysis Board</h2>
+              <h2 style={{ fontSize: 16, fontWeight: 700, color: "#111", margin: 0 }}>
+                {activeTab === "Task Dashboard" ? "Task Dashboard" : "RFP Analysis Board"}
+              </h2>
               <p style={{ fontSize: 12, color: "#888", margin: "2px 0 0" }}>Fullscreen view</p>
             </div>
             <button onClick={() => setKanbanFullscreen(false)} style={{
@@ -356,8 +358,8 @@ const RFPDashboard = () => {
               <Minimize2 size={14} /> Exit Fullscreen
             </button>
           </div>
-          <div style={{ flex: 1, overflowX: "auto", padding: "20px 28px 28px" }}>
-            {board}
+          <div style={{ flex: 1, overflowX: "auto", overflowY: "auto", padding: "20px 28px 28px" }}>
+            {activeTab === "Task Dashboard" ? <TaskTable fullscreen /> : board}
           </div>
         </div>
       )}
