@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { X, XCircle, CheckCircle, Paperclip } from "lucide-react";
 import ApprovalNotificationModal from "./ApprovalNotificationModal";
 import CompleteTaskModal from "./CompleteTaskModal";
+import QueryResponseModal from "./QueryResponseModal";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -225,10 +226,16 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showViewModal,     setShowViewModal]     = useState(false);
   const [showCompleteTask,  setShowCompleteTask]  = useState(false);
+  const [showQueryModal,    setShowQueryModal]    = useState(false);
 
   useEffect(() => {
     setShowApprovalModal(card?.action === "Send Notification");
     setShowViewModal(!!(card?.action === "View" && card?.notificationSections?.length));
+    if (card?.action === "Complete Tasks" && card?.isQuery) {
+      setShowQueryModal(true);
+    } else {
+      setShowQueryModal(false);
+    }
   }, [card]);
 
   if (!card) return null;
@@ -415,8 +422,8 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
               </Section>
             )}
 
-            {/* Attach File button — only for "Complete Tasks" action */}
-            {card.action === "Complete Tasks" && (
+            {/* Attach File button — only for "Complete Tasks" action and NOT for query */}
+            {(card.action === "Complete Tasks" && !card.isQuery) && (
               <div style={{ marginTop: 4, marginBottom: 14 }}>
                 <button
                   type="button"
@@ -568,6 +575,13 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
             console.log("Complete Task updated:", data);
             setShowCompleteTask(false);
           }}
+        />
+      )}
+
+      {showQueryModal && (
+        <QueryResponseModal
+          card={card}
+          onClose={() => setShowQueryModal(false)}
         />
       )}
     </>

@@ -117,6 +117,7 @@ export const KANBAN_COLUMNS = [
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL", "UVT"], tagColors: { CIPL: "#E3F0FB", UVT: "#F3E5F5" },
         details: { status: "Docs - pending", dueDate: "Apr 25, 2026", dueTime: "Time" },
+        isQuery: true,
         action: "Complete Tasks",
       },
     ],
