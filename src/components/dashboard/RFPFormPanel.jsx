@@ -590,6 +590,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
             console.log("Complete Task updated:", data);
             onCompleteTask?.(data);
             setShowCompleteTask(false);
+            onClose?.();
           }}
         />
       )}
@@ -602,6 +603,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
             console.log("Query Response updated:", data);
             onCompleteTask?.(data);
             setShowQueryModal(false);
+            onClose?.();
           }}
         />
       )}
