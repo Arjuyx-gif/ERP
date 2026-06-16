@@ -224,7 +224,7 @@ const RejectModal = ({ onCancel, onConfirm }) => {
 
 // ─── RFPFormPanel ──────────────────────────────────────────────────────────────
 
-const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
+const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteTask }) => {
   const formRef = useRef(null);
   const [showRejectModal,   setShowRejectModal]   = useState(false);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
@@ -585,6 +585,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification }) => {
           onClose={() => setShowCompleteTask(false)}
           onUpdate={(data) => {
             console.log("Complete Task updated:", data);
+            onCompleteTask?.(data);
             setShowCompleteTask(false);
           }}
         />

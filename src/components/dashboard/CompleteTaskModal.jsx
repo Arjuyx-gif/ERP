@@ -1,71 +1,40 @@
 import { useState, useRef } from "react";
-import { X, Paperclip, ChevronRight, FileText, Trash2, ChevronLeft } from "lucide-react";
+import { X, Paperclip, ChevronRight, FileText, Trash2, ChevronLeft, UploadCloud, Edit, Download, Save, Send } from "lucide-react";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
 // ─── OEM Docs Table Data ───────────────────────────────────────────────────────
 const OEM_DOCS_COLUMNS = [
-  "S.No",
-  "Firm Name",
-  "OEM",
-  "Product",
-  "BOQ",
-  "Tender ID / Submission Details / EMD / MOC",
-  "Invoice Value",
-  "OEM Status",
-  "OEM Certificate / Authorization",
-  "OEM Compliance Statement",
-  "Product Spec / Data Sheet",
-  "License / Subscription Details",
-  "OEM Support / Warranty / SLA Letter",
-  "OEM BOM (Bill of Materials)",
-  "Factory Acceptance Test (FAT) Certificate",
-  "Country of Origin / Make in India Certificate",
-  "Compliance / Undertaking",
-  "Additional OEM Documents / Remarks",
+  "S.No.",
+  "Item Description",
+  "Qty",
+  "Make",
+  "Modal",
+  "R&R",
+  "Mail Sent",
+  "MAF",
+  "Technical Compliance (on OEM Letter Head)",
+  "BOM ON OEM Letter head",
+  "MII Declaration",
+  "Datasheet",
+  "OEM Backend Support Undertaking Annexure - VI",
+  "List of Software Components to be used in NGET DR System",
+  "Management & Monitoring Platform",
+  "Land Border Declaration",
+  "No Deviation",
+  "ISO 9001:2015 Quality Management System Certification",
+  "NON EOS/EOL",
+  "Escalation/Support Matrix",
+  "Non-Malicious Dec...",
+  "Solution Document",
+  "Service Centre Support",
+  "Commercial Support 5 years 24 X 7 6hr CTR",
+  "OEM Experience Certificates",
 ];
 
 const OEM_DOCS_ROWS = [
-  {
-    sno: "1",
-    firm: "CIPL",
-    oem: "OEM Name",
-    product: "Product A",
-    boq: "Ref",
-    tender: "TND-2026-045 / Details / ₹5L / MOC",
-    invoice: "₹15,00,000",
-    status: "Submitted",
-    certificate: "✓",
-    compliance: "✓",
-    spec: "✓",
-    license: "N/A",
-    support: "✓",
-    bom: "✓",
-    fat: "Pending",
-    origin: "✓",
-    undertaking: "✓",
-    additional: "—",
-  },
-  {
-    sno: "2",
-    firm: "UVT",
-    oem: "OEM Name",
-    product: "Product B",
-    boq: "Ref",
-    tender: "TND-2026-045 / Details / ₹3L / MOC",
-    invoice: "₹8,50,000",
-    status: "Pending",
-    certificate: "Pending",
-    compliance: "Pending",
-    spec: "✓",
-    license: "✓",
-    support: "Pending",
-    bom: "✓",
-    fat: "N/A",
-    origin: "✓",
-    undertaking: "Pending",
-    additional: "Follow up required",
-  },
+  ["1", "NA", "", "NA", "", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"],
+  ["2", "NA", "", "NA", "", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"],
 ];
 
 // ─── OEM Docs Full-Screen View ─────────────────────────────────────────────────
@@ -79,6 +48,7 @@ const OEMDocsView = ({ onBack }) => {
     color: "#6B7280",
     background: "#F8FAFC",
     borderBottom: "2px solid #E5E7EB",
+    borderRight: "1px solid #E5E7EB",
     whiteSpace: "nowrap",
     textAlign: "left",
     position: "sticky",
@@ -92,8 +62,9 @@ const OEMDocsView = ({ onBack }) => {
     fontSize: 12,
     color: "#374151",
     borderBottom: "1px solid #F3F4F6",
+    borderRight: "1px solid #E5E7EB",
     verticalAlign: "middle",
-    background: isEven ? "#F9FAFB" : "#fff",
+    background: isEven ? "#FFFBEB" : "#fff",
     whiteSpace: "nowrap",
   });
 
@@ -244,26 +215,13 @@ const OEMDocsView = ({ onBack }) => {
               </tr>
             </thead>
             <tbody>
-              {OEM_DOCS_ROWS.map((r, i) => (
+              {OEM_DOCS_ROWS.map((row, i) => (
                 <tr key={i}>
-                  <td style={tdStyle(i % 2 === 0)}>{r.sno}</td>
-                  <td style={{ ...tdStyle(i % 2 === 0), fontWeight: 600, color: "#2563EB" }}>{r.firm}</td>
-                  <td style={tdStyle(i % 2 === 0)}>{r.oem}</td>
-                  <td style={tdStyle(i % 2 === 0)}>{r.product}</td>
-                  <td style={tdStyle(i % 2 === 0)}>{r.boq}</td>
-                  <td style={{ ...tdStyle(i % 2 === 0), maxWidth: 200, whiteSpace: "normal", lineHeight: 1.4 }}>{r.tender}</td>
-                  <td style={{ ...tdStyle(i % 2 === 0), fontWeight: 600 }}>{r.invoice}</td>
-                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.status)}</td>
-                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.certificate)}</td>
-                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.compliance)}</td>
-                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.spec)}</td>
-                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.license)}</td>
-                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.support)}</td>
-                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.bom)}</td>
-                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.fat)}</td>
-                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.origin)}</td>
-                  <td style={tdStyle(i % 2 === 0)}>{statusPill(r.undertaking)}</td>
-                  <td style={{ ...tdStyle(i % 2 === 0), color: "#6B7280", fontStyle: "italic" }}>{r.additional}</td>
+                  {row.map((cell, j) => (
+                    <td key={j} style={tdStyle(i % 2 === 0)}>
+                      {cell}
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>
@@ -277,33 +235,46 @@ const OEMDocsView = ({ onBack }) => {
             borderTop: "1px solid #E5E7EB",
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
             flexShrink: 0,
             background: "#fff",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 16, fontSize: 12, color: "#667085" }}>
-            <span>✅ Overall: <strong style={{ color: "#15803D" }}>1 Submitted</strong></span>
-            <span>⏳ <strong style={{ color: "#B45309" }}>1 Pending</strong></span>
-          </div>
           <div style={{ display: "flex", gap: 10 }}>
             <button
-              onClick={onBack}
               style={{
-                padding: "9px 24px",
-                border: "1px solid #D1D5DB",
-                borderRadius: 8,
-                background: "#fff",
-                fontSize: 13,
-                fontWeight: 500,
-                color: "#374151",
-                cursor: "pointer",
-                fontFamily: FONT,
+                padding: "9px 16px", border: "none", borderRadius: 8, background: "none",
+                fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6
               }}
             >
-              ← Back
+              <UploadCloud size={14} /> Upload
             </button>
             <button
+              style={{
+                padding: "9px 16px", border: "none", borderRadius: 8, background: "none",
+                fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6
+              }}
+            >
+              <Edit size={14} /> Edit
+            </button>
+            <button
+              style={{
+                padding: "9px 16px", border: "none", borderRadius: 8, background: "none",
+                fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6
+              }}
+            >
+              <Download size={14} /> Download
+            </button>
+            <button
+              style={{
+                padding: "9px 16px", border: "none", borderRadius: 8, background: "none",
+                fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6
+              }}
+            >
+              <Save size={14} /> Save Draft
+            </button>
+            <button
+              onClick={onBack}
               style={{
                 padding: "9px 24px",
                 border: "none",
@@ -314,9 +285,10 @@ const OEMDocsView = ({ onBack }) => {
                 color: "#fff",
                 cursor: "pointer",
                 fontFamily: FONT,
+                display: "flex", alignItems: "center", gap: 6
               }}
             >
-              📥 Download Report
+              <Send size={14} /> Submit
             </button>
           </div>
         </div>
@@ -340,12 +312,16 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
   const [files, setFiles] = useState([]);
   const [oemStatus, setOemStatus] = useState("100% Completed");
   const [showOEMDocs, setShowOEMDocs] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const fileInputRef = useRef(null);
 
   if (!card) return null;
 
   const handleFileChange = (e) => {
     const newFiles = Array.from(e.target.files);
+    if (newFiles.length > 0) {
+      setErrorMsg("");
+    }
     setFiles((prev) => [...prev, ...newFiles]);
     e.target.value = "";
   };
@@ -355,6 +331,10 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
   };
 
   const handleUpdate = () => {
+    if (files.length === 0) {
+      setErrorMsg("Please attach files before submitting.");
+      return;
+    }
     onUpdate?.({
       cardId: card.id,
       status,
@@ -692,6 +672,14 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
                     </button>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {/* Error Message */}
+            {errorMsg && (
+              <div style={{ marginTop: 8, fontSize: 13, color: "#D92D20", display: "flex", alignItems: "center", gap: 6 }}>
+                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></svg>
+                {errorMsg}
               </div>
             )}
           </div>

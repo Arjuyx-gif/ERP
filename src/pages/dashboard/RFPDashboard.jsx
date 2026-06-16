@@ -116,6 +116,36 @@ const RFPDashboard = () => {
     ));
   };
 
+  const handleCompleteTask = (data) => {
+    setColumns(cols => cols.map(col => ({
+      ...col,
+      cards: col.cards.map(c => {
+        if (c.id === data.cardId) {
+          const updatedBadges = c.badges ? c.badges.map(b => {
+            if (b.text.includes("Pending") && data.files && data.files.length > 0) {
+              return { ...b, text: b.text.replace("Pending", "Submitted"), color: "#15803D", bg: "#DCFCE7" };
+            }
+            return b;
+          }) : c.badges;
+
+          return {
+            ...c,
+            status: data.status || "Completed",
+            statusColor: "#15803D",
+            statusBg: "#DCFCE7",
+            badges: updatedBadges,
+            details: {
+              ...c.details,
+              remark: data.remarks || c.details.remark,
+              status: data.status || "Completed",
+            }
+          };
+        }
+        return c;
+      })
+    })));
+  };
+
   // ── Loading / error guards ───────────────────────────────────────────────────
   if (loading) return (
     <div style={{
@@ -383,7 +413,7 @@ const RFPDashboard = () => {
       <ViewAllModal col={viewAllCol} onClose={() => setViewAllCol(null)} />
 
       {/* ── RFP Form panel ── */}
-      <RFPFormPanel card={viewRFPCard} onClose={() => setViewRFPCard(null)} onReject={handleReject} onSendNotification={handleSendNotification} />
+      <RFPFormPanel card={viewRFPCard} onClose={() => setViewRFPCard(null)} onReject={handleReject} onSendNotification={handleSendNotification} onCompleteTask={handleCompleteTask} />
 
       {/* ── Bid Submission modal ── */}
       <BidSubmissionModal card={bidSubmittedCard} onClose={() => setBidSubmittedCard(null)} />
