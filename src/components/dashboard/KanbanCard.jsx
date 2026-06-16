@@ -167,16 +167,21 @@ const KanbanCard = ({ card, onViewRFP }) => {
       {card.poActions && (
         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 6 }}>
           <button
-            onClick={() => onViewRFP?.({ ...card, action: "Upload PO" })}
-            style={{ ...btnStyle, background: "#111", color: "#fff", border: "none" }}
+            onClick={() => onViewRFP?.({ ...card, action: "View PO" })}
+            style={{ ...btnStyle, background: "#fff", color: "#111827", border: "1px solid #E5E7EB" }}
           >
-            <Upload size={13} /> Upload PO
+            <Eye size={14} /> View PO
           </button>
           <button
             onClick={() => onViewRFP?.({ ...card, action: "Additional Docs" })}
-            style={{ ...btnStyle, background: "#F7F8FA", color: "#333", border: "1px solid #E2E8F0" }}
+            style={{ ...btnStyle, background: "#000", color: "#fff", border: "none", position: "relative", display: "block", textAlign: "center", padding: "10px 0" }}
           >
-            <Download size={13} /> Additional Documents & GeM Charges
+            <div style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", display: "flex" }}>
+              <Upload size={14} />
+            </div>
+            <span style={{ display: "inline-block", lineHeight: 1.4 }}>
+              Additional Documents &<br />GeM Charges
+            </span>
           </button>
         </div>
       )}
@@ -199,7 +204,7 @@ const KanbanCard = ({ card, onViewRFP }) => {
       {/* CTA button */}
       {card.action && (
         <button
-          onClick={["View RFP Form", "Review Now", "Send Notification", "View", "Complete Tasks", "Bid Submitted", "Upload PO"].includes(card.action) ? () => onViewRFP({ ...card, checkedNotify: checked }) : undefined}
+          onClick={["View RFP Form", "Review Now", "Send Notification", "View", "Complete Tasks", "Bid Submitted", "View PO", "View Task"].includes(card.action) ? () => onViewRFP({ ...card, checkedNotify: checked }) : undefined}
           style={{
             width: "100%", marginTop: 4, padding: "8px 0",
             background: isBlue ? "#2979FF" : "#fff",

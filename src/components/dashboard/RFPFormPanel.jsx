@@ -7,6 +7,7 @@ import FirmWiseResultModal from "./FirmWiseResultModal";
 import UploadPOModal from "./UploadPOModal";
 import AdditionalDocsModal from "./AdditionalDocsModal";
 import EMDReturnModal from "./EMDReturnModal";
+import ViewTaskModal from "./ViewTaskModal";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -235,6 +236,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
   const [showUploadPOModal,     setShowUploadPOModal]     = useState(false);
   const [showAdditionalDocs,    setShowAdditionalDocs]    = useState(false);
   const [showEMDReturnModal,    setShowEMDReturnModal]    = useState(false);
+  const [showViewTaskModal,     setShowViewTaskModal]     = useState(false);
 
   useEffect(() => {
     setShowApprovalModal(card?.action === "Send Notification");
@@ -243,6 +245,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
     setShowUploadPOModal(card?.action === "Upload PO");
     setShowAdditionalDocs(card?.action === "Additional Docs");
     setShowEMDReturnModal(card?.action === "EMD Return");
+    setShowViewTaskModal(card?.action === "View Task");
     if (card?.action === "Complete Tasks" && card?.isQuery) {
       setShowQueryModal(true);
     } else {
@@ -439,7 +442,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
               <div style={{ marginTop: 4, marginBottom: 14 }}>
                 <button
                   type="button"
-                  onClick={() => setShowCompleteTask(true)}
+                  onClick={() => card.action === "View Task" ? setShowViewTaskModal(true) : setShowCompleteTask(true)}
                   style={{
                     width: "100%",
                     padding: "14px 0",
@@ -633,6 +636,13 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
         <EMDReturnModal
           card={card}
           onClose={() => setShowEMDReturnModal(false)}
+        />
+      )}
+
+      {showViewTaskModal && (
+        <ViewTaskModal
+          card={card}
+          onClose={() => setShowViewTaskModal(false)}
         />
       )}
     </>

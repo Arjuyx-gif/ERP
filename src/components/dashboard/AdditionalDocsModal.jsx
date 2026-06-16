@@ -51,17 +51,6 @@ const AdditionalDocsModal = ({ card, onClose }) => {
         {/* Body */}
         <div style={{ overflowY: "auto", flex: 1, padding: "18px 22px", display: "flex", flexDirection: "column", gap: 18 }}>
 
-          {/* Info box */}
-          <div style={{
-            background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: 10,
-            padding: "14px 16px", display: "flex", flexDirection: "column", gap: 6,
-          }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "#C2410C" }}>Send Alert on SOF</div>
-            <div style={{ fontSize: 12, color: "#9A3412" }}>Bid Value: ₹50,000</div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "#C2410C" }}>Send Alert on Accounts</div>
-            <div style={{ fontSize: 12, color: "#9A3412" }}>GeM Charges: Amount</div>
-          </div>
-
           {/* PO Document */}
           <div>
             <div style={{ fontSize: 13, fontWeight: 600, color: "#344054", marginBottom: 8 }}>PO Document</div>
@@ -129,6 +118,17 @@ const AdditionalDocsModal = ({ card, onClose }) => {
                 resize: "none", lineHeight: 1.6,
               }}
             />
+          </div>
+
+          {/* Info box */}
+          <div style={{
+            background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: 10,
+            padding: "14px 16px", display: "flex", flexDirection: "column", gap: 6,
+          }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#C2410C" }}>Send Alert on SOF</div>
+            <div style={{ fontSize: 12, color: "#9A3412" }}>Bid Value: ₹50,000</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#C2410C" }}>Send Alert on Accounts</div>
+            <div style={{ fontSize: 12, color: "#9A3412" }}>GeM Charges: Amount</div>
           </div>
         </div>
 
