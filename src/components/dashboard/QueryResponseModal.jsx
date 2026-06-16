@@ -3,9 +3,45 @@ import { X, FileText, Upload } from "lucide-react";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
-const QueryResponseModal = ({ card, onClose }) => {
+const QueryResponseModal = ({ card, onClose, onUpdate }) => {
   const [remarks, setRemarks] = useState("");
+  const [file, setFile] = useState(null);
+  const [errorMsg, setErrorMsg] = useState("");
   const fileInputRef = useRef(null);
+
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files || []);
+    if (selectedFiles.length === 0) return;
+
+    const allowedExtensions = [".pdf", ".doc", ".docx"];
+    const validFile = selectedFiles.find((f) => {
+      const fileName = f.name.toLowerCase();
+      return allowedExtensions.some((ext) => fileName.endsWith(ext));
+    });
+
+    if (!validFile) {
+      setErrorMsg("Only PDF or Word documents are allowed.");
+      e.target.value = "";
+      return;
+    }
+
+    setErrorMsg("");
+    setFile(validFile);
+    e.target.value = "";
+  };
+
+  const handleSubmit = () => {
+    if (!file) {
+      setErrorMsg("Please upload a response document before submitting.");
+      return;
+    }
+    onUpdate?.({
+      cardId: card.id,
+      status: "Submitted",
+      remarks,
+      files: [file],
+    });
+  };
 
   if (!card) return null;
 
@@ -139,30 +175,52 @@ const QueryResponseModal = ({ card, onClose }) => {
             <label style={{ fontSize: 14, fontWeight: 600, color: "#111827", display: "block", marginBottom: 8 }}>
               Upload Response Document (PDF/Word)
             </label>
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              style={{
-                border: "1px dashed #D1D5DB", borderRadius: 8, padding: "24px 16px",
-                background: "#fff", cursor: "pointer", display: "flex", flexDirection: "column",
-                alignItems: "center", justifyContent: "center", gap: 10, textAlign: "center",
-                transition: "border-color 0.15s, background 0.15s",
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = "#2563EB";
-                e.currentTarget.style.background = "#F8FAFC";
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = "#D1D5DB";
-                e.currentTarget.style.background = "#fff";
-              }}
-            >
-              <Upload size={24} color="#6B7280" />
-              <div>
-                <div style={{ fontSize: 14, fontWeight: 500, color: "#374151", marginBottom: 4 }}>Click to upload response document</div>
-                <div style={{ fontSize: 12, color: "#6B7280" }}>PDF or Word files accepted</div>
+            {errorMsg && (
+              <div style={{ marginBottom: 12, fontSize: 13, color: "#D92D20", display: "flex", alignItems: "center", gap: 6 }}>
+                {errorMsg}
               </div>
-            </div>
-            <input ref={fileInputRef} type="file" accept=".pdf,.doc,.docx" style={{ display: "none" }} />
+            )}
+            {!file ? (
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                style={{
+                  border: "1px dashed #D1D5DB", borderRadius: 8, padding: "24px 16px",
+                  background: "#fff", cursor: "pointer", display: "flex", flexDirection: "column",
+                  alignItems: "center", justifyContent: "center", gap: 10, textAlign: "center",
+                  transition: "border-color 0.15s, background 0.15s",
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = "#2563EB";
+                  e.currentTarget.style.background = "#F8FAFC";
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = "#D1D5DB";
+                  e.currentTarget.style.background = "#fff";
+                }}
+              >
+                <Upload size={24} color="#6B7280" />
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 500, color: "#374151", marginBottom: 4 }}>Click to upload response document</div>
+                  <div style={{ fontSize: 12, color: "#6B7280" }}>PDF or Word files accepted</div>
+                </div>
+              </div>
+            ) : (
+              <div style={{
+                border: "1px solid #D1D5DB", borderRadius: 8, padding: "16px",
+                display: "flex", alignItems: "flex-start", gap: 12, background: "#F9FAFB"
+              }}>
+                <div style={{ width: 32, height: 32, borderRadius: 6, background: "#EFF6FF", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <FileText size={18} color="#2563EB" />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: "#111827", marginBottom: 4, wordBreak: "break-all" }}>{file.name}</div>
+                  <button onClick={() => setFile(null)} style={{ background: "none", border: "none", padding: 0, color: "#DC2626", fontSize: 12, cursor: "pointer", fontWeight: 500, fontFamily: FONT }}>
+                    Remove Document
+                  </button>
+                </div>
+              </div>
+            )}
+            <input onChange={handleFileChange} ref={fileInputRef} type="file" accept=".pdf,.doc,.docx" style={{ display: "none" }} />
           </div>
 
         </div>
@@ -193,7 +251,7 @@ const QueryResponseModal = ({ card, onClose }) => {
           </button>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleSubmit}
             style={{
               padding: "10px 36px", border: "none", borderRadius: 8,
               background: "#2563EB", fontSize: 14, fontWeight: 600, color: "#fff",

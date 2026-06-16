@@ -38,7 +38,8 @@ const OEM_DOCS_ROWS = [
 ];
 
 // ─── OEM Docs Full-Screen View ─────────────────────────────────────────────────
-const OEMDocsView = ({ onBack }) => {
+const OEMDocsView = ({ onBack, onSubmitDocs, onUpload }) => {
+  const fileInputRef = useRef(null);
   const thStyle = {
     padding: "10px 14px",
     fontSize: 10.5,
@@ -241,7 +242,15 @@ const OEMDocsView = ({ onBack }) => {
           }}
         >
           <div style={{ display: "flex", gap: 10 }}>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              onChange={onUpload}
+              style={{ display: "none" }}
+            />
             <button
+              onClick={() => fileInputRef.current?.click()}
               style={{
                 padding: "9px 16px", border: "none", borderRadius: 8, background: "none",
                 fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6
@@ -274,7 +283,7 @@ const OEMDocsView = ({ onBack }) => {
               <Save size={14} /> Save Draft
             </button>
             <button
-              onClick={onBack}
+              onClick={onSubmitDocs || onBack}
               style={{
                 padding: "9px 24px",
                 border: "none",
@@ -310,7 +319,7 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
   const [status, setStatus] = useState("");
   const [remarks, setRemarks] = useState("");
   const [files, setFiles] = useState([]);
-  const [oemStatus, setOemStatus] = useState("100% Completed");
+  const [oemStatus, setOemStatus] = useState("Pending");
   const [showOEMDocs, setShowOEMDocs] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const fileInputRef = useRef(null);
@@ -318,11 +327,33 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
   if (!card) return null;
 
   const handleFileChange = (e) => {
-    const newFiles = Array.from(e.target.files);
-    if (newFiles.length > 0) {
-      setErrorMsg("");
+    const selectedFiles = Array.from(e.target.files || []);
+
+    if (selectedFiles.length === 0) return;
+
+    const allowedExtensions = [".pdf", ".doc", ".docx"];
+
+    const validFiles = selectedFiles.filter((file) => {
+      const fileName = file.name.toLowerCase();
+      return allowedExtensions.some((ext) => fileName.endsWith(ext));
+    });
+
+    if (validFiles.length === 0) {
+      setErrorMsg("Only PDF or Word documents are allowed.");
+      e.target.value = "";
+      return;
     }
-    setFiles((prev) => [...prev, ...newFiles]);
+
+    setErrorMsg("");
+
+    // For Query Response, keep only one response document
+    if (card.isQuery) {
+      setFiles([validFiles[0]]);
+    } else {
+      setFiles((prev) => [...prev, ...validFiles]);
+    }
+
+    // Allows selecting the same file again later
     e.target.value = "";
   };
 
@@ -347,7 +378,14 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
 
   // If OEM Docs are open, render them instead
   if (showOEMDocs) {
-    return <OEMDocsView onBack={() => setShowOEMDocs(false)} />;
+    return <OEMDocsView
+      onBack={() => setShowOEMDocs(false)}
+      onSubmitDocs={() => {
+        setOemStatus("100% Completed");
+        setShowOEMDocs(false);
+      }}
+      onUpload={handleFileChange}
+    />;
   }
 
   return (
@@ -561,12 +599,13 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
                 marginBottom: 8,
               }}
             >
-              Attach Files<span style={{ color: "#F04438" }}>*</span>
+              {card.isQuery ? "Upload Response Document" : "Attach Files"}<span style={{ color: "#F04438" }}>*</span>
             </label>
             <input
               ref={fileInputRef}
               type="file"
               multiple
+              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.jpg,.jpeg,.png,.gif,.zip,.rar,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
               onChange={handleFileChange}
               style={{ display: "none" }}
             />
@@ -597,7 +636,7 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
             >
               <Paperclip size={18} color="#667085" />
               <span style={{ fontSize: 13, color: "#98A2B3" }}>
-                Click to attach files...
+                {card.isQuery ? "Click to upload response document..." : "Click to attach files..."}
               </span>
             </button>
 
@@ -685,53 +724,55 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
           </div>
 
           {/* OEM Status — clickable arrow opens OEM docs */}
-          <div style={{ marginBottom: 12 }}>
-            <button
-              type="button"
-              onClick={() => setShowOEMDocs(true)}
-              style={{
-                width: "100%",
-                border: "none",
-                background: "none",
-                padding: "10px 0",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                fontFamily: FONT,
-              }}
-            >
-              <span
+          {!card.isQuery && (
+            <div style={{ marginBottom: 12 }}>
+              <button
+                type="button"
+                onClick={() => setShowOEMDocs(true)}
                 style={{
-                  fontSize: 14,
-                  fontWeight: 700,
-                  color: "#101828",
+                  width: "100%",
+                  border: "none",
+                  background: "none",
+                  padding: "10px 0",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  fontFamily: FONT,
                 }}
               >
-                OEM Status
-              </span>
-              <ChevronRight
-                size={18}
-                color="#667085"
-                style={{ transition: "transform 0.2s ease" }}
-              />
-            </button>
+                <span
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "#101828",
+                  }}
+                >
+                  OEM Status
+                </span>
+                <ChevronRight
+                  size={18}
+                  color="#667085"
+                  style={{ transition: "transform 0.2s ease" }}
+                />
+              </button>
 
-            {/* OEM Status value */}
-            <div
-              style={{
-                border: "1px solid #D0D5DD",
-                borderRadius: 8,
-                padding: "12px 14px",
-                background: "#F9FAFB",
-                fontSize: 14,
-                color: "#101828",
-                marginTop: 4,
-              }}
-            >
-              {oemStatus}
+              {/* OEM Status value */}
+              <div
+                style={{
+                  border: "1px solid #D0D5DD",
+                  borderRadius: 8,
+                  padding: "12px 14px",
+                  background: "#F9FAFB",
+                  fontSize: 14,
+                  color: "#101828",
+                  marginTop: 4,
+                }}
+              >
+                {oemStatus}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* ── Footer ── */}

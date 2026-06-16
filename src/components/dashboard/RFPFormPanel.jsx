@@ -434,8 +434,8 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
               </Section>
             )}
 
-            {/* Attach File button — only for "Complete Tasks" action and NOT for query */}
-            {(card.action === "Complete Tasks" && !card.isQuery) && (
+            {/* Attach File button — for "Complete Tasks" or "View Task" action */}
+            {(card.action === "Complete Tasks" || card.action === "View Task") && (
               <div style={{ marginTop: 4, marginBottom: 14 }}>
                 <button
                   type="button"
@@ -461,7 +461,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
                   onMouseLeave={e => e.currentTarget.style.background = "#111"}
                 >
                   <Paperclip size={16} />
-                  Attach File
+                  {card.isQuery ? "Upload Response Document" : (card.action === "View Task" ? "View Task" : "Attach File")}
                 </button>
               </div>
             )}
@@ -595,6 +595,11 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
         <QueryResponseModal
           card={card}
           onClose={() => setShowQueryModal(false)}
+          onUpdate={(data) => {
+            console.log("Query Response updated:", data);
+            onCompleteTask?.(data);
+            setShowQueryModal(false);
+          }}
         />
       )}
 

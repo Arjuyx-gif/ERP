@@ -117,27 +117,50 @@ const RFPDashboard = () => {
   };
 
   const handleCompleteTask = (data) => {
+    let updated = false;
     setColumns(cols => cols.map(col => ({
       ...col,
       cards: col.cards.map(c => {
-        if (c.id === data.cardId) {
+        if (c.id === data.cardId && !updated) {
+          // Only update the first matching card with a "Complete Tasks" or "View Task" action
+          if (c.action !== "Complete Tasks" && c.action !== "View Task") return c;
+          updated = true;
+
           const updatedBadges = c.badges ? c.badges.map(b => {
-            if (b.text.includes("Pending") && data.files && data.files.length > 0) {
-              return { ...b, text: b.text.replace("Pending", "Submitted"), color: "#15803D", bg: "#DCFCE7" };
+            if (b.text.toLowerCase().includes("pending") && data.files && data.files.length > 0) {
+              return { ...b, text: b.text.replace(/Pending/i, "Submitted"), color: "#15803D", bg: "#DCFCE7" };
             }
             return b;
           }) : c.badges;
 
+          let finalStatus = data.status;
+          let finalDetailsStatus = data.status;
+
+          if (!data.status) {
+            finalStatus = "Submitted";
+            finalDetailsStatus = "Docs - submitted";
+            
+            if (data.files && data.files.length > 0) {
+               if (c.status?.toLowerCase() === "pending") {
+                 finalStatus = "Submitted";
+               }
+               if (c.details?.status?.toLowerCase().includes("pending")) {
+                 finalDetailsStatus = c.details.status.replace(/pending/i, "submitted");
+               }
+            }
+          }
+
           return {
             ...c,
-            status: data.status || "Completed",
+            status: finalStatus,
             statusColor: "#15803D",
             statusBg: "#DCFCE7",
+            action: (data.files && data.files.length > 0) ? "View Task" : c.action,
             badges: updatedBadges,
             details: {
               ...c.details,
               remark: data.remarks || c.details.remark,
-              status: data.status || "Completed",
+              status: finalDetailsStatus,
             }
           };
         }
