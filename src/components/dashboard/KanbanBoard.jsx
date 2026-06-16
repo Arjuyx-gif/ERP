@@ -26,7 +26,8 @@ const KanbanBoard = ({ columns, onViewAll, onViewRFP }) => (
           <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
             <span style={{
               background: col.countBg, color: "#fff",
-              fontSize: 11, fontWeight: 700, borderRadius: 12, padding: "1px 8px",
+              fontSize: 11, fontWeight: 700, borderRadius: "50%",
+              width: 18, height: 18, display: "flex", alignItems: "center", justifyContent: "center"
             }}>
               {col.count}
             </span>
