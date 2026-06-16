@@ -158,7 +158,7 @@ const KanbanCard = ({ card, onViewRFP }) => {
             onClick={() => onViewRFP?.({ ...card, action: "Update Result" })}
             style={{ ...btnStyle, background: "#111", color: "#fff", border: "none" }}
           >
-            Result Awaited
+            Update Result
           </button>
         </div>
       )}

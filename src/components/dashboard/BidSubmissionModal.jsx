@@ -185,7 +185,7 @@ const BidSubmissionModal = ({ card, onClose }) => {
                       </td>
                       <td style={{ padding: "12px 16px", borderBottom: i === DOCUMENTS.length - 1 ? "none" : "1px solid #E5E7EB", borderLeft: "1px solid #E5E7EB" }}>
                         <button style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, color: "#111827", fontFamily: FONT }}>
-                          <DownloadCloud size={16} /> View
+                          <Download size={16} /> View
                         </button>
                       </td>
                     </tr>
