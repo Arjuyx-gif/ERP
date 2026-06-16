@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { X, Paperclip, ChevronRight, FileText, Trash2, ChevronLeft, UploadCloud, Edit, Download, Save, Send } from "lucide-react";
+import { X, Paperclip, ChevronRight, FileText, Trash2, ChevronLeft, Upload, Pencil, Download, Save, Send } from "lucide-react";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -38,8 +38,25 @@ const OEM_DOCS_ROWS = [
 ];
 
 // ─── OEM Docs Full-Screen View ─────────────────────────────────────────────────
-const OEMDocsView = ({ onBack, onSubmitDocs, onUpload }) => {
+const OEMDocsView = ({ onBack, onSubmitDocs, onUpload, files, removeFile }) => {
   const fileInputRef = useRef(null);
+  const tableRef = useRef(null);
+  const [toastMsg, setToastMsg] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [tableData, setTableData] = useState(() => OEM_DOCS_ROWS.map(row => [...row]));
+
+  const showToast = (msg) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(""), 3000);
+  };
+
+  const handleUploadChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      showToast(`${e.target.files.length} file(s) uploaded successfully!`);
+      if (onUpload) onUpload(e);
+    }
+  };
+
   const thStyle = {
     padding: "10px 14px",
     fontSize: 10.5,
@@ -65,8 +82,10 @@ const OEMDocsView = ({ onBack, onSubmitDocs, onUpload }) => {
     borderBottom: "1px solid #F3F4F6",
     borderRight: "1px solid #E5E7EB",
     verticalAlign: "middle",
-    background: isEven ? "#FFFBEB" : "#fff",
+    background: isEditing ? "#F8FAFC" : (isEven ? "#FFFBEB" : "#fff"),
     whiteSpace: "nowrap",
+    cursor: isEditing ? "text" : "default",
+    outline: "none",
   });
 
   const statusPill = (text) => {
@@ -101,6 +120,18 @@ const OEMDocsView = ({ onBack, onSubmitDocs, onUpload }) => {
           WebkitBackdropFilter: "blur(4px)",
         }}
       />
+
+      {/* Toast Notification */}
+      {toastMsg && (
+        <div style={{
+          position: "fixed", top: 40, left: "50%", transform: "translateX(-50%)", zIndex: 9999,
+          background: "#15803D", color: "#fff", padding: "10px 24px", borderRadius: 8,
+          fontSize: 14, fontWeight: 600, boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
+          animation: "toastSlideDown 0.3s ease-out", fontFamily: FONT
+        }}>
+          {toastMsg}
+        </div>
+      )}
 
       {/* Full-width modal */}
       <div
@@ -205,7 +236,7 @@ const OEMDocsView = ({ onBack, onSubmitDocs, onUpload }) => {
             boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
           }}
         >
-          <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "auto" }}>
+          <table ref={tableRef} style={{ width: "100%", borderCollapse: "collapse", tableLayout: "auto" }}>
             <thead>
               <tr>
                 {OEM_DOCS_COLUMNS.map((h, i) => (
@@ -216,10 +247,15 @@ const OEMDocsView = ({ onBack, onSubmitDocs, onUpload }) => {
               </tr>
             </thead>
             <tbody>
-              {OEM_DOCS_ROWS.map((row, i) => (
+              {tableData.map((row, i) => (
                 <tr key={i}>
                   {row.map((cell, j) => (
-                    <td key={j} style={tdStyle(i % 2 === 0)}>
+                    <td 
+                      key={j} 
+                      style={tdStyle(i % 2 === 0)}
+                      contentEditable={isEditing}
+                      suppressContentEditableWarning={true}
+                    >
                       {cell}
                     </td>
                   ))}
@@ -228,6 +264,46 @@ const OEMDocsView = ({ onBack, onSubmitDocs, onUpload }) => {
             </tbody>
           </table>
         </div>
+
+        {/* Attached file list in OEMDocsView */}
+        {files && files.length > 0 && (
+          <div
+            style={{
+              padding: "0 24px 16px",
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 10,
+            }}
+          >
+            {files.map((file, idx) => (
+              <div
+                key={idx}
+                style={{
+                  display: "flex", alignItems: "center", gap: 8,
+                  padding: "6px 12px", background: "#F9FAFB",
+                  borderRadius: 8, border: "1px solid #E5E7EB",
+                  fontSize: 12, color: "#374151", fontWeight: 500, fontFamily: FONT
+                }}
+              >
+                <FileText size={14} color="#2979FF" />
+                <span style={{ maxWidth: 150, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {file.name}
+                </span>
+                <button
+                  onClick={() => removeFile && removeFile(idx)}
+                  style={{
+                    background: "none", border: "none", padding: 2, cursor: "pointer",
+                    color: "#9CA3AF", display: "flex", alignItems: "center"
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "#EF4444")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "#9CA3AF")}
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Footer */}
         <div
@@ -246,7 +322,7 @@ const OEMDocsView = ({ onBack, onSubmitDocs, onUpload }) => {
               ref={fileInputRef}
               type="file"
               multiple
-              onChange={onUpload}
+              onChange={handleUploadChange}
               style={{ display: "none" }}
             />
             <button
@@ -256,17 +332,35 @@ const OEMDocsView = ({ onBack, onSubmitDocs, onUpload }) => {
                 fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6
               }}
             >
-              <UploadCloud size={14} /> Upload
+              <Upload size={14} /> Upload
             </button>
             <button
+              onClick={() => {
+                if (isEditing) {
+                  if (tableRef.current) {
+                    const rows = tableRef.current.querySelectorAll('tbody tr');
+                    const newData = Array.from(rows).map(row => {
+                      const cells = row.querySelectorAll('td');
+                      return Array.from(cells).map(cell => cell.textContent);
+                    });
+                    setTableData(newData);
+                  }
+                  setIsEditing(false);
+                  showToast("Edits saved successfully!");
+                } else {
+                  setIsEditing(true);
+                  showToast("Edit mode enabled. Click on any cell to edit.");
+                }
+              }}
               style={{
-                padding: "9px 16px", border: "none", borderRadius: 8, background: "none",
+                padding: "9px 16px", border: isEditing ? "1px solid #E5E7EB" : "none", borderRadius: 8, background: isEditing ? "#F3F4F6" : "none",
                 fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6
               }}
             >
-              <Edit size={14} /> Edit
+              <Pencil size={14} /> {isEditing ? "Save Edits" : "Edit"}
             </button>
             <button
+              onClick={() => showToast("Downloading OEM Documentation CSV...")}
               style={{
                 padding: "9px 16px", border: "none", borderRadius: 8, background: "none",
                 fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6
@@ -275,6 +369,7 @@ const OEMDocsView = ({ onBack, onSubmitDocs, onUpload }) => {
               <Download size={14} /> Download
             </button>
             <button
+              onClick={() => showToast("Draft saved successfully!")}
               style={{
                 padding: "9px 16px", border: "none", borderRadius: 8, background: "none",
                 fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6
@@ -283,7 +378,13 @@ const OEMDocsView = ({ onBack, onSubmitDocs, onUpload }) => {
               <Save size={14} /> Save Draft
             </button>
             <button
-              onClick={onSubmitDocs || onBack}
+              onClick={() => {
+                showToast("Documents submitted successfully!");
+                setTimeout(() => {
+                  if (onSubmitDocs) onSubmitDocs();
+                  else onBack();
+                }, 800);
+              }}
               style={{
                 padding: "9px 24px",
                 border: "none",
@@ -308,6 +409,10 @@ const OEMDocsView = ({ onBack, onSubmitDocs, onUpload }) => {
           from { opacity: 0; transform: translate(-50%, -48%); }
           to   { opacity: 1; transform: translate(-50%, -50%); }
         }
+        @keyframes toastSlideDown {
+          from { opacity: 0; transform: translate(-50%, -20px); }
+          to   { opacity: 1; transform: translate(-50%, 0); }
+        }
       `}</style>
     </>
   );
@@ -319,6 +424,7 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
   const [status, setStatus] = useState("");
   const [remarks, setRemarks] = useState("");
   const [files, setFiles] = useState([]);
+  const [oemFiles, setOemFiles] = useState([]);
   const [oemStatus, setOemStatus] = useState("Pending");
   const [showOEMDocs, setShowOEMDocs] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -333,24 +439,23 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
 
     const allowedExtensions = [".pdf", ".doc", ".docx"];
 
-    const validFiles = selectedFiles.filter((file) => {
-      const fileName = file.name.toLowerCase();
-      return allowedExtensions.some((ext) => fileName.endsWith(ext));
-    });
-
-    if (validFiles.length === 0) {
-      setErrorMsg("Only PDF or Word documents are allowed.");
-      e.target.value = "";
-      return;
-    }
-
-    setErrorMsg("");
-
-    // For Query Response, keep only one response document
+    // Validate for Query response only
     if (card.isQuery) {
+      const validFiles = selectedFiles.filter((file) => {
+        const fileName = file.name.toLowerCase();
+        return allowedExtensions.some((ext) => fileName.endsWith(ext));
+      });
+
+      if (validFiles.length === 0) {
+        setErrorMsg("Only PDF or Word documents are allowed for responses.");
+        e.target.value = "";
+        return;
+      }
+      
+      setErrorMsg("");
       setFiles([validFiles[0]]);
     } else {
-      setFiles((prev) => [...prev, ...validFiles]);
+      setFiles((prev) => [...prev, ...selectedFiles]);
     }
 
     // Allows selecting the same file again later
@@ -359,6 +464,18 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
 
   const removeFile = (idx) => {
     setFiles((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleOemFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files || []);
+    if (selectedFiles.length === 0) return;
+
+    setOemFiles((prev) => [...prev, ...selectedFiles]);
+    e.target.value = "";
+  };
+
+  const removeOemFile = (index) => {
+    setOemFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleUpdate = () => {
@@ -384,7 +501,9 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
         setOemStatus("100% Completed");
         setShowOEMDocs(false);
       }}
-      onUpload={handleFileChange}
+      onUpload={handleOemFileChange}
+      files={oemFiles}
+      removeFile={removeOemFile}
     />;
   }
 
@@ -765,11 +884,17 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
                   padding: "12px 14px",
                   background: "#F9FAFB",
                   fontSize: 14,
-                  color: "#101828",
+                  color: oemFiles.length > 0 ? "#2979FF" : "#101828",
+                  cursor: oemFiles.length > 0 ? "pointer" : "default",
                   marginTop: 4,
                 }}
+                onClick={() => {
+                  if (oemFiles.length > 0) {
+                     setShowOEMDocs(true);
+                  }
+                }}
               >
-                {oemStatus}
+                {oemFiles.length > 0 ? "View Doc" : oemStatus}
               </div>
             </div>
           )}
