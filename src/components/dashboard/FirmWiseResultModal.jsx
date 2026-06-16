@@ -282,7 +282,7 @@ const FirmWiseResultModal = ({ card, onClose, onSubmit }) => {
 
       <div style={{ padding: "14px 22px 20px", borderTop: "1px solid #EAECF0", flexShrink: 0 }}>
         <button
-          onClick={onSubmit}
+          onClick={() => onSubmit({ results })}
           style={{
             width: "100%", padding: "13px 0", border: "none", borderRadius: 12,
             background: "#2979FF", fontSize: 14, fontWeight: 700, color: "#fff",

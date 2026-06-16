@@ -151,20 +151,14 @@ const KanbanCard = ({ card, onViewRFP }) => {
         </div>
       )}
 
-      {/* Won / Lost / Cancelled */}
+      {/* Result Awaited Action */}
       {card.wonLost && (
         <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 6 }}>
           <button
             onClick={() => onViewRFP?.({ ...card, action: "Update Result" })}
-            style={{ ...btnStyle, background: "#4CAF50", color: "#fff", border: "none" }}
+            style={{ ...btnStyle, background: "#111", color: "#fff", border: "none" }}
           >
-            <CheckCircle size={13} /> Won
-          </button>
-          <button style={{ ...btnStyle, background: "#F44336", color: "#fff", border: "none" }}>
-            <XCircle size={13} /> Lost
-          </button>
-          <button style={{ ...btnStyle, background: "#fff", color: "#888", border: "1px solid #ddd" }}>
-            <XCircle size={13} /> Cancelled
+            Result Awaited
           </button>
         </div>
       )}

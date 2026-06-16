@@ -169,6 +169,108 @@ const RFPDashboard = () => {
     })));
   };
 
+  const handleUpdateResult = (data) => {
+    const { cardId, results } = data;
+
+    setColumns(cols => {
+      let originalCard = null;
+
+      // First pass: find and remove the card from its current column
+      const newCols = cols.map(col => {
+        const foundIndex = col.cards.findIndex(c => c.id === cardId);
+        if (foundIndex > -1) {
+          originalCard = { ...col.cards[foundIndex] };
+          return {
+            ...col,
+            cards: [...col.cards.slice(0, foundIndex), ...col.cards.slice(foundIndex + 1)]
+          };
+        }
+        return col;
+      });
+
+      if (!originalCard) return cols;
+
+      const wonFirms = [];
+      const lostFirms = [];
+      Object.entries(results).forEach(([firm, res]) => {
+        if (res === "Won") wonFirms.push(firm);
+        else lostFirms.push(firm);
+      });
+
+      const cardsToAdd = [];
+
+      if (wonFirms.length > 0) {
+        const wonCard = { ...originalCard };
+        wonCard.id = wonFirms.length > 0 && lostFirms.length > 0 ? originalCard.id + "-won" : originalCard.id;
+        wonCard.status = "Completed";
+        wonCard.statusColor = "#4CAF50";
+        wonCard.statusBg = "#E8F5E9";
+        wonCard.wonLost = false;
+        wonCard.poActions = true;
+        wonCard.lostActions = false;
+        wonCard.action = "Upload PO";
+        wonCard.badge = null; // remove single badge, rely on tags
+
+        wonCard.tags = [];
+        wonCard.tagColors = { ...originalCard.tagColors };
+        wonFirms.forEach(firm => {
+          wonCard.tags.push(firm);
+          wonCard.tags.push("Awarded");
+          wonCard.tagColors[firm] = { bg: "#E3F0FB", color: "#2979FF" };
+          wonCard.tagColors["Awarded"] = { bg: "#D1FAE5", color: "#059669" };
+        });
+
+        cardsToAdd.push({ columnId: "won", card: wonCard });
+      }
+
+      if (lostFirms.length > 0) {
+        const lostCard = { ...originalCard };
+        lostCard.id = wonFirms.length > 0 && lostFirms.length > 0 ? originalCard.id + "-lost" : originalCard.id;
+        lostCard.status = "Lost";
+        lostCard.statusColor = "#C62828";
+        lostCard.statusBg = "#FBE9E7";
+        lostCard.wonLost = false;
+        lostCard.poActions = false;
+        lostCard.lostActions = true;
+        lostCard.action = "EMD Return";
+        lostCard.badge = null; // remove single badge, rely on tags
+        
+        lostCard.tags = [];
+        lostCard.tagColors = { ...originalCard.tagColors };
+        lostFirms.forEach(firm => {
+          lostCard.tags.push(firm);
+          const firmResult = results[firm];
+          lostCard.tags.push(firmResult);
+          lostCard.tagColors[firm] = { bg: "#E3F0FB", color: "#2979FF" };
+          
+          if (firmResult === "Lost") {
+            lostCard.tagColors[firmResult] = { bg: "#FBE9E7", color: "#C62828" };
+          } else if (firmResult === "Canceled") {
+            lostCard.tagColors[firmResult] = { bg: "#F3F4F6", color: "#6B7280" };
+          } else if (firmResult === "Disqualified") {
+            lostCard.tagColors[firmResult] = { bg: "#FEF3C7", color: "#B45309" };
+          } else {
+             lostCard.tagColors[firmResult] = { bg: "#FEF9E7", color: "#D97706" };
+          }
+        });
+
+        cardsToAdd.push({ columnId: "lost", card: lostCard });
+      }
+
+      // Second pass: add it to the target column
+      return newCols.map(col => {
+        const matchedAdds = cardsToAdd.filter(c => c.columnId === col.id);
+        if (matchedAdds.length > 0) {
+          return {
+            ...col,
+            cards: [...col.cards, ...matchedAdds.map(c => c.card)]
+          };
+        }
+        return col;
+      });
+    });
+  };
+
   // ── Loading / error guards ───────────────────────────────────────────────────
   if (loading) return (
     <div style={{
@@ -436,7 +538,7 @@ const RFPDashboard = () => {
       <ViewAllModal col={viewAllCol} onClose={() => setViewAllCol(null)} />
 
       {/* ── RFP Form panel ── */}
-      <RFPFormPanel card={viewRFPCard} onClose={() => setViewRFPCard(null)} onReject={handleReject} onSendNotification={handleSendNotification} onCompleteTask={handleCompleteTask} />
+      <RFPFormPanel card={viewRFPCard} onClose={() => setViewRFPCard(null)} onReject={handleReject} onSendNotification={handleSendNotification} onCompleteTask={handleCompleteTask} onUpdateResult={handleUpdateResult} />
 
       {/* ── Bid Submission modal ── */}
       <BidSubmissionModal card={bidSubmittedCard} onClose={() => setBidSubmittedCard(null)} />

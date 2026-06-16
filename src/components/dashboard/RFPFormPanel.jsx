@@ -224,7 +224,7 @@ const RejectModal = ({ onCancel, onConfirm }) => {
 
 // ─── RFPFormPanel ──────────────────────────────────────────────────────────────
 
-const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteTask }) => {
+const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteTask, onUpdateResult }) => {
   const formRef = useRef(null);
   const [showRejectModal,   setShowRejectModal]   = useState(false);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
@@ -607,7 +607,11 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
         <FirmWiseResultModal
           card={card}
           onClose={() => setShowFirmResultModal(false)}
-          onSubmit={() => setShowFirmResultModal(false)}
+          onSubmit={(resultData) => {
+            setShowFirmResultModal(false);
+            onUpdateResult?.({ cardId: card.id, ...resultData });
+            onClose?.();
+          }}
         />
       )}
 
