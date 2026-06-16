@@ -90,6 +90,39 @@ const RFPDashboard = () => {
     })));
   };
 
+  const handleApprove = (card) => {
+    setColumns(cols => {
+      let approvedCard = null;
+      const newCols = cols.map(col => {
+        if (col.id === "awaiting_approval") {
+          const idx = col.cards.findIndex(c => c.id === card.id);
+          if (idx > -1) {
+            approvedCard = {
+              ...col.cards[idx],
+              status: "Approved",
+              statusColor: "#059669",
+              statusBg: "#D1FAE5",
+              badge: { text: "Approved", color: "#059669", bg: "#D1FAE5" },
+              action: "View RFP Form",
+              details: { ...col.cards[idx].details, status: "Approved" },
+            };
+            return {
+              ...col,
+              cards: col.cards.filter((_, i) => i !== idx),
+            };
+          }
+        }
+        return col;
+      });
+      if (!approvedCard) return cols;
+      return newCols.map(col =>
+        col.id === "approved"
+          ? { ...col, cards: [...col.cards, approvedCard] }
+          : col
+      );
+    });
+  };
+
   const handleReject = (card, reason) => {
     const rejectedCard = {
       id: card.id,
@@ -540,7 +573,7 @@ const RFPDashboard = () => {
       <ViewAllModal col={viewAllCol} onClose={() => setViewAllCol(null)} />
 
       {/* ── RFP Form panel ── */}
-      <RFPFormPanel card={viewRFPCard} onClose={() => setViewRFPCard(null)} onReject={handleReject} onSendNotification={handleSendNotification} onCompleteTask={handleCompleteTask} onUpdateResult={handleUpdateResult} />
+      <RFPFormPanel card={viewRFPCard} onClose={() => setViewRFPCard(null)} onReject={handleReject} onSendNotification={handleSendNotification} onCompleteTask={handleCompleteTask} onUpdateResult={handleUpdateResult} onApprove={handleApprove} />
 
       {/* ── Bid Submission modal ── */}
       <BidSubmissionModal card={bidSubmittedCard} onClose={() => setBidSubmittedCard(null)} />

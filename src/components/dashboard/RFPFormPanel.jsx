@@ -225,7 +225,7 @@ const RejectModal = ({ onCancel, onConfirm }) => {
 
 // ─── RFPFormPanel ──────────────────────────────────────────────────────────────
 
-const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteTask, onUpdateResult }) => {
+const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteTask, onUpdateResult, onApprove }) => {
   const formRef = useRef(null);
   const [showRejectModal,   setShowRejectModal]   = useState(false);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
@@ -438,7 +438,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
             )}
 
             {/* Attach File button — for "Complete Tasks" or "View Task" action */}
-            {(card.action === "Complete Tasks" || card.action === "View Task") && (
+            {!card.isQuery && (card.action === "Complete Tasks" || card.action === "View Task") && (
               <div style={{ marginTop: 4, marginBottom: 14 }}>
                 <button
                   type="button"
@@ -523,7 +523,8 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
                   <XCircle size={16} /> Re-check
                 </button>
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={() => { onApprove?.(card); onClose?.(); }}
                   style={{
                     flex: 1, padding: "12px 0", border: "none", borderRadius: 8,
                     background: "#1B5E20", fontSize: 13, fontWeight: 700, color: "#fff",
