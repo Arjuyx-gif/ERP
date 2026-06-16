@@ -71,10 +71,12 @@ const RFPDashboard = () => {
   };
 
   const handleSendNotification = (card, checkedDepts, notificationSections) => {
+    let processed = false;
     setColumns(cols => cols.map(col => ({
       ...col,
       cards: col.cards.flatMap(c => {
-        if (c.id === card.id && c.action === "Send Notification") {
+        if (!processed && c.id === card.id && c.action === "Send Notification") {
+          processed = true;
           const sentCard = {
             ...c,
             notifyList: checkedDepts,
@@ -93,22 +95,48 @@ const RFPDashboard = () => {
   const handleApprove = (card) => {
     setColumns(cols => {
       let approvedCard = null;
+      let approvedAwaitingCard = null;
       const newCols = cols.map(col => {
         if (col.id === "awaiting_approval") {
           const idx = col.cards.findIndex(c => c.id === card.id);
           if (idx > -1) {
+            const originalCard = col.cards[idx];
+            // Card for Alert/Notify column with Send Notification functionality
             approvedCard = {
-              ...col.cards[idx],
+              ...originalCard,
               status: "Approved",
               statusColor: "#059669",
               statusBg: "#D1FAE5",
               badge: { text: "Approved", color: "#059669", bg: "#D1FAE5" },
-              action: "View RFP Form",
-              details: { ...col.cards[idx].details, status: "Approved" },
+              details: { ...originalCard.details, status: "Send Alert" },
+              notifyList: ["Pre-sales", "Sales-coordinator", "Purchase", "Accounts", "HR", "Service"],
+              checkedNotify: [],
+              sendBy: "Sales Rep Name",
+              action: "Send Notification",
+            };
+            // Card that stays in Awaiting Approval (like rejected cards)
+            approvedAwaitingCard = {
+              id: originalCard.id,
+              tender: originalCard.tender,
+              customer: originalCard.customer,
+              amount: originalCard.amount,
+              tags: originalCard.tags,
+              tagColors: originalCard.tagColors,
+              status: "Approved",
+              statusColor: "#059669",
+              statusBg: "#D1FAE5",
+              action: "Review Now",
+              details: {
+                ...originalCard.details,
+                status: "Approved",
+              },
             };
             return {
               ...col,
-              cards: col.cards.filter((_, i) => i !== idx),
+              cards: [
+                ...col.cards.filter((_, i) => i !== idx),
+                approvedAwaitingCard,
+              ],
             };
           }
         }
@@ -116,7 +144,7 @@ const RFPDashboard = () => {
       });
       if (!approvedCard) return cols;
       return newCols.map(col =>
-        col.id === "approved"
+        col.id === "alert_notify"
           ? { ...col, cards: [...col.cards, approvedCard] }
           : col
       );
@@ -239,10 +267,10 @@ const RFPDashboard = () => {
         wonCard.statusColor = "#4CAF50";
         wonCard.statusBg = "#E8F5E9";
         wonCard.wonLost = false;
-        wonCard.poActions = true;
+        wonCard.poActions = false;
         wonCard.lostActions = false;
-        wonCard.action = "Upload PO";
-        wonCard.badge = null; // remove single badge, rely on tags
+        wonCard.action = null;
+        wonCard.badge = null;
 
         wonCard.tags = [];
         wonCard.tagColors = { ...originalCard.tagColors };
@@ -265,8 +293,8 @@ const RFPDashboard = () => {
         lostCard.wonLost = false;
         lostCard.poActions = false;
         lostCard.lostActions = true;
-        lostCard.action = "EMD Return";
-        lostCard.badge = null; // remove single badge, rely on tags
+        lostCard.action = null;
+        lostCard.badge = null;
 
         lostCard.tags = [];
         lostCard.tagColors = { ...originalCard.tagColors };

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, ChevronDown, Paperclip } from "lucide-react";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
@@ -15,6 +16,125 @@ const resultStyle = (value) => {
   }
 };
 
+// ── Portal dropdown menu — rendered at document.body to escape overflow:hidden ──
+const DropdownPortal = ({ triggerRef, onSelect, onClose }) => {
+  const [rect, setRect] = useState(null);
+
+  useEffect(() => {
+    if (triggerRef.current) {
+      setRect(triggerRef.current.getBoundingClientRect());
+    }
+  }, [triggerRef]);
+
+  if (!rect) return null;
+
+  return createPortal(
+    <>
+      {/* Click-away backdrop */}
+      <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 9998 }} />
+      <div style={{
+        position: "fixed",
+        top: rect.bottom,
+        left: rect.left,
+        width: rect.width,
+        background: "#FFFDE7",
+        border: "1px solid #E9D89A",
+        borderTop: "none",
+        borderRadius: "0 0 6px 6px",
+        boxShadow: "0 6px 20px rgba(0,0,0,0.14)",
+        zIndex: 9999,
+        overflow: "hidden",
+        fontFamily: FONT,
+      }}>
+        {RESULT_OPTIONS.map((opt, idx) => (
+          <div
+            key={opt}
+            onClick={() => { onSelect(opt); onClose(); }}
+            onMouseEnter={e => { e.currentTarget.style.background = "#BFDBFE"; e.currentTarget.style.color = "#1E3A5F"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#92400E"; }}
+            style={{
+              padding: "9px 12px",
+              fontSize: 13, fontWeight: 500, color: "#92400E",
+              cursor: "pointer",
+              borderBottom: idx < RESULT_OPTIONS.length - 1 ? "1px solid #E9D89A" : "none",
+              transition: "background 0.12s, color 0.12s",
+            }}
+          >
+            {opt}
+          </div>
+        ))}
+      </div>
+    </>,
+    document.body
+  );
+};
+
+// ── Per-firm editable row (needs its own ref for portal positioning) ────────────
+const FirmRow = ({ firm, value, tagColor, isLast, onChange }) => {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef(null);
+  const { bg, color } = resultStyle(value);
+
+  return (
+    <div style={{
+      display: "grid", gridTemplateColumns: "1fr 1.5fr 1.2fr",
+      padding: "12px 14px", alignItems: "center",
+      borderBottom: isLast ? "none" : "1px solid #EAECF0",
+      background: "#fff",
+    }}>
+      {/* Firm tag */}
+      <span style={{
+        display: "inline-block", width: "fit-content",
+        fontSize: 12, fontWeight: 600,
+        padding: "3px 10px", borderRadius: 6,
+        background: tagColor || "#E3F0FB", color: "#344054",
+      }}>
+        {firm}
+      </span>
+
+      {/* Custom dropdown trigger */}
+      <div style={{ position: "relative" }}>
+        <div
+          ref={triggerRef}
+          onClick={() => setOpen(o => !o)}
+          style={{
+            display: "inline-flex", alignItems: "center", gap: 8,
+            background: "#FFFDE7",
+            border: "1px solid #E9D89A",
+            borderRadius: open ? "6px 6px 0 0" : 6,
+            padding: "6px 10px",
+            cursor: "pointer", userSelect: "none",
+            minWidth: 148,
+          }}
+        >
+          <span style={{ flex: 1, fontSize: 13, fontWeight: 500, color: "#92400E" }}>
+            {value}
+          </span>
+          <ChevronDown
+            size={14} color="#92400E"
+            style={{
+              flexShrink: 0,
+              transition: "transform 0.15s",
+              transform: open ? "rotate(180deg)" : "rotate(0deg)",
+            }}
+          />
+        </div>
+
+        {open && (
+          <DropdownPortal
+            triggerRef={triggerRef}
+            onSelect={onChange}
+            onClose={() => setOpen(false)}
+          />
+        )}
+      </div>
+
+      <div /> {/* EMD Return column — empty while editing */}
+    </div>
+  );
+};
+
+// ── Main modal ──────────────────────────────────────────────────────────────────
 const FirmWiseResultModal = ({ card, onClose, onSubmit }) => {
   const firms = card.tags?.filter(t => t !== "Lost") || [];
 
@@ -22,9 +142,9 @@ const FirmWiseResultModal = ({ card, onClose, onSubmit }) => {
   const [results, setResults] = useState(
     firms.reduce((acc, firm) => ({ ...acc, [firm]: "Result Awaited" }), {})
   );
-  const [editRemarks, setEditRemarks]     = useState("");
-  const [refundDetails, setRefundDetails] = useState("");
-  const [reviewRemarks, setReviewRemarks] = useState("");
+  const [editRemarks,    setEditRemarks]    = useState("");
+  const [refundDetails,  setRefundDetails]  = useState("");
+  const [reviewRemarks,  setReviewRemarks]  = useState("");
 
   const lostFirms = firms.filter(f => results[f] === "Lost");
   const hasLost   = lostFirms.length > 0;
@@ -63,13 +183,14 @@ const FirmWiseResultModal = ({ card, onClose, onSubmit }) => {
     </div>
   );
 
-  // ── Firm-Wise Result table (shared between phases) ──────────────────────────
-  const FirmTable = ({ editable }) => (
+  // ── Read-only firm table (phase 2) ──────────────────────────────────────────
+  const FirmTableReadOnly = () => (
     <div>
       <div style={{ fontSize: 13, fontWeight: 700, color: "#101828", marginBottom: 10 }}>
         Firm - Wise Result
       </div>
       <div style={{ border: "1px solid #EAECF0", borderRadius: 10, overflow: "hidden" }}>
+        {/* Header */}
         <div style={{
           display: "grid", gridTemplateColumns: "1fr 1.5fr 1.2fr",
           background: "#F9FAFB", padding: "9px 14px", borderBottom: "1px solid #EAECF0",
@@ -78,6 +199,7 @@ const FirmWiseResultModal = ({ card, onClose, onSubmit }) => {
             <span key={h} style={{ fontSize: 12, fontWeight: 600, color: "#667085" }}>{h}</span>
           ))}
         </div>
+        {/* Rows */}
         {firms.map((firm, i) => {
           const { bg, color } = resultStyle(results[firm]);
           return (
@@ -95,38 +217,15 @@ const FirmWiseResultModal = ({ card, onClose, onSubmit }) => {
               }}>
                 {firm}
               </span>
-
-              {editable ? (
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: bg, borderRadius: 8, padding: "5px 8px 5px 10px", width: "fit-content" }}>
-                  <select
-                    value={results[firm]}
-                    onChange={e => setResults(prev => ({ ...prev, [firm]: e.target.value }))}
-                    style={{
-                      appearance: "none", WebkitAppearance: "none",
-                      background: "transparent", color, border: "none",
-                      fontSize: 12, fontWeight: 600,
-                      fontFamily: FONT, cursor: "pointer", outline: "none",
-                      width: "auto",
-                    }}
-                  >
-                    {RESULT_OPTIONS.map(opt => (
-                      <option key={opt} value={opt}>{opt}</option>
-                    ))}
-                  </select>
-                  <ChevronDown size={13} color={color} style={{ flexShrink: 0 }} />
-                </div>
-              ) : (
-                <span style={{
-                  display: "inline-block", width: "fit-content",
-                  fontSize: 12, fontWeight: 600,
-                  padding: "4px 14px", borderRadius: 8, background: bg, color,
-                }}>
-                  {results[firm]}
-                </span>
-              )}
-
+              <span style={{
+                display: "inline-block", width: "fit-content",
+                fontSize: 12, fontWeight: 600,
+                padding: "4px 14px", borderRadius: 8, background: bg, color,
+              }}>
+                {results[firm]}
+              </span>
               <div>
-                {results[firm] === "Lost" && !editable && (
+                {results[firm] === "Lost" && (
                   <span style={{ fontSize: 12, fontWeight: 600, color: "#DC2626", cursor: "pointer" }}>
                     Initiate Refund
                   </span>
@@ -144,7 +243,37 @@ const FirmWiseResultModal = ({ card, onClose, onSubmit }) => {
     return (
       <Wrapper>
         <div style={{ overflowY: "auto", flex: 1, padding: "18px 22px", display: "flex", flexDirection: "column", gap: 18 }}>
-          <FirmTable editable />
+
+          {/* Editable firm table — uses FirmRow with portal dropdowns */}
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#101828", marginBottom: 10 }}>
+              Firm - Wise Result
+            </div>
+            <div style={{ border: "1px solid #EAECF0", borderRadius: 10, overflow: "visible" }}>
+              {/* Header */}
+              <div style={{
+                display: "grid", gridTemplateColumns: "1fr 1.5fr 1.2fr",
+                background: "#F9FAFB", padding: "9px 14px", borderBottom: "1px solid #EAECF0",
+                borderRadius: "10px 10px 0 0",
+              }}>
+                {["Firm", "Result", "EMD Return"].map(h => (
+                  <span key={h} style={{ fontSize: 12, fontWeight: 600, color: "#667085" }}>{h}</span>
+                ))}
+              </div>
+              {/* Rows — each one has its own ref for portal positioning */}
+              {firms.map((firm, i) => (
+                <FirmRow
+                  key={firm}
+                  firm={firm}
+                  value={results[firm]}
+                  tagColor={card.tagColors?.[firm]}
+                  isLast={i === firms.length - 1}
+                  onChange={val => setResults(prev => ({ ...prev, [firm]: val }))}
+                />
+              ))}
+            </div>
+          </div>
+
           <div>
             <div style={{ fontSize: 13, fontWeight: 600, color: "#344054", marginBottom: 8 }}>Remarks</div>
             <textarea
@@ -182,7 +311,7 @@ const FirmWiseResultModal = ({ card, onClose, onSubmit }) => {
     <Wrapper>
       <div style={{ overflowY: "auto", flex: 1, padding: "18px 22px", display: "flex", flexDirection: "column", gap: 18 }}>
 
-        <FirmTable editable={false} />
+        <FirmTableReadOnly />
 
         {/* EMD Refund Request */}
         {hasLost && (

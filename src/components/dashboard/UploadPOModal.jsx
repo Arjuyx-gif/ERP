@@ -5,7 +5,7 @@ const FONT = "'Inter','Segoe UI',sans-serif";
 const UploadPOModal = ({ card, onClose }) => {
   return (
     <div style={{
-      position: "fixed", top: 0, right: 0, bottom: 0, width: "100%",
+      position: "fixed", top: 0, left: 60, bottom: 0, width: "100%",
       zIndex: 975,
       display: "flex", alignItems: "center", justifyContent: "center",
       background: "rgba(0,0,0,0.30)",
@@ -42,20 +42,20 @@ const UploadPOModal = ({ card, onClose }) => {
 
         {/* Body */}
         <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: 20 }}>
-          
+
           {/* PO Document Section */}
           <div>
             <div style={{ fontSize: 15, fontWeight: 600, color: "#111827", marginBottom: 12 }}>
               PO Document
             </div>
-            
+
             <div style={{
               background: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: 8,
               padding: "16px", display: "flex", alignItems: "flex-start", gap: 14,
               cursor: "pointer", transition: "background 0.2s"
             }}
-            onMouseEnter={e => e.currentTarget.style.background = "#F1F5F9"}
-            onMouseLeave={e => e.currentTarget.style.background = "#F8FAFC"}
+              onMouseEnter={e => e.currentTarget.style.background = "#F1F5F9"}
+              onMouseLeave={e => e.currentTarget.style.background = "#F8FAFC"}
             >
               <FileText size={28} color="#2563EB" strokeWidth={1.5} />
               <div>

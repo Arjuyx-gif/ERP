@@ -31,7 +31,9 @@ const KanbanCard = ({ card, onViewRFP }) => {
 
       {/* ID + status */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-        <span style={{ fontWeight: 700, fontSize: 13, color: "#222" }}>{card.id}</span>
+        <span style={{ fontWeight: 700, fontSize: 13, color: "#222" }}>
+          {card.id.replace(/-won$|-lost$/, "")}
+        </span>
         <Badge text={card.status} color={card.statusColor} bg={card.statusBg} />
       </div>
 

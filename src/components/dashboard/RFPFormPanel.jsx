@@ -242,7 +242,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
     setShowApprovalModal(card?.action === "Send Notification");
     setShowViewModal(!!(card?.action === "View" && card?.notificationSections?.length));
     setShowFirmResultModal(card?.action === "Update Result");
-    setShowUploadPOModal(card?.action === "Upload PO");
+    setShowUploadPOModal(card?.action === "Upload PO" || card?.action === "View PO");
     setShowAdditionalDocs(card?.action === "Additional Docs");
     setShowEMDReturnModal(card?.action === "EMD Return");
     setShowViewTaskModal(card?.action === "View Task");
