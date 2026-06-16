@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   Calendar, Clock, User, CheckCircle, XCircle, Upload, Download,
-  ArrowUpRight, Eye,
+  ArrowUpRight, Eye, AlertCircle, Star
 } from "lucide-react";
 import Badge from "../ui/Badge";
 import Tag from "../ui/Tag";
@@ -116,18 +116,20 @@ const KanbanCard = ({ card, onViewRFP }) => {
 
       {/* Status badge with optional icon */}
       {card.statusBadge && (
-        <div style={{ marginBottom: 8 }}>
-          <span style={{
-            fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 12,
-            background: card.statusBadge.bg || "#E8F5E9",
-            color: card.statusBadge.color || "#4CAF50",
-            display: "inline-flex", alignItems: "center", gap: 4,
+        <div style={{ marginBottom: 12 }}>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 6,
+            padding: "8px 12px", borderRadius: 8,
+            background: card.statusBadge.bg || "#FFFBEB",
+            border: `1px solid ${card.statusBadge.color ? card.statusBadge.color + "40" : "#FDE047"}`,
+            color: card.statusBadge.color || "#B45309", fontSize: 12, fontWeight: 700,
           }}>
-            {card.statusBadge.iconName && (
-              <DynamicIcon name={card.statusBadge.iconName} size={11} color={card.statusBadge.color || "#4CAF50"} />
+            <AlertCircle size={14} color={card.statusBadge.color || "#B45309"} strokeWidth={2.5} />
+            {card.statusBadge.iconName === "bell" && (
+              <Star size={14} color="#FBBF24" fill="#FBBF24" strokeWidth={1} />
             )}
-            {card.statusBadge.text}
-          </span>
+            <span style={{ marginLeft: 2 }}>{card.statusBadge.text}</span>
+          </div>
         </div>
       )}
 

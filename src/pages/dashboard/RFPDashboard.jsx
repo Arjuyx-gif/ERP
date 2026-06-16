@@ -99,7 +99,7 @@ const RFPDashboard = () => {
       tags: card.tags,
       tagColors: card.tagColors,
       status: "Rejected",
-      statusColor: "#F5A623",
+      statusColor: "#CA3500",
       statusBg: "#FFF4E0",
       action: "Review Now",
       rejectionRemark: reason || "Sent back for rework",
@@ -139,14 +139,14 @@ const RFPDashboard = () => {
           if (!data.status) {
             finalStatus = "Submitted";
             finalDetailsStatus = "Docs - submitted";
-            
+
             if (data.files && data.files.length > 0) {
-               if (c.status?.toLowerCase() === "pending") {
-                 finalStatus = "Submitted";
-               }
-               if (c.details?.status?.toLowerCase().includes("pending")) {
-                 finalDetailsStatus = c.details.status.replace(/pending/i, "submitted");
-               }
+              if (c.status?.toLowerCase() === "pending") {
+                finalStatus = "Submitted";
+              }
+              if (c.details?.status?.toLowerCase().includes("pending")) {
+                finalDetailsStatus = c.details.status.replace(/pending/i, "submitted");
+              }
             }
           }
 
@@ -234,7 +234,7 @@ const RFPDashboard = () => {
         lostCard.lostActions = true;
         lostCard.action = "EMD Return";
         lostCard.badge = null; // remove single badge, rely on tags
-        
+
         lostCard.tags = [];
         lostCard.tagColors = { ...originalCard.tagColors };
         lostFirms.forEach(firm => {
@@ -242,7 +242,7 @@ const RFPDashboard = () => {
           const firmResult = results[firm];
           lostCard.tags.push(firmResult);
           lostCard.tagColors[firm] = { bg: "#E3F0FB", color: "#2979FF" };
-          
+
           if (firmResult === "Lost") {
             lostCard.tagColors[firmResult] = { bg: "#FBE9E7", color: "#C62828" };
           } else if (firmResult === "Canceled") {
@@ -250,7 +250,7 @@ const RFPDashboard = () => {
           } else if (firmResult === "Disqualified") {
             lostCard.tagColors[firmResult] = { bg: "#FEF3C7", color: "#B45309" };
           } else {
-             lostCard.tagColors[firmResult] = { bg: "#FEF9E7", color: "#D97706" };
+            lostCard.tagColors[firmResult] = { bg: "#FEF9E7", color: "#D97706" };
           }
         });
 
@@ -339,25 +339,27 @@ const RFPDashboard = () => {
               </h1>
               <p style={{ fontSize: 12, color: "#888", margin: "0 0 16px" }}>Last updated: 2 hours ago</p>
             </div>
-            <button style={{
-              display: "flex", alignItems: "center", gap: 6,
-              padding: "9px 20px", border: "none", borderRadius: 8,
-              background: "#2563EB", color: "#fff", fontSize: 13, fontWeight: 600,
-              cursor: "pointer", fontFamily: "'Inter','Segoe UI',sans-serif",
-              boxShadow: "0 2px 8px rgba(37,99,235,0.25)",
-              transition: "background 0.15s, box-shadow 0.15s",
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = "#1D4ED8";
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)";
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = "#2563EB";
-              e.currentTarget.style.boxShadow = "0 2px 8px rgba(37,99,235,0.25)";
-            }}
-            >
-              <Plus size={16} /> Create RFP
-            </button>
+            {activeTab === "Task Dashboard" && (
+              <button style={{
+                display: "flex", alignItems: "center", gap: 6,
+                padding: "9px 20px", border: "none", borderRadius: 8,
+                background: "#2563EB", color: "#fff", fontSize: 13, fontWeight: 600,
+                cursor: "pointer", fontFamily: "'Inter','Segoe UI',sans-serif",
+                boxShadow: "0 2px 8px rgba(37,99,235,0.25)",
+                transition: "background 0.15s, box-shadow 0.15s",
+              }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = "#1D4ED8";
+                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)";
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = "#2563EB";
+                  e.currentTarget.style.boxShadow = "0 2px 8px rgba(37,99,235,0.25)";
+                }}
+              >
+                <Plus size={16} /> Create RFP
+              </button>
+            )}
           </div>
 
           {/* Search + bell + tab filters */}
