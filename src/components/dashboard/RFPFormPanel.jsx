@@ -481,7 +481,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
             background: "#fff",
             flexShrink: 0,
             display: "flex", alignItems: "center", gap: 10,
-            justifyContent: (!card.rejectionRemark && (card.action === "Review Now" || card.action === "Approve RFP")) ? "stretch" : "flex-end",
+            justifyContent: (!card.rejectionRemark && (card.action === "Review Now" || card.action === "Approve RFP" || card.action === "Approved View")) ? "stretch" : "flex-end",
           }}>
             {card.action === "Send Notification" ? (
               <button
@@ -509,9 +509,9 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
               >
                 <XCircle size={15} color="#667085" /> Close
               </button>
-            ) : card.action === "Approve RFP" ? (
-              /* Task Dashboard A flow */
-              taskPhase === "approved" ? (
+            ) : card.action === "Approved View" || (card.action === "Approve RFP" && taskPhase === "approved") ? (
+              /* Approved state — Download + Send to MD Sir */
+              (
                 <>
                   <button
                     type="button"
@@ -538,7 +538,10 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
                     <Send size={16} /> Send to MD Sir
                   </button>
                 </>
-              ) : taskPhase === "rejected" ? (
+              )
+            ) : card.action === "Approve RFP" ? (
+              /* Task Dashboard A flow — Re-check / Rejected / Approve */
+              taskPhase === "rejected" ? (
                 <button
                   type="button"
                   onClick={onClose}

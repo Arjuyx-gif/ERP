@@ -96,13 +96,17 @@ const TaskTable = ({ fullscreen = false, onViewRFP }) => (
               <td style={{ padding: "14px 14px" }}>
                 {row.actionLabel && (
                   <button
-                    onClick={row.actionLabel === "Approve RFP" ? () => onViewRFP?.({
-                      id: row.id,
-                      tender: row.title,
-                      customer: row.salesPerson,
-                      amount: row.value,
-                      action: "Approve RFP",
-                    }) : undefined}
+                    onClick={() => {
+                      if (row.actionLabel === "Approve RFP") {
+                        onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, action: "Approve RFP" });
+                      } else if (row.actionLabel === "View RFP") {
+                        onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, action: "View RFP Form" });
+                      } else if (row.actionLabel === "Send to MD Sir") {
+                        onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, action: "Approved View" });
+                      } else if (row.actionLabel === "Forwarded to MD Sir" || row.actionLabel === "View PO") {
+                        onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, action: "View RFP Form" });
+                      }
+                    }}
                     style={{
                       display: "inline-flex", alignItems: "center", gap: 6,
                       padding: "6px 12px", border: "1px solid #E2E8F0", borderRadius: 6,
