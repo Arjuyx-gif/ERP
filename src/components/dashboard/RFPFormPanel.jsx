@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { X, XCircle, CheckCircle, Paperclip } from "lucide-react";
+import { X, XCircle, CheckCircle, Paperclip, Download, Send } from "lucide-react";
 import ApprovalNotificationModal from "./ApprovalNotificationModal";
 import CompleteTaskModal from "./CompleteTaskModal";
 import QueryResponseModal from "./QueryResponseModal";
@@ -227,6 +227,7 @@ const RejectModal = ({ onCancel, onConfirm }) => {
 
 const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteTask, onUpdateResult, onApprove }) => {
   const formRef = useRef(null);
+  const [taskPhase, setTaskPhase] = useState(null); // null | "rejected" | "approved"
   const [showRejectModal,   setShowRejectModal]   = useState(false);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showViewModal,     setShowViewModal]     = useState(false);
@@ -237,6 +238,8 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
   const [showAdditionalDocs,    setShowAdditionalDocs]    = useState(false);
   const [showEMDReturnModal,    setShowEMDReturnModal]    = useState(false);
   const [showViewTaskModal,     setShowViewTaskModal]     = useState(false);
+
+  useEffect(() => { setTaskPhase(null); }, [card?.id, card?.action]);
 
   useEffect(() => {
     setShowApprovalModal(card?.action === "Send Notification");
@@ -478,7 +481,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
             background: "#fff",
             flexShrink: 0,
             display: "flex", alignItems: "center", gap: 10,
-            justifyContent: (!card.rejectionRemark && card.action === "Review Now") ? "stretch" : "flex-end",
+            justifyContent: (!card.rejectionRemark && (card.action === "Review Now" || card.action === "Approve RFP")) ? "stretch" : "flex-end",
           }}>
             {card.action === "Send Notification" ? (
               <button
@@ -506,8 +509,80 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
               >
                 <XCircle size={15} color="#667085" /> Close
               </button>
+            ) : card.action === "Approve RFP" ? (
+              /* Task Dashboard A flow */
+              taskPhase === "approved" ? (
+                <>
+                  <button
+                    type="button"
+                    style={{
+                      flex: 1, padding: "12px 0", border: "1px solid #D1D5DB", borderRadius: 8,
+                      background: "#fff", fontSize: 13, fontWeight: 600, color: "#374151",
+                      cursor: "pointer", fontFamily: FONT,
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    }}
+                  >
+                    <Download size={16} color="#374151" /> Download
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    style={{
+                      flex: 1, padding: "12px 0", border: "none", borderRadius: 8,
+                      background: "#1B5E20", fontSize: 13, fontWeight: 700, color: "#fff",
+                      cursor: "pointer", fontFamily: FONT,
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                      boxShadow: "0 2px 6px rgba(27,94,32,0.3)",
+                    }}
+                  >
+                    <Send size={16} /> Send to MD Sir
+                  </button>
+                </>
+              ) : taskPhase === "rejected" ? (
+                <button
+                  type="button"
+                  onClick={onClose}
+                  style={{
+                    padding: "9px 28px", border: "1px solid #D1D5DB", borderRadius: 8,
+                    background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151",
+                    cursor: "pointer", fontFamily: FONT,
+                    display: "flex", alignItems: "center", gap: 7,
+                  }}
+                >
+                  <XCircle size={15} color="#667085" /> Close
+                </button>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setShowRejectModal(true)}
+                    style={{
+                      flex: 1, padding: "12px 0", border: "none", borderRadius: 8,
+                      background: "#B71C1C", fontSize: 13, fontWeight: 700, color: "#fff",
+                      cursor: "pointer", fontFamily: FONT,
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                      boxShadow: "0 2px 6px rgba(183,28,28,0.3)",
+                    }}
+                  >
+                    <XCircle size={16} /> Re-check
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTaskPhase("approved")}
+                    style={{
+                      flex: 1, padding: "12px 0", border: "none", borderRadius: 8,
+                      background: "#1B5E20", fontSize: 13, fontWeight: 700, color: "#fff",
+                      cursor: "pointer", fontFamily: FONT,
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                      boxShadow: "0 2px 6px rgba(27,94,32,0.3)",
+                    }}
+                  >
+                    <CheckCircle size={16} /> Approved
+                  </button>
+                </>
+              )
             ) : card.action === "Review Now" ? (
-              /* First-time review — Re-check or Approve */
+              /* Awaiting Approval flow — Re-check or Approve */
               <>
                 <button
                   type="button"
@@ -558,7 +633,15 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
       {showRejectModal && (
         <RejectModal
           onCancel={() => setShowRejectModal(false)}
-          onConfirm={reason => { setShowRejectModal(false); onReject?.(card, reason); onClose?.(); }}
+          onConfirm={reason => {
+            setShowRejectModal(false);
+            if (card.action === "Approve RFP") {
+              setTaskPhase("rejected");
+            } else {
+              onReject?.(card, reason);
+              onClose?.();
+            }
+          }}
         />
       )}
 

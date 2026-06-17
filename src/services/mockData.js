@@ -18,11 +18,22 @@ export const BASE_ROW = {
 // ─── KPI Cards ────────────────────────────────────────────────────────────────
 // src/services/mockData.js
 export const KPI_CARDS = [
-  { label: "Total RFPs", value: 5, iconName: "document", color: "#1565C0", iconBg: "#E3F0FB" },
-  { label: "Awaiting Approval", value: 1, iconName: "timer", color: "#F5A623", iconBg: "#FFF4E0" },
-  { label: "Submitted", value: 1, iconName: "tick", color: "#4CAF50", iconBg: "#E8F5E9" },
-  { label: "Won (L1)", value: 3, iconName: "trophy", color: "#4CAF50", iconBg: "#E8F5E9" },
-  { label: "PO - Pending", value: 1, iconName: "alert", color: "#FF5722", iconBg: "#FBE9E7" },
+  { label: "Total RFPs",      value: 5, iconName: "document", color: "#1565C0", iconBg: "#E3F0FB" },
+  { label: "Awaiting Approval", value: 1, iconName: "timer",  color: "#F5A623", iconBg: "#FFF4E0" },
+  { label: "Submitted",       value: 1, iconName: "tick",     color: "#4CAF50", iconBg: "#E8F5E9" },
+  { label: "Won (L1)",        value: 3, iconName: "trophy",   color: "#4CAF50", iconBg: "#E8F5E9" },
+  { label: "PO - Pending",    value: 1, iconName: "alert",    color: "#FF5722", iconBg: "#FBE9E7" },
+];
+
+export const TASK_DASHBOARD_A_KPI_CARDS = [
+  { label: "Total RFPs",               value: 15, iconName: "document",    color: "#1565C0", iconBg: "#E3F0FB" },
+  { label: "Approved & Sent to MD Sir", value: 14, iconName: "arrow-right", color: "#2563EB", iconBg: "#DBEAFE" },
+  { label: "Returned to Team",          value: 5,  iconName: "refresh",     color: "#EA580C", iconBg: "#FFF7ED" },
+  { label: "Approved by MD Sir",        value: 3,  iconName: "tick",        color: "#16A34A", iconBg: "#DCFCE7" },
+  { label: "Won Tenders",               value: 7,  iconName: "trophy",      color: "#16A34A", iconBg: "#DCFCE7" },
+  { label: "Lost Tender",               value: 1,  iconName: "timer",       color: "#DC2626", iconBg: "#FEE2E2" },
+  { label: "PO Awaited",                value: 4,  iconName: "briefcase",   color: "#92400E", iconBg: "#FEF3C7" },
+  { label: "Pending Approval",          value: 4,  iconName: "clock",       color: "#B45309", iconBg: "#FEF9C3" },
 ];
 
 // ─── Kanban Columns ───────────────────────────────────────────────────────────
@@ -473,15 +484,15 @@ export const PANEL_NOTIFICATIONS = [
 ];
 
 // ─── Task Dashboard Table ─────────────────────────────────────────────────────
-// highlight: null | "yellow" | "green"
+// highlight: null | "yellow" | "green" | "orange"
 export const TASK_TABLE_ROWS = [
-  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "SOF - Pending", statusColor: "#F59E0B", statusBg: "#FEF3C7", updated: "Yesterday", completion: 0, actionLabel: "Start SOF", actionIcon: "edit", highlight: null },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Doc. Uploaded\nQuery & Response", statusColor: "#2563EB", statusBg: "#DBEAFE", updated: "Yesterday", completion: 0, actionLabel: "Upload", actionIcon: "upload", highlight: "yellow" },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Submitted for\nApproval", statusColor: "#16A34A", statusBg: "#DCFCE7", updated: "Yesterday", completion: 100, actionLabel: "View", actionIcon: "eye", highlight: "green" },
-  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Order Placed", statusColor: "#16A34A", statusBg: "#DCFCE7", updated: "Today", completion: 80, actionLabel: "View SOF", actionIcon: "eye", highlight: null },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Draft", statusColor: "#6B7280", statusBg: "#F3F4F6", updated: "Today", completion: 0, actionLabel: "Continue", actionIcon: "edit", highlight: null },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "In Progress", statusColor: "#2563EB", statusBg: "#DBEAFE", updated: "2 hrs ago", completion: 60, actionLabel: "Continue RFP", actionIcon: "edit", highlight: null },
-  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "EMD Completed\n& Uploaded", statusColor: "#16A34A", statusBg: "#DCFCE7", updated: "Today", completion: 80, actionLabel: "View SOF", actionIcon: "eye", highlight: null },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Approval Waiting",  statusColor: "#B45309", completion: 100, actionLabel: "Approve RFP",        actionIcon: "edit", highlight: "yellow" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Approved",          statusColor: "#374151", completion: 100, actionLabel: "Send to MD Sir",      actionIcon: "send", highlight: null    },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Approved",          statusColor: "#374151", completion: 100, actionLabel: "Send to MD Sir",      actionIcon: "send", highlight: null    },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Approved",          statusColor: "#374151", completion: 100, actionLabel: "Forwarded to MD Sir",  actionIcon: "send", highlight: "green" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Rejected",          statusColor: "#DC2626", completion: 0,   actionLabel: "View RFP",             actionIcon: "eye",  highlight: "orange" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Won - PO Awaiting", statusColor: "#374151", completion: 100, actionLabel: "View RFP",             actionIcon: "eye",  highlight: null    },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "PO Updated",        statusColor: "#374151", completion: 100, actionLabel: "View PO",              actionIcon: "eye",  highlight: null    },
 ];
 
 export const QUICK_ACCESS = [

@@ -4,7 +4,7 @@ import {
   XCircle, Upload, Download, ArrowUpRight, AlertCircle, LayoutDashboard,
   ClipboardList, Users, Inbox, TrendingUp, BarChart2, Database,
   ChevronDown, ChevronRight, ArrowRight, Globe, Check, Maximize2, Minimize2,
-  Settings,
+  Settings, Send, Briefcase, RefreshCcw,
 } from 'lucide-react';
 
 const ICONS = {
@@ -45,6 +45,9 @@ const ICONS = {
   check:            Check,
   fullscreen:       Maximize2,
   shrink:           Minimize2,
+  send:             Send,
+  briefcase:        Briefcase,
+  refresh:          RefreshCcw,
 };
 
 const DynamicIcon = ({ name, size = 20, color = "currentColor" }) => {

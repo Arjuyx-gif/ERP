@@ -13,6 +13,7 @@ import Modal from "../../components/dashboard/ReminderModal";
 import ViewAllModal from "../../components/dashboard/ViewAllModal";
 import DynamicIcon from "../../components/ui/DynamicIcon";
 import { useDashboard } from "../../hooks/useDashboard";
+import { TASK_DASHBOARD_A_KPI_CARDS } from "../../services/mockData";
 
 // ─── RFPDashboard ─────────────────────────────────────────────────────────────
 
@@ -30,7 +31,7 @@ const RFPDashboard = () => {
   const [activeModal, setActiveModal] = useState(null);
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [search, setSearch] = useState("");
-  const [stageFilter, setStageFilter] = useState("All Stages");
+  const [stageFilter] = useState("All Stages");
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [deadlineFilter, setDeadlineFilter] = useState("By Deadline");
   const [tabFilter, setTabFilter] = useState("All");
@@ -403,7 +404,7 @@ const RFPDashboard = () => {
               </h1>
               <p style={{ fontSize: 12, color: "#888", margin: "0 0 16px" }}>Last updated: 2 hours ago</p>
             </div>
-            {activeTab === "Task Dashboard" && (
+            {activeTab.startsWith("Task Dashboard") && (
               <button style={{
                 display: "flex", alignItems: "center", gap: 6,
                 padding: "9px 20px", border: "none", borderRadius: 8,
@@ -487,7 +488,7 @@ const RFPDashboard = () => {
 
           {/* KPI cards */}
           <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
-            {kpiCards.map(kpi => (
+            {(activeTab === "Task Dashboard A" ? TASK_DASHBOARD_A_KPI_CARDS : kpiCards).map(kpi => (
               <div key={kpi.label} style={{
                 flex: "1 1 130px", background: "#fff", borderRadius: 10,
                 padding: "14px 16px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
@@ -509,7 +510,7 @@ const RFPDashboard = () => {
 
           {/* Dashboard / Task Dashboard tabs */}
           <div style={{ display: "flex", borderBottom: "2px solid #E2E8F0" }}>
-            {["Dashboard", "Task Dashboard"].map(tab => (
+            {["Dashboard", "Task Dashboard A", "Task Dashboard B", "Task Dashboard C"].map(tab => (
               <button key={tab} onClick={() => setActiveTab(tab)} style={{
                 padding: "10px 20px", background: "none", border: "none",
                 borderBottom: activeTab === tab ? "2px solid #2979FF" : "2px solid transparent",
@@ -551,7 +552,7 @@ const RFPDashboard = () => {
 
         {/* Board / Table */}
         <div style={{ flex: 1, overflowX: "auto", padding: "0 28px 28px" }}>
-          {activeTab === "Task Dashboard" ? <TaskTable /> : board}
+          {activeTab.startsWith("Task Dashboard") ? <TaskTable onViewRFP={handleViewRFP} /> : board}
         </div>
       </div>
       </div>
@@ -568,7 +569,7 @@ const RFPDashboard = () => {
           }}>
             <div>
               <h2 style={{ fontSize: 16, fontWeight: 700, color: "#111", margin: 0 }}>
-                {activeTab === "Task Dashboard" ? "Task Dashboard" : "RFP Analysis Board"}
+                {activeTab.startsWith("Task Dashboard") ? activeTab : "RFP Analysis Board"}
               </h2>
               <p style={{ fontSize: 12, color: "#888", margin: "2px 0 0" }}>Fullscreen view</p>
             </div>
@@ -581,7 +582,7 @@ const RFPDashboard = () => {
             </button>
           </div>
           <div style={{ flex: 1, overflowX: "auto", overflowY: "auto", padding: "20px 28px 28px" }}>
-            {activeTab === "Task Dashboard" ? <TaskTable fullscreen /> : board}
+            {activeTab.startsWith("Task Dashboard") ? <TaskTable fullscreen /> : board}
           </div>
         </div>
       )}
