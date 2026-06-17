@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Sidebar from "../../components/layout/Sidebar";
+import GlobalHeader from "../../components/layout/GlobalHeader";
 import NotificationPanel from "../../components/dashboard/NotificationPanel";
 import DashboardTopBar from "../../components/dashboard/DashboardTopBar";
 import KpiGrid from "../../components/dashboard/KpiGrid";
@@ -17,13 +18,15 @@ const MainDashboard = () => {
 
   return (
     <div style={{
-      display: "flex", minHeight: "100vh",
+      display: "flex", flexDirection: "column", height: "100vh",
       fontFamily: "'Inter','Segoe UI',sans-serif",
       background: "#F8F9FB",
     }}>
-      <Sidebar />
+      <GlobalHeader />
+      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+        <Sidebar />
 
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflowY: "auto" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflowY: "auto" }}>
         <DashboardTopBar
           search={search}
           onSearchChange={setSearch}
@@ -40,6 +43,7 @@ const MainDashboard = () => {
           <RecentActivities />
           <QuickAccess />
         </div>
+      </div>
       </div>
 
       {showNotifications && (
