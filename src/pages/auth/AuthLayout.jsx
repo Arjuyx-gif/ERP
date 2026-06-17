@@ -2,6 +2,8 @@
 // Shared split-panel layout used by SignIn, SignUp, and RecoverPassword.
 // Left side: white form area. Right side: blue illustration panel.
 
+import logo from "../../assets/logo.png";
+
 const AuthLayout = ({ illustration, children }) => {
   return (
     <div style={styles.root}>
@@ -14,6 +16,7 @@ const AuthLayout = ({ illustration, children }) => {
 
       {/* ── Right: blue illustration panel ── */}
       <div style={styles.rightPanel}>
+        <img src={logo} alt="cipl logo" style={{ position: "absolute", top: 40, right: 40, height: 80, objectFit: "contain", zIndex: 10 }} />
         {/* Decorative background circles */}
         <div style={styles.circle1} />
         <div style={styles.circle2} />
@@ -52,8 +55,8 @@ const styles = {
   rightPanel: {
     width: "38%",
     flexShrink: 0,
-    backgroundColor: "#2979FF",
-    backgroundImage: "radial-gradient(ellipse at 80% 20%, #448AFF 0%, #2979FF 50%, #1565C0 100%)",
+    backgroundColor: "#1B51E5",
+    backgroundImage: "radial-gradient(ellipse at 80% 20%, #234BD2 0%, #234BD2 50%, #1565C0 100%)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

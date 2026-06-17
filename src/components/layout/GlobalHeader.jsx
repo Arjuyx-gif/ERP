@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "../../assets/logo.png";
 
 const GlobalHeader = () => {
   return (
@@ -23,7 +24,7 @@ const GlobalHeader = () => {
         display: "flex", alignItems: "center", gap: 12
       }}>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <img src="src/assets/logo.png" alt="cipl logo" style={{ height: 36, objectFit: "contain" }} />
+          <img src={logo} alt="cipl logo" style={{ height: 36, objectFit: "contain" }} />
         </div>
         <span style={{ fontWeight: 600, fontSize: 18, letterSpacing: 0.5 }}>ERP PORTAL</span>
       </div>
