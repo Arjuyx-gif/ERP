@@ -45,9 +45,9 @@ const RFPDashboard = () => {
       setActiveModal({
         title: "Pre-Bid Meeting Reminder",
         subtitle: "You have 1 upcoming pre-bid meeting:",
-        rfpId: "RFP-2026-006", tenderTitle: "Tender title", customer: "Customer Name",
+        rfpId: "TDN-2026-006", tenderTitle: "Tender title", customer: "Customer Name",
         details: [
-          { text: "Tender ID - TND-2026-001" },
+          { text: "Tender ID - TDN-2026-001" },
           { text: "Apr 5, 2024", icon: "calendar" },
           { text: "2:00 PM", icon: "timer" },
           { text: "Online", icon: "globe" },
@@ -63,7 +63,7 @@ const RFPDashboard = () => {
       setTimeout(() => setActiveModal({
         title: "Pending Query Response",
         subtitle: "You have 1 pending query response(s):",
-        rfpId: "RFP-2026-006", tenderTitle: "Tender title", customer: "Customer Name",
+        rfpId: "TDN-2026-006", tenderTitle: "Tender title", customer: "Customer Name",
         deadlinePill: "05-05-2026",
       }), 200);
     } else {
