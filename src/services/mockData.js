@@ -18,7 +18,7 @@ export const BASE_ROW = {
 // ─── KPI Cards ────────────────────────────────────────────────────────────────
 // src/services/mockData.js
 export const KPI_CARDS = [
-  { label: "Total RFPs", value: 5, iconName: "document", color: "#1565C0", iconBg: "#E3F0FB" },
+  { label: "Total TDNs", value: 5, iconName: "document", color: "#1565C0", iconBg: "#E3F0FB" },
   { label: "Awaiting Approval", value: 1, iconName: "timer", color: "#F5A623", iconBg: "#FFF4E0" },
   { label: "Submitted", value: 1, iconName: "tick", color: "#4CAF50", iconBg: "#E8F5E9" },
   { label: "Won (L1)", value: 3, iconName: "trophy", color: "#4CAF50", iconBg: "#E8F5E9" },
@@ -30,22 +30,22 @@ export const KPI_CARDS = [
 // so the badge always reflects the true number of loaded cards.
 export const KANBAN_COLUMNS = [
   {
-    id: "rfp_analysis", title: "RFP Analysis",
+    id: "TDN_analysis", title: "TDN Analysis",
     color: "#E3F0FB", countBg: "#4A90D9",
     cards: [
       {
-        id: "RFP-2026-001", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
+        id: "TDN-2026-001", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
         tender: "Tender Title", customer: "Customer Name", amount: "500Cr.",
         tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
         details: { status: "Result Awaited", preBidDate: "20/04/2026", preBidTime: "Time", preBidVenue: "Venue", deadline: "Apr 25, 2026" },
-        action: "View RFP Form",
+        action: "View TDN Form",
       },
       {
-        id: "RFP-2026-002", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
+        id: "TDN-2026-002", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
         tender: "Tender Title", customer: "Customer Name", amount: "500Cr.",
         tags: ["CIPL", "UVT", "NIPL"], tagColors: { CIPL: "#E3F0FB", UVT: "#F3E5F5", NIPL: "#E8F5E9" },
         details: { status: "Approval Awaiting", preBidDate: "20/04/2026", preBidTime: "Time", preBidVenue: "Venue", deadline: "Apr 25, 2026" },
-        action: "View RFP Form",
+        action: "View TDN Form",
       },
     ],
   },
@@ -54,7 +54,7 @@ export const KANBAN_COLUMNS = [
     color: "#FFF8E1", countBg: "#F5A623",
     cards: [
       {
-        id: "RFP-2026-005", status: "Pending", statusColor: "#F5A623", statusBg: "#FFF4E0",
+        id: "TDN-2026-005", status: "Pending", statusColor: "#F5A623", statusBg: "#FFF4E0",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
         details: { status: "MD Office - Approval Waiting", deadline: "Apr 25, 2026" },
@@ -68,7 +68,7 @@ export const KANBAN_COLUMNS = [
     color: "#FFF3E0", countBg: "#FF9800",
     cards: [
       {
-        id: "RFP-2026-005", status: "Approved", statusColor: "#4CAF50", statusBg: "#E8F5E9",
+        id: "TDN-2026-005", status: "Approved", statusColor: "#4CAF50", statusBg: "#E8F5E9",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL", "UVT", "NIPL"], tagColors: { CIPL: "#E3F0FB", UVT: "#F3E5F5", NIPL: "#E8F5E9" },
         details: { status: "Send Alert", deadline: "Apr 25, 2026" },
@@ -84,7 +84,7 @@ export const KANBAN_COLUMNS = [
     color: "#F3E5F5", countBg: "#9C27B0",
     cards: [
       {
-        id: "RFP-2026-004", status: "In Progress", statusColor: "#1565C0", statusBg: "#E3F0FB",
+        id: "TDN-2026-004", status: "In Progress", statusColor: "#1565C0", statusBg: "#E3F0FB",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL", "UVT"], tagColors: { CIPL: "#E3F0FB", UVT: "#F3E5F5" },
         details: { status: "Docs. Pending", deadline: "Apr 25, 2026" },
@@ -101,7 +101,7 @@ export const KANBAN_COLUMNS = [
     color: "#E8F5E9", countBg: "#4CAF50",
     cards: [
       {
-        id: "RFP-2026-009", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
+        id: "TDN-2026-009", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL", "UVT"], tagColors: { CIPL: "#E3F0FB", UVT: "#F3E5F5" },
         details: { status: "Bid Submitted - Date", dueDate: "Apr 25, 2026", dueTime: "Time" },
@@ -114,7 +114,7 @@ export const KANBAN_COLUMNS = [
     color: "#FFF8E1", countBg: "#FFC107",
     cards: [
       {
-        id: "RFP-2026-009", status: "Pending", statusColor: "#F5A623", statusBg: "#FFF4E0",
+        id: "TDN-2026-009", status: "Pending", statusColor: "#F5A623", statusBg: "#FFF4E0",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL", "UVT"], tagColors: { CIPL: "#E3F0FB", UVT: "#F3E5F5" },
         details: { status: "Docs - pending", dueDate: "Apr 25, 2026", dueTime: "Time" },
@@ -128,7 +128,7 @@ export const KANBAN_COLUMNS = [
     color: "#FBE9E7", countBg: "#FF5722",
     cards: [
       {
-        id: "RFP-2026-009", status: "Pending", statusColor: "#F5A623", statusBg: "#FFF4E0",
+        id: "TDN-2026-009", status: "Pending", statusColor: "#F5A623", statusBg: "#FFF4E0",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL", "UVT"], tagColors: { CIPL: "#E3F0FB", UVT: "#F3E5F5" },
         details: { status: "Result Awaited", deadline: "Apr 30, 2026" },
@@ -141,7 +141,7 @@ export const KANBAN_COLUMNS = [
     color: "#E8F5E9", countBg: "#2E7D32",
     cards: [
       {
-        id: "RFP-2026-007", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
+        id: "TDN-2026-007", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
         details: { status: "PO Received", deadline: "Apr 30, 2026" },
@@ -149,14 +149,14 @@ export const KANBAN_COLUMNS = [
         statusBadge: { text: "PO Received", iconName: "bell", color: "#F5A623", bg: "#FFF4E0" },
       },
       {
-        id: "RFP-2026-017", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
+        id: "TDN-2026-017", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: [], tagColors: {},
         details: { status: "PO Awaiting", deadline: "Apr 30, 2026" },
         statusBadge: { text: "PO Awaiting", iconName: "alert", color: "#F5A623", bg: "#FFF4E0" },
       },
       {
-        id: "RFP-2026-017", status: "Bid Canceled", statusColor: "#F44336", statusBg: "#FBE9E7",
+        id: "TDN-2026-017", status: "Bid Canceled", statusColor: "#F44336", statusBg: "#FBE9E7",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: [], tagColors: {},
         details: { status: "Bid Canceled", deadline: "Apr 30, 2026" },
@@ -169,7 +169,7 @@ export const KANBAN_COLUMNS = [
     color: "#E3F0FB", countBg: "#1565C0",
     cards: [
       {
-        id: "RFP-2026-007", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
+        id: "TDN-2026-007", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
         details: { status: "Start with SOF", deadline: "Apr 30, 2026" },
@@ -184,7 +184,7 @@ export const KANBAN_COLUMNS = [
     color: "#FBE9E7", countBg: "#C62828",
     cards: [
       {
-        id: "RFP-2026-012", status: "Lost", statusColor: "#C62828", statusBg: "#FBE9E7",
+        id: "TDN-2026-012", status: "Lost", statusColor: "#C62828", statusBg: "#FBE9E7",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["UVT", "Lost", "NIPL", "Lost"],
         tagColors: {
@@ -202,7 +202,7 @@ export const KANBAN_COLUMNS = [
 // ─── Notifications ────────────────────────────────────────────────────────────
 export const NOTIFICATIONS = [
   {
-    id: 1, type: "success", tag: "active", title: "RFP Uploaded (New)", time: "3h ago", actionText: "View RFP & Complete Checklist",
+    id: 1, type: "success", tag: "active", title: "TDN Uploaded (New)", time: "3h ago", actionText: "View TDN & Complete Checklist",
     details: [
       { label: "Tender ID", value: "TND-2026-005" },
       { label: "Customer", value: "Customer Name" },
@@ -247,8 +247,8 @@ export const SIDEBAR_NAV = [
   {
     iconName: "clipboard", label: "Sales & Pre-sales", expandable: true,
     children: [
-      { label: "RFP Dashboard", path: "/rfp-dashboard" },
-      { label: "RFP Analysis Form" },
+      { label: "TDN Dashboard", path: "/TDN-dashboard" },
+      { label: "TDN Analysis Form" },
       { label: "Pre-sales Checklist" },
       { label: "Comparison Sheet" },
       { label: "SOF" },
@@ -271,7 +271,7 @@ export const SIDEBAR_NAV = [
 const r = extra => ({ ...BASE_ROW, ...extra });
 
 export const VIEW_ALL_ROWS = {
-  rfp_analysis: [
+  TDN_analysis: [
     r({ preBidDate: "Today", preBidTime: "2:00 P.M", venue: "Venue", variant: "warning" }),
     r({ preBidDate: "Date", preBidTime: "Time", venue: "Venue" }),
     r({ preBidDate: "Date", preBidTime: "Time", venue: "Venue" }),
@@ -325,7 +325,7 @@ export const VIEW_ALL_ROWS = {
 // ─── Main Dashboard Data ───────────────────────────────────────────────────────
 
 export const MAIN_KPI_TOP = [
-  { label: "Active RFPs", value: 12, sub: "3 closing this week", cardBg: "#EFF6FF", color: "#1D4ED8", bar: "#3B82F6", barTrack: "#DBEAFE", barPct: 75 },
+  { label: "Active TDNs", value: 12, sub: "3 closing this week", cardBg: "#EFF6FF", color: "#1D4ED8", bar: "#3B82F6", barTrack: "#DBEAFE", barPct: 75 },
   { label: "Active SOFs", value: 24, sub: "5 pending validations", cardBg: "#F5F3FF", color: "#5B21B6", bar: "#8B5CF6", barTrack: "#EDE9FE", barPct: 60 },
   { label: "EMD Pending", value: 3, sub: "1 awaiting refund", cardBg: "#FDF4FF", color: "#86198F", bar: "#C026D3", barTrack: "#FAE8FF", barPct: 28 },
   { label: "Active Procurement", value: 18, sub: "4 delayed", cardBg: "#F0FDF4", color: "#166534", bar: "#22C55E", barTrack: "#DCFCE7", barPct: 82 },
@@ -338,7 +338,7 @@ export const MAIN_KPI_BOT = [
 ];
 
 export const WORKFLOW_PIPELINE = [
-  { label: "RFP", active: 12, delayed: 2 },
+  { label: "TDN", active: 12, delayed: 2 },
   { label: "Bid Submitted", active: 8, delayed: 1 },
   { label: "PO Received", active: 15, delayed: null, cancelled: 1 },
   { label: "SOF Validation", active: 12, delayed: 3 },
@@ -374,7 +374,7 @@ export const DEPT_WORKLOAD_DATA = [
 ];
 
 export const ACTIVITY_TIMELINE = [
-  { icon: "tick", iconColor: "#10B981", title: "RFP Approved", id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
+  { icon: "tick", iconColor: "#10B981", title: "TDN Approved", id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
   { icon: "tick", iconColor: "#10B981", title: "EMD Submitted", id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
   { icon: "alert-circle", iconColor: "#2979FF", title: "Query Raised", id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
   { icon: "document", iconColor: "#6B7280", title: "Bid Submitted", id: "TND-045", meta: "Person/ Dept Name", time: "2 min ago" },
@@ -413,7 +413,7 @@ export const PANEL_NOTIFICATIONS = [
   },
   {
     id: 3, type: "success", tag: "completed",
-    title: "RFP Approved – Notification Sent",
+    title: "TDN Approved – Notification Sent",
     details: [
       { label: "Tender ID", value: "TND-2026-005" },
       { label: "Amount", value: "₹500 Cr" },
@@ -480,12 +480,12 @@ export const TASK_TABLE_ROWS = [
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Submitted for\nApproval", statusColor: "#16A34A", statusBg: "#DCFCE7", updated: "Yesterday", completion: 100, actionLabel: "View", actionIcon: "eye", highlight: "green" },
   { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Order Placed", statusColor: "#16A34A", statusBg: "#DCFCE7", updated: "Today", completion: 80, actionLabel: "View SOF", actionIcon: "eye", highlight: null },
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Draft", statusColor: "#6B7280", statusBg: "#F3F4F6", updated: "Today", completion: 0, actionLabel: "Continue", actionIcon: "edit", highlight: null },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "In Progress", statusColor: "#2563EB", statusBg: "#DBEAFE", updated: "2 hrs ago", completion: 60, actionLabel: "Continue RFP", actionIcon: "edit", highlight: null },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "In Progress", statusColor: "#2563EB", statusBg: "#DBEAFE", updated: "2 hrs ago", completion: 60, actionLabel: "Continue TDN", actionIcon: "edit", highlight: null },
   { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "EMD Completed\n& Uploaded", statusColor: "#16A34A", statusBg: "#DCFCE7", updated: "Today", completion: 80, actionLabel: "View SOF", actionIcon: "eye", highlight: null },
 ];
 
 export const QUICK_ACCESS = [
-  { icon: "document", label: "RFP Tracker", color: "#2979FF", bg: "#EFF6FF", path: "/rfp-dashboard" },
+  { icon: "document", label: "TDN Tracker", color: "#2979FF", bg: "#EFF6FF", path: "/TDN-dashboard" },
   { icon: "inbox", label: "SOF Dashboard", color: "#059669", bg: "#ECFDF5", path: "/sof-dashboard" },
   { icon: "users", label: "Sales Coordinator Dashboard", color: "#7C3AED", bg: "#F5F3FF", path: "/sales-coordinator" },
   { icon: "clipboard", label: "Tracker", color: "#EA580C", bg: "#FFF7ED", path: "/tracker" },
