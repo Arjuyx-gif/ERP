@@ -13,7 +13,7 @@ const FILTERS = ["All", "Active", "In Progress", "Delayed", "Pending", "Complete
 const TAG_KEY = { All: "all", Active: "active", "In Progress": "in-progress", Delayed: "delayed", Pending: "pending", Completed: "completed" };
 
 // ─── NotificationPanel ────────────────────────────────────────────────────────
-const NotificationPanel = ({ notifications = [], onClose }) => {
+const NotificationPanel = ({ notifications = [], onClose, onAction }) => {
   const [activeFilter, setActiveFilter] = useState("All");
   const [filterOpen, setFilterOpen]     = useState(false);
   const filterRef = useRef(null);
@@ -178,7 +178,12 @@ const NotificationPanel = ({ notifications = [], onClose }) => {
                       {n.time || "Just now"}
                     </div>
                     {n.actionText && (
-                      <button style={{
+                      <button
+                        onClick={() => {
+                          onAction?.(n);
+                          onClose?.();
+                        }}
+                        style={{
                         display: "inline-flex", alignItems: "center", gap: 6,
                         padding: "8px 14px", border: "none", borderRadius: 6,
                         background: "#000", color: "#fff", fontSize: 12, fontWeight: 500,

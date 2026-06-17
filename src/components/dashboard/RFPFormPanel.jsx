@@ -249,10 +249,17 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
     setShowAdditionalDocs(card?.action === "Additional Docs");
     setShowEMDReturnModal(card?.action === "EMD Return");
     setShowViewTaskModal(card?.action === "View Task");
+
+    // Query modal — either from Kanban or from Task Dashboard B (upload action)
     if (card?.action === "Complete Tasks" && card?.isQuery) {
       setShowQueryModal(true);
     } else {
       setShowQueryModal(false);
+    }
+
+    // Auto-open CompleteTaskModal from Task Dashboard B (checkOEM action only)
+    if (card?.action === "Complete Tasks" && card?.fromDashboardB && !card?.isQuery) {
+      setShowCompleteTask(true);
     }
   }, [card]);
 

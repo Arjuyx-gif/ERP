@@ -6,6 +6,7 @@ import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
 import KanbanBoard from "../../components/dashboard/KanbanBoard";
 import TaskTable from "../../components/dashboard/TaskTable";
+import TaskTableB from "../../components/dashboard/TaskTableB";
 import RFPFormPanel from "../../components/dashboard/RFPFormPanel";
 import BidSubmissionModal from "../../components/dashboard/BidSubmissionModal";
 import NotificationPanel from "../../components/dashboard/NotificationPanel";
@@ -361,6 +362,56 @@ const RFPDashboard = () => {
     }
   };
 
+  // Handler for Task Dashboard B action buttons
+  const handleTaskBAction = (row) => {
+    // Map actionType to the correct panel/modal flow
+    let action = "View RFP Form";
+    let isQuery = false;
+    let showQueryUploadZone = false;
+
+    if (row.actionType === "checkOEM" || row.actionType === "start") {
+      action = "Complete Tasks";      // opens CompleteTaskModal on top of RFP form
+    } else if (row.actionType === "upload") {
+      action = "Complete Tasks";      // opens QueryResponseModal with upload zone
+      isQuery = true;
+      showQueryUploadZone = true;
+    } else if (row.actionType === "checkQuery") {
+      action = "Complete Tasks";      // opens QueryResponseModal with pre-filled doc
+      isQuery = true;
+    }
+
+    const card = {
+      id: row.id,
+      tender: row.title,
+      customer: row.customer,
+      amount: "-",
+      action,
+      isQuery,
+      fromDashboardB: true,
+      showQueryUploadZone,
+    };
+    setViewRFPCard(card);
+  };
+
+  // Handler for "View Teams & Remarks" link in Task Dashboard B
+  const handleAlertNotifyClick = (row) => {
+    const card = {
+      id: row.id,
+      tender: row.title,
+      customer: row.customer,
+      amount: "-",
+      tags: ["CIPL", "NIPL"],
+      action: "View",
+      fromDashboardB: true,
+      notificationSections: [
+        { id: 1, name: "Sales Coordinator", remark: "" },
+        { id: 2, name: "Accounts", remark: "" },
+        { id: 3, name: "Service", remark: "" },
+      ],
+    };
+    setViewRFPCard(card);
+  };
+
   const STAGE_MAP = {
     "RFP Analysis": "rfp_analysis",
     "Awaiting Approval": "awaiting_approval",
@@ -552,7 +603,11 @@ const RFPDashboard = () => {
 
         {/* Board / Table */}
         <div style={{ flex: 1, overflowX: "auto", padding: "0 28px 28px" }}>
-          {activeTab.startsWith("Task Dashboard") ? <TaskTable onViewRFP={handleViewRFP} /> : board}
+          {activeTab === "Task Dashboard B"
+            ? <TaskTableB onAction={handleTaskBAction} onAlertNotifyClick={handleAlertNotifyClick} />
+            : activeTab.startsWith("Task Dashboard")
+              ? <TaskTable onViewRFP={handleViewRFP} />
+              : board}
         </div>
       </div>
       </div>
@@ -582,7 +637,11 @@ const RFPDashboard = () => {
             </button>
           </div>
           <div style={{ flex: 1, overflowX: "auto", overflowY: "auto", padding: "20px 28px 28px" }}>
-            {activeTab.startsWith("Task Dashboard") ? <TaskTable fullscreen /> : board}
+            {activeTab === "Task Dashboard B"
+              ? <TaskTableB fullscreen onAction={handleTaskBAction} onAlertNotifyClick={handleAlertNotifyClick} />
+              : activeTab.startsWith("Task Dashboard")
+                ? <TaskTable fullscreen />
+                : board}
           </div>
         </div>
       )}
@@ -597,6 +656,11 @@ const RFPDashboard = () => {
           <NotificationPanel
             notifications={notifications}
             onClose={() => setShowNotifications(false)}
+            onAction={(notification) => {
+              // Switch to Task Dashboard B in fullscreen when "View & Complete Docs." is clicked
+              setActiveTab("Task Dashboard B");
+              setKanbanFullscreen(true);
+            }}
           />
         </>
       )}

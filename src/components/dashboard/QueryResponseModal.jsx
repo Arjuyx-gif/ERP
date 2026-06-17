@@ -6,8 +6,10 @@ const FONT = "'Inter','Segoe UI',sans-serif";
 const QueryResponseModal = ({ card, onClose, onUpdate }) => {
   const [remarks, setRemarks] = useState("");
   const [file, setFile] = useState(null);
+  const [queryFile, setQueryFile] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
   const fileInputRef = useRef(null);
+  const queryFileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files || []);
@@ -125,20 +127,69 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
             <label style={{ fontSize: 14, fontWeight: 600, color: "#111827", display: "block", marginBottom: 8 }}>
               Query Document
             </label>
-            <div style={{
-              border: "1px solid #D1D5DB", borderRadius: 8, padding: "16px",
-              display: "flex", alignItems: "flex-start", gap: 12, background: "#F9FAFB"
-            }}>
-              <div style={{ width: 32, height: 32, borderRadius: 6, background: "#EFF6FF", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <FileText size={18} color="#2563EB" />
+            {!queryFile && card?.showQueryUploadZone ? (
+              <div
+                onClick={() => queryFileInputRef.current?.click()}
+                style={{
+                  border: "1px dashed #D1D5DB", borderRadius: 8, padding: "24px 16px",
+                  background: "#fff", cursor: "pointer", display: "flex", flexDirection: "column",
+                  alignItems: "center", justifyContent: "center", gap: 10, textAlign: "center",
+                  transition: "border-color 0.15s, background 0.15s",
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = "#2563EB";
+                  e.currentTarget.style.background = "#F8FAFC";
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = "#D1D5DB";
+                  e.currentTarget.style.background = "#fff";
+                }}
+              >
+                <Upload size={24} color="#6B7280" />
+                <div style={{ fontSize: 14, fontWeight: 500, color: "#374151" }}>Click to Upload Query Document</div>
               </div>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 500, color: "#111827", marginBottom: 4 }}>Query_Document_RFP_2026_006.pdf</div>
-                <button style={{ background: "none", border: "none", padding: 0, color: "#4B5563", fontSize: 12, cursor: "pointer", fontWeight: 500, fontFamily: FONT }}>
-                  Download Document
-                </button>
+            ) : queryFile ? (
+              <div style={{
+                border: "1px solid #D1D5DB", borderRadius: 8, padding: "16px",
+                display: "flex", alignItems: "flex-start", gap: 12, background: "#F9FAFB"
+              }}>
+                <div style={{ width: 32, height: 32, borderRadius: 6, background: "#EFF6FF", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <FileText size={18} color="#2563EB" />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: "#111827", marginBottom: 4, wordBreak: "break-all" }}>{queryFile.name}</div>
+                  <button onClick={() => setQueryFile(null)} style={{ background: "none", border: "none", padding: 0, color: "#DC2626", fontSize: 12, cursor: "pointer", fontWeight: 500, fontFamily: FONT }}>
+                    Remove Document
+                  </button>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div style={{
+                border: "1px solid #D1D5DB", borderRadius: 8, padding: "16px",
+                display: "flex", alignItems: "flex-start", gap: 12, background: "#F9FAFB"
+              }}>
+                <div style={{ width: 32, height: 32, borderRadius: 6, background: "#EFF6FF", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <FileText size={18} color="#2563EB" />
+                </div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: "#111827", marginBottom: 4 }}>Query_Document_RFP_2026_006.pdf</div>
+                  <button style={{ background: "none", border: "none", padding: 0, color: "#4B5563", fontSize: 12, cursor: "pointer", fontWeight: 500, fontFamily: FONT }}>
+                    Download Document
+                  </button>
+                </div>
+              </div>
+            )}
+            <input
+              ref={queryFileInputRef}
+              type="file"
+              accept=".pdf,.doc,.docx"
+              onChange={e => {
+                const f = e.target.files?.[0];
+                if (f) setQueryFile(f);
+                e.target.value = "";
+              }}
+              style={{ display: "none" }}
+            />
           </div>
 
           {/* Remarks */}

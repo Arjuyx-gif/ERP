@@ -14,7 +14,7 @@ const GlobalHeader = () => {
       position: "relative",
       fontFamily: "'Inter','Segoe UI',sans-serif",
       borderBottom: "1px solid rgba(255,255,255,0.05)",
-      zIndex: 1000
+      zIndex: 900
     }}>
       <div style={{ fontWeight: 700, fontSize: 15, width: 200, paddingLeft: 16, boxSizing: "border-box" }}>
         ERP System

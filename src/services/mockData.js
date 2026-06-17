@@ -483,6 +483,54 @@ export const PANEL_NOTIFICATIONS = [
   },
 ];
 
+// ─── Task Dashboard B – Pre-sales Table ──────────────────────────────────────
+// oemStatus: string  |  queryResponse: string | null
+// actionType: "checkOEM" | "upload" | "view" | "checkQuery" | "start"
+export const TASK_TABLE_B_ROWS = [
+  {
+    id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name",
+    presalesChecklist: "Completed", alertNotify: "View Teams & Remarks",
+    oemStatus: "OEM Pending", queryResponse: "-",
+    deadline: "08/06/2026", updated: "2 hrs ago",
+    actionType: "checkOEM", highlight: null,
+  },
+  {
+    id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name",
+    presalesChecklist: "Completed", alertNotify: "View Teams & Remarks",
+    oemStatus: "Completed", queryResponse: "Doc. Uploaded Query & Response",
+    deadline: "10/06/2026", updated: "Yesterday",
+    actionType: "upload", highlight: null,
+  },
+  {
+    id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name",
+    presalesChecklist: "Completed", alertNotify: "View Teams & Remarks",
+    oemStatus: "Completed", queryResponse: "Response Pending",
+    deadline: "10/06/2026", updated: "Yesterday",
+    actionType: "upload", highlight: null,
+  },
+  {
+    id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name",
+    presalesChecklist: "Completed", alertNotify: "View Teams & Remarks",
+    oemStatus: "Completed", queryResponse: "Completed",
+    deadline: "10/06/2026", updated: "Today",
+    actionType: "view", highlight: "green",
+  },
+  {
+    id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name",
+    presalesChecklist: "Completed", alertNotify: "View Teams & Remarks",
+    oemStatus: "Completed", queryResponse: "In Progress",
+    deadline: "10/06/2026", updated: "Today",
+    actionType: "checkQuery", highlight: null,
+  },
+  {
+    id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name",
+    presalesChecklist: "Completed", alertNotify: "View Teams & Remarks",
+    oemStatus: "Completed", queryResponse: "Awaiting OEM Docs",
+    deadline: "10/06/2026", updated: "Yesterday",
+    actionType: "start", highlight: null,
+  },
+];
+
 // ─── Task Dashboard Table ─────────────────────────────────────────────────────
 // highlight: null | "yellow" | "green" | "orange"
 export const TASK_TABLE_ROWS = [
