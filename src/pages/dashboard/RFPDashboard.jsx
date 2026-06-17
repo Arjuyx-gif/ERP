@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Search, Bell, SlidersHorizontal, Eye, Minimize2, Plus } from "lucide-react";
 
 import Sidebar from "../../components/layout/Sidebar";
+import GlobalHeader from "../../components/layout/GlobalHeader";
 import KanbanBoard from "../../components/dashboard/KanbanBoard";
 import TaskTable from "../../components/dashboard/TaskTable";
 import RFPFormPanel from "../../components/dashboard/RFPFormPanel";
@@ -382,14 +383,16 @@ const RFPDashboard = () => {
 
   return (
     <div style={{
-      display: "flex", minHeight: "100vh",
+      display: "flex", flexDirection: "column", height: "100vh",
       fontFamily: "'Inter','Segoe UI',sans-serif", background: "#F7F8FA",
     }}>
+      <GlobalHeader />
+      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
 
-      <Sidebar />
+        <Sidebar />
 
-      {/* ── Main area ── */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden" }}>
+        {/* ── Main area ── */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden", overflowY: "auto" }}>
 
         {/* Header */}
         <div style={{ padding: "20px 28px 0", background: "#F7F8FA" }}>
@@ -550,6 +553,7 @@ const RFPDashboard = () => {
         <div style={{ flex: 1, overflowX: "auto", padding: "0 28px 28px" }}>
           {activeTab === "Task Dashboard" ? <TaskTable /> : board}
         </div>
+      </div>
       </div>
 
       {/* ── Fullscreen overlay (Kanban or Task Dashboard) ── */}
