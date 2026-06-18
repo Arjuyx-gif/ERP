@@ -468,7 +468,7 @@ const RFPDashboard = () => {
               </h1>
               <p style={{ fontSize: 12, color: "#888", margin: "0 0 16px" }}>Last updated: 2 hours ago</p>
             </div>
-            {(activeTab === "Task Dashboard S" || activeTab === "Task Dashboard S2") && (
+            {activeTab.startsWith("Task Dashboard") && activeTab !== "Task Dashboard PS" && (
               <button
                 onClick={() => navigate("/rfp-analysis-form")}
                 style={{
