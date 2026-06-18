@@ -1,5 +1,6 @@
 // src/pages/dashboard/RFPDashboard.jsx
 import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Search, Bell, SlidersHorizontal, Eye, Minimize2, Plus } from "lucide-react";
 
 import Sidebar from "../../components/layout/Sidebar";
@@ -7,6 +8,7 @@ import GlobalHeader from "../../components/layout/GlobalHeader";
 import KanbanBoard from "../../components/dashboard/KanbanBoard";
 import TaskTable from "../../components/dashboard/TaskTable";
 import TaskTableB from "../../components/dashboard/TaskTableB";
+import TaskTableC from "../../components/dashboard/TaskTableC";
 import RFPFormPanel from "../../components/dashboard/RFPFormPanel";
 import BidSubmissionModal from "../../components/dashboard/BidSubmissionModal";
 import NotificationPanel from "../../components/dashboard/NotificationPanel";
@@ -19,6 +21,9 @@ import { TASK_DASHBOARD_A_KPI_CARDS } from "../../services/mockData";
 // ─── RFPDashboard ─────────────────────────────────────────────────────────────
 
 const RFPDashboard = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   // ── Data from service layer (swap service implementation for real API) ──────
   const { kpiCards, columns: initialColumns, notifications, loading, error } = useDashboard();
   const [columns, setColumns] = useState([]);
@@ -30,7 +35,7 @@ const RFPDashboard = () => {
   // ── UI state ────────────────────────────────────────────────────────────────
   const [showNotifications, setShowNotifications] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
-  const [activeTab, setActiveTab] = useState("Dashboard");
+  const [activeTab, setActiveTab] = useState(location.state?.tab ?? "Dashboard");
   const [search, setSearch] = useState("");
   const [stageFilter] = useState("All Stages");
   const [statusFilter, setStatusFilter] = useState("All Status");
@@ -41,27 +46,34 @@ const RFPDashboard = () => {
   const [viewRFPCard, setViewRFPCard] = useState(null);
   const [bidSubmittedCard, setBidSubmittedCard] = useState(null);
 
-  // Auto-show Pre-Bid reminder on mount
+  const PRE_BID_MODAL = {
+    title: "Pre-Bid Meeting Reminder",
+    subtitle: "You have 1 upcoming pre-bid meeting:",
+    rfpId: "TDN-2026-006", tenderTitle: "Tender title", customer: "Customer Name",
+    details: [
+      { text: "Tender ID - TDN-2026-001" },
+      { text: "Apr 5, 2024", icon: "calendar" },
+      { text: "2:00 PM", icon: "timer" },
+      { text: "Online", icon: "globe" },
+      { text: "Join Meeting", highlight: true },
+    ],
+  };
+
+  // Auto-show Pre-Bid reminder on mount (chains to Pending Query Response)
   useEffect(() => {
-    const t = setTimeout(() => {
-      setActiveModal({
-        title: "Pre-Bid Meeting Reminder",
-        subtitle: "You have 1 upcoming pre-bid meeting:",
-        rfpId: "TDN-2026-006", tenderTitle: "Tender title", customer: "Customer Name",
-        details: [
-          { text: "Tender ID - TDN-2026-001" },
-          { text: "Apr 5, 2024", icon: "calendar" },
-          { text: "2:00 PM", icon: "timer" },
-          { text: "Online", icon: "globe" },
-          { text: "Join Meeting", highlight: true },
-        ],
-      });
-    }, 800);
+    const t = setTimeout(() => setActiveModal(PRE_BID_MODAL), 800);
     return () => clearTimeout(t);
   }, []);
 
+  // Show Pre-Bid reminder whenever user switches to Task Dashboard S (no chain)
+  useEffect(() => {
+    if (activeTab === "Task Dashboard S") {
+      setActiveModal({ ...PRE_BID_MODAL, noChain: true });
+    }
+  }, [activeTab]);
+
   const handleAcknowledge = () => {
-    if (activeModal?.title === "Pre-Bid Meeting Reminder") {
+    if (activeModal?.title === "Pre-Bid Meeting Reminder" && !activeModal?.noChain) {
       setTimeout(() => setActiveModal({
         title: "Pending Query Response",
         subtitle: "You have 1 pending query response(s):",
@@ -456,14 +468,16 @@ const RFPDashboard = () => {
               <p style={{ fontSize: 12, color: "#888", margin: "0 0 16px" }}>Last updated: 2 hours ago</p>
             </div>
             {activeTab.startsWith("Task Dashboard") && (
-              <button style={{
-                display: "flex", alignItems: "center", gap: 6,
-                padding: "9px 20px", border: "none", borderRadius: 8,
-                background: "#2563EB", color: "#fff", fontSize: 13, fontWeight: 600,
-                cursor: "pointer", fontFamily: "'Inter','Segoe UI',sans-serif",
-                boxShadow: "0 2px 8px rgba(37,99,235,0.25)",
-                transition: "background 0.15s, box-shadow 0.15s",
-              }}
+              <button
+                onClick={() => navigate("/rfp-analysis-form")}
+                style={{
+                  display: "flex", alignItems: "center", gap: 6,
+                  padding: "9px 20px", border: "none", borderRadius: 8,
+                  background: "#2563EB", color: "#fff", fontSize: 13, fontWeight: 600,
+                  cursor: "pointer", fontFamily: "'Inter','Segoe UI',sans-serif",
+                  boxShadow: "0 2px 8px rgba(37,99,235,0.25)",
+                  transition: "background 0.15s, box-shadow 0.15s",
+                }}
                 onMouseEnter={e => {
                   e.currentTarget.style.background = "#1D4ED8";
                   e.currentTarget.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)";
@@ -539,7 +553,7 @@ const RFPDashboard = () => {
 
           {/* KPI cards */}
           <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
-            {(activeTab === "Task Dashboard A" ? TASK_DASHBOARD_A_KPI_CARDS : kpiCards).map(kpi => (
+            {(activeTab === "Task Dashboard SM" ? TASK_DASHBOARD_A_KPI_CARDS : kpiCards).map(kpi => (
               <div key={kpi.label} style={{
                 flex: "1 1 130px", background: "#fff", borderRadius: 10,
                 padding: "14px 16px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
@@ -561,18 +575,30 @@ const RFPDashboard = () => {
 
           {/* Dashboard / Task Dashboard tabs */}
           <div style={{ display: "flex", borderBottom: "2px solid #E2E8F0" }}>
-            {["Dashboard", "Task Dashboard A", "Task Dashboard B", "Task Dashboard C"].map(tab => (
-              <button key={tab} onClick={() => setActiveTab(tab)} style={{
-                padding: "10px 20px", background: "none", border: "none",
-                borderBottom: activeTab === tab ? "2px solid #2979FF" : "2px solid transparent",
-                marginBottom: "-2px",
-                color: activeTab === tab ? "#2979FF" : "#888",
-                fontWeight: activeTab === tab ? 700 : 400,
-                fontSize: 14, cursor: "pointer", fontFamily: "inherit",
-              }}>
-                {tab}
-              </button>
-            ))}
+            {["Dashboard", "Task Dashboard SM", "Task Dashboard PS", "Task Dashboard S"].map(tab => {
+              const isLocked = activeTab === "Task Dashboard S" && tab === "Dashboard";
+              const isActive = activeTab === tab;
+              return (
+                <button
+                  key={tab}
+                  onClick={() => { if (!isLocked) setActiveTab(tab); }}
+                  disabled={isLocked}
+                  style={{
+                    padding: "10px 20px", background: "none", border: "none",
+                    borderBottom: isActive ? "2px solid #2979FF" : "2px solid transparent",
+                    marginBottom: "-2px",
+                    color: isLocked ? "#C8C8C8" : isActive ? "#2979FF" : "#888",
+                    fontWeight: isActive ? 700 : 400,
+                    fontSize: 14,
+                    cursor: isLocked ? "not-allowed" : "pointer",
+                    fontFamily: "inherit",
+                    opacity: isLocked ? 0.5 : 1,
+                  }}
+                >
+                  {tab}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -603,11 +629,13 @@ const RFPDashboard = () => {
 
         {/* Board / Table */}
         <div style={{ flex: 1, overflowX: "auto", padding: "0 28px 28px" }}>
-          {activeTab === "Task Dashboard B"
+          {activeTab === "Task Dashboard PS"
             ? <TaskTableB onAction={handleTaskBAction} onAlertNotifyClick={handleAlertNotifyClick} />
-            : activeTab.startsWith("Task Dashboard")
-              ? <TaskTable onViewRFP={handleViewRFP} />
-              : board}
+            : activeTab === "Task Dashboard S"
+              ? <TaskTableC />
+              : activeTab.startsWith("Task Dashboard")
+                ? <TaskTable onViewRFP={handleViewRFP} />
+                : board}
         </div>
       </div>
       </div>
@@ -637,11 +665,13 @@ const RFPDashboard = () => {
             </button>
           </div>
           <div style={{ flex: 1, overflowX: "auto", overflowY: "auto", padding: "20px 28px 28px" }}>
-            {activeTab === "Task Dashboard B"
+            {activeTab === "Task Dashboard PS"
               ? <TaskTableB fullscreen onAction={handleTaskBAction} onAlertNotifyClick={handleAlertNotifyClick} />
-              : activeTab.startsWith("Task Dashboard")
-                ? <TaskTable fullscreen />
-                : board}
+              : activeTab === "Task Dashboard S"
+                ? <TaskTableC fullscreen />
+                : activeTab.startsWith("Task Dashboard")
+                  ? <TaskTable fullscreen />
+                  : board}
           </div>
         </div>
       )}
@@ -657,8 +687,8 @@ const RFPDashboard = () => {
             notifications={notifications}
             onClose={() => setShowNotifications(false)}
             onAction={(notification) => {
-              // Switch to Task Dashboard B in fullscreen when "View & Complete Docs." is clicked
-              setActiveTab("Task Dashboard B");
+              // Switch to Task Dashboard PS in fullscreen when "View & Complete Docs." is clicked
+              setActiveTab("Task Dashboard PS");
               setKanbanFullscreen(true);
             }}
           />

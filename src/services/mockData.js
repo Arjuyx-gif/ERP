@@ -259,7 +259,7 @@ export const SIDEBAR_NAV = [
     iconName: "clipboard", label: "Sales & Pre-sales", expandable: true,
     children: [
       { label: "RFP Dashboard", path: "/rfp-dashboard" },
-      { label: "RFP Analysis Form" },
+      { label: "RFP Analysis Form", path: "/rfp-analysis-form" },
       { label: "Pre-sales Checklist" },
       { label: "Comparison Sheet" },
       { label: "SOF" },
@@ -541,6 +541,18 @@ export const TASK_TABLE_ROWS = [
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Rejected",          statusColor: "#DC2626", completion: 0,   actionLabel: "View RFP",             actionIcon: "eye",  highlight: "orange" },
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Won - PO Awaiting", statusColor: "#374151", completion: 100, actionLabel: "View RFP",             actionIcon: "eye",  highlight: null    },
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "PO Updated",        statusColor: "#374151", completion: 100, actionLabel: "View PO",              actionIcon: "eye",  highlight: null    },
+];
+
+// ─── Task Dashboard C Table ───────────────────────────────────────────────────
+// highlight: null | "yellow" | "green" | "red"
+export const TASK_DASHBOARD_C_TABLE_ROWS = [
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "In Progress",                  statusColor: "#1565C0", updated: "2 hrs ago",  completion: 65,  actionLabel: "Continue",         actionIcon: "edit",   highlight: null    },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Doc. Uploaded Query & Response", statusColor: "#D97706", updated: "Yesterday",  completion: 0,   actionLabel: "Upload",           actionIcon: "upload", highlight: "yellow" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Submitted",                     statusColor: "#16A34A", updated: "Yesterday",  completion: 100, actionLabel: "View",             actionIcon: "eye",    highlight: "green"  },
+  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Order Placed",                  statusColor: "#374151", updated: "Today",      completion: 80,  actionLabel: "View SOF",         actionIcon: "eye",    highlight: null    },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Rework",                        statusColor: "#DC2626", updated: "Today",      completion: 80,  actionLabel: "Edit & Resubmit",  actionIcon: "edit",   highlight: "red"   },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Rejected",                      statusColor: "#DC2626", updated: "Yesterday",  completion: 0,   actionLabel: "Edit",             actionIcon: "edit",   highlight: null    },
+  { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "EMD Completed & Uploaded",      statusColor: "#374151", updated: "Today",      completion: 80,  actionLabel: "View SOF",         actionIcon: "eye",    highlight: null    },
 ];
 
 export const QUICK_ACCESS = [
