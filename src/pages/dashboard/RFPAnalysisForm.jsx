@@ -619,7 +619,9 @@ const RFPAnalysisForm = () => {
                   &nbsp;&nbsp;Tender ID:&nbsp;<strong style={{ color: "#111" }}>{displayTenderId}</strong>
                 </p>
               </div>
-              <button style={{
+              <button
+                onClick={() => navigate("/tender-checklist")}
+                style={{
                 display: "flex", alignItems: "center", gap: 6,
                 padding: "8px 16px", border: "1px solid #FECDD3", borderRadius: 8,
                 background: "#FFF1F2", fontSize: 13, fontWeight: 500, color: "#E11D48",

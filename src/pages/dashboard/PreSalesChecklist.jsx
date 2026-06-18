@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Plus, Search, Filter, ArrowUpDown, Eye, X, FileEdit } from "lucide-react";
 import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
@@ -115,14 +115,24 @@ const statusColor = (s) => {
 
 const PreSalesChecklist = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [showStatusDrop, setShowStatusDrop] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
 
+  // Merge submitted entry from TenderChecklist into the rows
+  const allRows = useMemo(() => {
+    const base = [...CHECKLIST_ROWS];
+    if (location.state?.newEntry) {
+      base.unshift(location.state.newEntry);
+    }
+    return base;
+  }, [location.state]);
+
   const filteredRows = useMemo(() => {
-    let rows = [...CHECKLIST_ROWS];
+    let rows = [...allRows];
     // Tab filter
     if (tab === "Needs Action") rows = rows.filter(r => r.status !== "Completed");
     if (tab === "Completed") rows = rows.filter(r => r.status === "Completed");
@@ -139,7 +149,7 @@ const PreSalesChecklist = () => {
       );
     }
     return rows;
-  }, [tab, statusFilter, search]);
+  }, [tab, statusFilter, search, allRows]);
 
   const TABS = ["All", "Needs Action", "Completed"];
 
@@ -416,7 +426,7 @@ const PreSalesChecklist = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {CHECKLIST_ROWS.map((row, i) => (
+                  {allRows.map((row, i) => (
                     <tr
                       key={i}
                       style={{ transition: "background 0.15s" }}
