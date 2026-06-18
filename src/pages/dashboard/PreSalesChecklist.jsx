@@ -297,18 +297,23 @@ const PreSalesChecklist = () => {
               background: "#fff", borderRadius: 10, border: "1px solid #E5E7EB",
               overflow: "auto", flex: 1,
             }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed", minWidth: 800 }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 1100 }}>
                 <thead style={{ position: "sticky", top: 0, zIndex: 10 }}>
                   <tr>
-                    {SUMMARY_COLS.map(col => (
-                      <th key={col.key} style={{...thStyle(col), borderTop: "none"}}>{col.label}</th>
+                    {FULL_COLS.map((col, i) => (
+                      <th key={col.key} style={{
+                        ...thStyle(col),
+                        borderTop: "none",
+                        textAlign: "center",
+                        borderRight: i < FULL_COLS.length - 1 ? "1px solid #E5E7EB" : "none",
+                      }}>{col.label}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {filteredRows.length === 0 ? (
                     <tr>
-                      <td colSpan={SUMMARY_COLS.length} style={{ padding: 40, textAlign: "center", color: "#9CA3AF", fontSize: 14 }}>
+                      <td colSpan={FULL_COLS.length} style={{ padding: 40, textAlign: "center", color: "#9CA3AF", fontSize: 14 }}>
                         No checklists found.
                       </td>
                     </tr>
@@ -320,9 +325,37 @@ const PreSalesChecklist = () => {
                         onMouseEnter={e => e.currentTarget.style.background = "#F9FAFB"}
                         onMouseLeave={e => e.currentTarget.style.background = "transparent"}
                       >
-                        {SUMMARY_COLS.map(col => (
-                          <td key={col.key} style={tdStyle(col)}>{row[col.key]}</td>
-                        ))}
+                        {FULL_COLS.map((col, cIdx) => {
+                          if (col.key === "status") return (
+                            <td key={col.key} style={modalTdStyle(col, cIdx, FULL_COLS.length)}>
+                              <span style={{ color: statusColor(row.status), fontWeight: 500 }}>{row.status}</span>
+                            </td>
+                          );
+                          if (col.key === "completion") return (
+                            <td key={col.key} style={modalTdStyle(col, cIdx, FULL_COLS.length)}>
+                              {row.completion}%
+                            </td>
+                          );
+                          if (col.key === "actions") {
+                            const isDraft = row.status === "Draft";
+                            return (
+                              <td key={col.key} style={modalTdStyle(col, cIdx, FULL_COLS.length)}>
+                                <button style={{
+                                  display: "inline-flex", alignItems: "center", gap: 5,
+                                  background: "none", border: "none", cursor: "pointer",
+                                  fontSize: 13, fontWeight: 600, fontFamily: FONT, color: "#374151",
+                                }}>
+                                  {isDraft
+                                    ? <><FileEdit size={14} color="#6B7280" /> Continue</>
+                                    : <><Eye size={14} color="#6B7280" /> View</>}
+                                </button>
+                              </td>
+                            );
+                          }
+                          return (
+                            <td key={col.key} style={modalTdStyle(col, cIdx, FULL_COLS.length)}>{row[col.key]}</td>
+                          );
+                        })}
                       </tr>
                     ))
                   )}
@@ -337,7 +370,7 @@ const PreSalesChecklist = () => {
       {showViewModal && (
         <div
           style={{
-            position: "fixed", inset: 0, zIndex: 300,
+            position: "fixed", inset: 0, zIndex: 1000,
             display: "flex", alignItems: "center", justifyContent: "center",
             background: "rgba(0,0,0,0.4)",
             padding: 24,
