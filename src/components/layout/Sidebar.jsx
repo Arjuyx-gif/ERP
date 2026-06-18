@@ -115,7 +115,7 @@ const Sidebar = () => {
         }}>JD</div>
         <div>
           <div style={{ fontSize: 12, color: "#E2E8F0", fontWeight: 600 }}>Name</div>
-          <div style={{ fontSize: 11, color: "#718096" }}>Sales Manager</div>
+          <div style={{ fontSize: 11, color: "#718096" }}>Pre-Sales Department</div>
         </div>
       </div>
     </div>

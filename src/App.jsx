@@ -9,6 +9,7 @@ import RecoverPassword from "./pages/auth/RecoverPassword";
 import MainDashboard   from "./pages/dashboard/MainDashboard";
 import RFPDashboard    from "./pages/dashboard/RFPDashboard";
 import RFPAnalysisForm from "./pages/dashboard/RFPAnalysisForm";
+import PreSalesChecklist from "./pages/dashboard/PreSalesChecklist";
 import PlaceholderPage from "./pages/PlaceholderPage";
 
 const ph = title => <PlaceholderPage title={title} />;
@@ -27,6 +28,7 @@ const App = () => (
       <Route path="/dashboard"        element={<MainDashboard />} />
       <Route path="/rfp-dashboard"    element={<RFPDashboard />} />
       <Route path="/rfp-analysis-form" element={<RFPAnalysisForm />} />
+      <Route path="/pre-sales-checklist" element={<PreSalesChecklist />} />
       <Route path="/sof-dashboard"    element={ph("SOF Dashboard")} />
       <Route path="/sales-coordinator"element={ph("Sales Coordinator Dashboard")} />
       <Route path="/tracker"          element={ph("Tracker")} />
