@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Eye, Upload, Edit3 } from "lucide-react";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
@@ -72,49 +71,7 @@ const ROWS = [
   },
 ];
 
-const TaskTableS2 = ({ fullscreen = false }) => {
-  const [showSOFModal, setShowSOFModal] = useState(false);
-
-  return (
-  <>
-  {showSOFModal && (
-    <div
-      onClick={() => setShowSOFModal(false)}
-      style={{
-        position: "fixed", inset: 0, zIndex: 1000,
-        background: "rgba(0,0,0,0.35)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-      }}
-    >
-      <div
-        onClick={e => e.stopPropagation()}
-        style={{
-          background: "#fff", borderRadius: 12,
-          padding: "32px 28px 24px", width: 300,
-          boxShadow: "0 8px 32px rgba(0,0,0,0.14)",
-          fontFamily: FONT, textAlign: "center",
-        }}
-      >
-        <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2563EB", margin: "0 0 14px" }}>
-          Complete Pending SOFs
-        </h2>
-        <p style={{ fontSize: 13, color: "#374151", lineHeight: 1.6, margin: "0 0 24px" }}>
-          Please complete the current SOF before creating a new RFP.<br />
-          Finish all mandatory SOF details and submit/save the form to continue.
-        </p>
-        <button
-          onClick={() => setShowSOFModal(false)}
-          style={{
-            padding: "10px 40px", background: "#2563EB", color: "#fff",
-            border: "none", borderRadius: 8, fontSize: 14, fontWeight: 600,
-            cursor: "pointer", fontFamily: FONT,
-          }}
-        >
-          OK
-        </button>
-      </div>
-    </div>
-  )}
+const TaskTableS2 = ({ fullscreen = false }) => (
   <div style={{
     background: "#fff",
     borderRadius: 10,
@@ -171,7 +128,6 @@ const TaskTableS2 = ({ fullscreen = false }) => {
               <td style={{ padding: "14px 14px" }}>
                 {row.actionLabel && (
                   <button
-                    onClick={() => { if (row.actionLabel === "Start SOF") setShowSOFModal(true); }}
                     style={{
                       display: "inline-flex", alignItems: "center", gap: 6,
                       padding: "6px 12px", border: "1px solid #E2E8F0", borderRadius: 6,
@@ -199,8 +155,6 @@ const TaskTableS2 = ({ fullscreen = false }) => {
       </tbody>
     </table>
   </div>
-  </>
-  );
-};
+);
 
 export default TaskTableS2;

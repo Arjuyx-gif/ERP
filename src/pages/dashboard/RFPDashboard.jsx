@@ -43,6 +43,8 @@ const RFPDashboard = () => {
   const [deadlineFilter, setDeadlineFilter] = useState("By Deadline");
   const [tabFilter, setTabFilter] = useState("All");
   const [kanbanFullscreen, setKanbanFullscreen] = useState(false);
+  const [sofModal, setSofModal] = useState(null); // null | "warn" | "error"
+  const [sofWarned, setSofWarned] = useState(false);
   const [viewAllCol, setViewAllCol] = useState(null);
   const [viewRFPCard, setViewRFPCard] = useState(null);
   const [bidSubmittedCard, setBidSubmittedCard] = useState(null);
@@ -470,7 +472,13 @@ const RFPDashboard = () => {
             </div>
             {activeTab.startsWith("Task Dashboard") && activeTab !== "Task Dashboard PS" && (
               <button
-                onClick={() => navigate("/rfp-analysis-form")}
+                onClick={() => {
+                  if (activeTab === "Task Dashboard S2") {
+                    setSofModal(sofWarned ? "error" : "warn");
+                  } else {
+                    navigate("/rfp-analysis-form");
+                  }
+                }}
                 style={{
                   display: "flex", alignItems: "center", gap: 6,
                   padding: "9px 20px", border: "none", borderRadius: 8,
@@ -709,6 +717,51 @@ const RFPDashboard = () => {
 
       {/* ── Bid Submission modal ── */}
       <BidSubmissionModal card={bidSubmittedCard} onClose={() => setBidSubmittedCard(null)} />
+
+      {/* ── SOF warning / error modal (Task Dashboard S2 only) ── */}
+      {sofModal && (
+        <div
+          onClick={() => setSofModal(null)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 1000,
+            background: "rgba(0,0,0,0.35)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: "#fff", borderRadius: 12,
+              padding: "28px 28px 24px", width: 300,
+              boxShadow: "0 8px 32px rgba(0,0,0,0.14)",
+              fontFamily: "'Inter','Segoe UI',sans-serif", textAlign: "center",
+            }}
+          >
+            {sofModal === "error" && (
+              <p style={{ fontSize: 15, fontWeight: 700, color: "#DC2626", margin: "0 0 10px" }}>
+                ERROR !!!
+              </p>
+            )}
+            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2563EB", margin: "0 0 14px" }}>
+              Complete Pending SOFs
+            </h2>
+            <p style={{ fontSize: 13, color: "#374151", lineHeight: 1.6, margin: "0 0 24px" }}>
+              Please complete the current SOF before creating a new RFP.<br />
+              Finish all mandatory SOF details and submit/save the form to continue.
+            </p>
+            <button
+              onClick={() => { setSofWarned(true); setSofModal(null); }}
+              style={{
+                padding: "10px 40px", background: "#2563EB", color: "#fff",
+                border: "none", borderRadius: 8, fontSize: 14, fontWeight: 600,
+                cursor: "pointer", fontFamily: "'Inter','Segoe UI',sans-serif",
+              }}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
