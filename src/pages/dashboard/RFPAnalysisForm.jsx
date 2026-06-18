@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Save, Upload, Eye, Check, Calendar, Download } from "lucide-react";
 import Sidebar from "../../components/layout/Sidebar";
@@ -611,10 +611,11 @@ const RFPAnalysisForm = () => {
                     onClick={() => setDocView("docs")}
                     style={{
                       background: "none", border: "none", borderBottom: "1.5px solid #2563EB",
-                      padding: "0 0 1px", cursor: "pointer", fontFamily: FONT,
-                      fontSize: 12, color: "#2563EB", minWidth: 70, display: "inline-block",
+                      padding: "6px 0", cursor: "pointer", fontFamily: FONT,
+                      fontSize: 14, color: "#2563EB", minWidth: 140, display: "inline-block",
+                      textAlign: "left", lineHeight: "1",
                     }}
-                  >{" "}</button>
+                  >{"\u00A0"}</button>
                   &nbsp;&nbsp;Tender ID:&nbsp;<strong style={{ color: "#111" }}>{displayTenderId}</strong>
                 </p>
               </div>
