@@ -309,21 +309,18 @@ const TenderChecklist = () => {
               <button onClick={addItem} style={barBtnStyle}>
                 <Plus size={14} color="#6B7280" /> Add Item
               </button>
-              <button onClick={() => setEditing(false)} style={barBtnStyle}>
-                <Pencil size={14} color="#6B7280" /> Edit
-              </button>
               <button onClick={() => navigate("/pre-sales-checklist")} style={barBtnStyle}>
                 <Save size={14} color="#6B7280" /> Save Draft
               </button>
               <button
-                onClick={handleSubmit}
+                onClick={() => setEditing(false)}
                 style={{
                   display: "flex", alignItems: "center", gap: 6,
                   padding: "8px 18px", border: "none", borderRadius: 8,
                   background: "#2563EB", fontSize: 13, fontWeight: 600, color: "#fff",
                   cursor: "pointer", fontFamily: FONT,
                 }}>
-                <Upload size={14} /> Submit
+                <Check size={14} /> Save Changes
               </button>
             </div>
           )}

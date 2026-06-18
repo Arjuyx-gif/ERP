@@ -9,6 +9,7 @@ import KanbanBoard from "../../components/dashboard/KanbanBoard";
 import TaskTable from "../../components/dashboard/TaskTable";
 import TaskTableB from "../../components/dashboard/TaskTableB";
 import TaskTableC from "../../components/dashboard/TaskTableC";
+import TaskTableS2 from "../../components/dashboard/TaskTableS2";
 import RFPFormPanel from "../../components/dashboard/RFPFormPanel";
 import BidSubmissionModal from "../../components/dashboard/BidSubmissionModal";
 import NotificationPanel from "../../components/dashboard/NotificationPanel";
@@ -467,7 +468,7 @@ const RFPDashboard = () => {
               </h1>
               <p style={{ fontSize: 12, color: "#888", margin: "0 0 16px" }}>Last updated: 2 hours ago</p>
             </div>
-            {activeTab.startsWith("Task Dashboard") && (
+            {(activeTab === "Task Dashboard S" || activeTab === "Task Dashboard S2") && (
               <button
                 onClick={() => navigate("/rfp-analysis-form")}
                 style={{
@@ -575,8 +576,8 @@ const RFPDashboard = () => {
 
           {/* Dashboard / Task Dashboard tabs */}
           <div style={{ display: "flex", borderBottom: "2px solid #E2E8F0" }}>
-            {["Dashboard", "Task Dashboard SM", "Task Dashboard PS", "Task Dashboard S"].map(tab => {
-              const isLocked = activeTab === "Task Dashboard S" && tab === "Dashboard";
+            {["Dashboard", "Task Dashboard SM", "Task Dashboard PS", "Task Dashboard S", "Task Dashboard S2"].map(tab => {
+              const isLocked = (activeTab === "Task Dashboard S" || activeTab === "Task Dashboard S2") && tab === "Dashboard";
               const isActive = activeTab === tab;
               return (
                 <button
@@ -633,9 +634,11 @@ const RFPDashboard = () => {
             ? <TaskTableB onAction={handleTaskBAction} onAlertNotifyClick={handleAlertNotifyClick} />
             : activeTab === "Task Dashboard S"
               ? <TaskTableC />
-              : activeTab.startsWith("Task Dashboard")
-                ? <TaskTable onViewRFP={handleViewRFP} />
-                : board}
+              : activeTab === "Task Dashboard S2"
+                ? <TaskTableS2 />
+                : activeTab.startsWith("Task Dashboard")
+                  ? <TaskTable onViewRFP={handleViewRFP} />
+                  : board}
         </div>
       </div>
       </div>
@@ -669,9 +672,11 @@ const RFPDashboard = () => {
               ? <TaskTableB fullscreen onAction={handleTaskBAction} onAlertNotifyClick={handleAlertNotifyClick} />
               : activeTab === "Task Dashboard S"
                 ? <TaskTableC fullscreen />
-                : activeTab.startsWith("Task Dashboard")
-                  ? <TaskTable fullscreen />
-                  : board}
+                : activeTab === "Task Dashboard S2"
+                  ? <TaskTableS2 fullscreen />
+                  : activeTab.startsWith("Task Dashboard")
+                    ? <TaskTable fullscreen />
+                    : board}
           </div>
         </div>
       )}
@@ -686,7 +691,7 @@ const RFPDashboard = () => {
           <NotificationPanel
             notifications={notifications}
             onClose={() => setShowNotifications(false)}
-            onAction={(notification) => {
+            onAction={() => {
               // Switch to Task Dashboard PS in fullscreen when "View & Complete Docs." is clicked
               setActiveTab("Task Dashboard PS");
               setKanbanFullscreen(true);
