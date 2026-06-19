@@ -316,7 +316,7 @@ const SOFDashboard = () => {
                         <button style={{
                           display: "inline-flex", alignItems: "center", gap: 8,
                           background: "#fff", border: "1px solid #D1D5DB", borderRadius: 8, color: "#111827",
-                          padding: "8px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: FONT
+                          padding: "8px 12px", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: FONT
                         }}>
                           Continue SOF
                         </button>
