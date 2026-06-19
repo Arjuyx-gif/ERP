@@ -261,7 +261,7 @@ export const SIDEBAR_NAV = [
       { label: "RFP Dashboard", path: "/rfp-dashboard" },
       { label: "Pre-sales Checklist", path: "/pre-sales-checklist" },
       { label: "Comparison Sheet" },
-      { label: "SOF" },
+      { label: "SOF", path: "/sof-dashboard" },
     ],
   },
   { iconName: "users", label: "Sales Coordinator", expandable: true, path: "/sales-coordinator" },
