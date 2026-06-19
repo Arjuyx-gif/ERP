@@ -640,7 +640,7 @@ const RFPDashboard = () => {
           {activeTab === "Task Dashboard PS"
             ? <TaskTableB onAction={handleTaskBAction} onAlertNotifyClick={handleAlertNotifyClick} />
             : activeTab === "Task Dashboard S"
-              ? <TaskTableC />
+              ? <TaskTableC onViewRFP={handleViewRFP} />
               : activeTab === "Task Dashboard S2"
                 ? <TaskTableS2 />
                 : activeTab.startsWith("Task Dashboard")
@@ -678,7 +678,7 @@ const RFPDashboard = () => {
             {activeTab === "Task Dashboard PS"
               ? <TaskTableB fullscreen onAction={handleTaskBAction} onAlertNotifyClick={handleAlertNotifyClick} />
               : activeTab === "Task Dashboard S"
-                ? <TaskTableC fullscreen />
+                ? <TaskTableC fullscreen onViewRFP={handleViewRFP} />
                 : activeTab === "Task Dashboard S2"
                   ? <TaskTableS2 fullscreen />
                   : activeTab.startsWith("Task Dashboard")

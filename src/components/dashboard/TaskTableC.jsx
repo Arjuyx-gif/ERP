@@ -28,7 +28,16 @@ const ACTION_ICON = {
   edit:   Edit3,
 };
 
-const TaskTableC = ({ fullscreen = false }) => (
+const ACTION_MAP = {
+  "Upload PO":       row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View PO" }),
+  "Continue":        row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
+  "Upload":          row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "Complete Tasks", isQuery: true, showQueryUploadZone: true }),
+  "View":            row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
+  "View SOF":        row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
+  "Edit & Resubmit": row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
+};
+
+const TaskTableC = ({ fullscreen = false, onViewRFP }) => (
   <div style={{
     background: "#fff",
     borderRadius: 10,
@@ -99,6 +108,10 @@ const TaskTableC = ({ fullscreen = false }) => (
               <td style={{ padding: "14px 14px", textAlign: "center" }}>
                 {row.actionLabel && (
                   <button
+                    onClick={() => {
+                      const builder = ACTION_MAP[row.actionLabel];
+                      if (builder) onViewRFP?.(builder(row));
+                    }}
                     style={{
                       display: "inline-flex", alignItems: "center", gap: 6,
                       padding: "6px 12px", border: "1px solid #E2E8F0", borderRadius: 6,
