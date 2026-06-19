@@ -307,7 +307,8 @@ const SOFDashboard = () => {
                         <button style={{
                           display: "inline-flex", alignItems: "center", gap: 8,
                           background: "#0D47A1", border: "none", borderRadius: 8, color: "#fff",
-                          padding: "8px 16px", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT
+                          padding: "8px 16px", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT,
+                          whiteSpace: "nowrap",
                         }}>
                           <Play size={16} strokeWidth={2} /> View SOF
                         </button>
