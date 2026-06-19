@@ -591,10 +591,10 @@ const RFPAnalysisForm = () => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh", fontFamily: FONT, background: "#F7F8FA" }}>
-      <GlobalHeader />
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-        <Sidebar />
+    <div style={{ display: "flex", height: "100vh", fontFamily: FONT, background: "#F7F8FA" }}>
+      <Sidebar />
+      <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
+        <GlobalHeader />
 
         <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden" }}>
 

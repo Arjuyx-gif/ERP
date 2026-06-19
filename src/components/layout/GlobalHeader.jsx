@@ -8,26 +8,15 @@ const GlobalHeader = () => {
       background: "#04060A",
       display: "flex",
       alignItems: "center",
-      padding: "0 24px 0 0",
-      color: "#fff",
+      justifyContent: "center",
       flexShrink: 0,
-      position: "relative",
       fontFamily: "'Inter','Segoe UI',sans-serif",
       borderBottom: "1px solid rgba(255,255,255,0.05)",
-      zIndex: 900
+      zIndex: 900,
+      gap: 12,
     }}>
-      <div style={{ fontWeight: 700, fontSize: 15, width: 200, paddingLeft: 16, boxSizing: "border-box" }}>
-        ERP System
-      </div>
-      <div style={{
-        position: "absolute", left: "50%", transform: "translateX(-50%)",
-        display: "flex", alignItems: "center", gap: 12
-      }}>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <img src={logo} alt="cipl logo" style={{ height: 36, objectFit: "contain" }} />
-        </div>
-        <span style={{ fontWeight: 600, fontSize: 18, letterSpacing: 0.5 }}>ERP PORTAL</span>
-      </div>
+      <img src={logo} alt="cipl logo" style={{ height: 36, objectFit: "contain" }} />
+      <span style={{ fontWeight: 600, fontSize: 18, letterSpacing: 0.5, color: "#fff" }}>ERP PORTAL</span>
     </div>
   );
 };

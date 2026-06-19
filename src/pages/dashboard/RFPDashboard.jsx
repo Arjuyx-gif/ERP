@@ -450,13 +450,12 @@ const RFPDashboard = () => {
 
   return (
     <div style={{
-      display: "flex", flexDirection: "column", height: "100vh",
+      display: "flex", height: "100vh",
       fontFamily: "'Inter','Segoe UI',sans-serif", background: "#F7F8FA",
     }}>
-      <GlobalHeader />
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-
-        <Sidebar />
+      <Sidebar />
+      <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
+        <GlobalHeader />
 
         {/* ── Main area ── */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden", overflowY: "auto" }}>

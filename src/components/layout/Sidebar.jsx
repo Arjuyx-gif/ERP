@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { SIDEBAR_NAV } from "../../services/mockData";
 import DynamicIcon from "../ui/DynamicIcon";
+import ciplLogo from "../../assets/cipl-logo-white 1.png";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -26,7 +27,14 @@ const Sidebar = () => {
       width: 200, flexShrink: 0, background: "#04060A",
       display: "flex", flexDirection: "column", height: "100%", fontFamily: "inherit",
     }}>
-      <div style={{ height: 16 }} />
+      {/* Logo */}
+      <div style={{
+        padding: "15px 16px 16px",
+        display: "flex", justifyContent: "center", alignItems: "center",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
+      }}>
+        <img src={ciplLogo} alt="CIPL" style={{ width: "100%", maxWidth: 160, objectFit: "contain" }} />
+      </div>
 
       <div className="no-scrollbar" style={{ flex: 1, overflowY: "auto", padding: "8px 0" }}>
         {SIDEBAR_NAV.map(item => {
