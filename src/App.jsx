@@ -11,6 +11,7 @@ import RFPDashboard    from "./pages/dashboard/RFPDashboard";
 import RFPAnalysisForm from "./pages/dashboard/RFPAnalysisForm";
 import PreSalesChecklist from "./pages/dashboard/PreSalesChecklist";
 import ComparisonSheet   from "./pages/dashboard/ComparisonSheet";
+import ComparisonSheetDetail from "./pages/dashboard/ComparisonSheetDetail";
 import TenderChecklist from "./pages/dashboard/TenderChecklist";
 import SOFDashboard    from "./pages/dashboard/SOFDashboard";
 import SalesOrderForm  from "./pages/dashboard/SalesOrderForm";
@@ -34,6 +35,7 @@ const App = () => (
       <Route path="/rfp-analysis-form" element={<RFPAnalysisForm />} />
       <Route path="/pre-sales-checklist" element={<PreSalesChecklist />} />
       <Route path="/comparison-sheet"  element={<ComparisonSheet />} />
+      <Route path="/comparison-sheet-detail" element={<ComparisonSheetDetail />} />
       <Route path="/tender-checklist" element={<TenderChecklist />} />
       <Route path="/sof-dashboard"    element={<SOFDashboard />} />
       <Route path="/sales-order-form" element={<SalesOrderForm />} />

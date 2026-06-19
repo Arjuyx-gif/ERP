@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, Filter, Bell, Plus, X, Edit, Eye, FileText, Clock, CheckCircle2, Users, AlertCircle, User, ChevronDown } from "lucide-react";
 import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
@@ -46,9 +47,11 @@ const NOTIFICATIONS = [
 ];
 
 const ComparisonSheet = () => {
+  const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("All Status");
 
   return (
     <div style={{ display: "flex", height: "100vh", width: "100vw", overflow: "hidden", fontFamily: FONT, background: "#F9FAFB" }}>
@@ -74,7 +77,7 @@ const ComparisonSheet = () => {
                   <Bell size={20} color="#4B5563" />
                   <div style={{ position: "absolute", top: 10, right: 11, width: 6, height: 6, borderRadius: "50%", background: "#EF4444" }} />
                 </div>
-                <button style={{ display: "flex", alignItems: "center", gap: 6, background: "#2563EB", color: "#fff", border: "none", padding: "10px 16px", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                <button onClick={() => navigate("/comparison-sheet-detail")} style={{ display: "flex", alignItems: "center", gap: 6, background: "#2563EB", color: "#fff", border: "none", padding: "10px 16px", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
                   <Plus size={16} /> Create
                 </button>
               </div>
@@ -117,14 +120,16 @@ const ComparisonSheet = () => {
                     <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 10 }} onClick={() => setShowFilters(false)} />
                     <div style={{ position: "absolute", top: "100%", right: 0, marginTop: 4, width: 140, background: "#fff", border: "1px solid #E5E7EB", borderRadius: 6, boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)", zIndex: 20, overflow: "hidden" }}>
                       {["All Status", "Draft", "Pending", "Completed"].map((status, i) => (
-                        <div 
-                          key={i} 
-                          style={{ 
-                            padding: "10px 16px", fontSize: 13, color: i === 0 ? "#000" : "#374151", 
-                            cursor: "pointer", background: i === 0 ? "#93C5FD" : "#fff", 
-                            borderBottom: i < 3 ? "1px solid #E5E7EB" : "none" 
+                        <div
+                          key={i}
+                          style={{
+                            padding: "10px 16px", fontSize: 13,
+                            color: activeFilter === status ? "#000" : "#374151",
+                            cursor: "pointer",
+                            background: activeFilter === status ? "#93C5FD" : "#fff",
+                            borderBottom: i < 3 ? "1px solid #E5E7EB" : "none",
                           }}
-                          onClick={() => setShowFilters(false)}
+                          onClick={() => { setActiveFilter(status); setShowFilters(false); }}
                         >
                           {status}
                         </div>
@@ -140,36 +145,49 @@ const ComparisonSheet = () => {
           <div style={{ padding: 32, display: "flex", gap: 24 }}>
             
             {/* Left: Main Table */}
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginBottom: 16 }}>
-                <button style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", background: "#fff", border: "1px solid #E5E7EB", borderRadius: 6, fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer" }}>
-                  <Edit size={14} /> Edit
-                </button>
-                <button 
-                  onClick={() => setShowModal(true)}
-                  style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", background: "#fff", border: "1px solid #E5E7EB", borderRadius: 6, fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer" }}
-                >
-                  <Eye size={14} /> View
-                </button>
-              </div>
-
-              <div style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, overflow: "hidden" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+            <div style={{ flex: 1, minWidth: 0, overflow: "auto" }}>
+              <div style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, overflow: "auto" }}>
+                <table style={{ width: "100%", minWidth: 1100, borderCollapse: "collapse", fontSize: 13 }}>
                   <thead>
                     <tr style={{ background: "#F9FAFB", borderBottom: "1px solid #E5E7EB" }}>
-                      <th style={{ padding: "16px", textAlign: "center", fontWeight: 600, color: "#6B7280", borderRight: "1px solid #E5E7EB" }}>Tender ID</th>
-                      <th style={{ padding: "16px", textAlign: "center", fontWeight: 600, color: "#6B7280", borderRight: "1px solid #E5E7EB" }}>Firm Name</th>
-                      <th style={{ padding: "16px", textAlign: "center", fontWeight: 600, color: "#6B7280", borderRight: "1px solid #E5E7EB" }}>Tender Title</th>
-                      <th style={{ padding: "16px", textAlign: "center", fontWeight: 600, color: "#6B7280" }}>Customer</th>
+                      <th style={{ padding: "14px 16px", textAlign: "center", fontWeight: 600, color: "#4B5563", borderRight: "1px solid #E5E7EB", whiteSpace: "nowrap" }}>Tender ID</th>
+                      <th style={{ padding: "14px 16px", textAlign: "center", fontWeight: 600, color: "#4B5563", borderRight: "1px solid #E5E7EB", whiteSpace: "nowrap" }}>Firm Name</th>
+                      <th style={{ padding: "14px 16px", textAlign: "center", fontWeight: 600, color: "#4B5563", borderRight: "1px solid #E5E7EB", whiteSpace: "nowrap" }}>Tender Title</th>
+                      <th style={{ padding: "14px 16px", textAlign: "center", fontWeight: 600, color: "#4B5563", borderRight: "1px solid #E5E7EB", whiteSpace: "nowrap" }}>Customer</th>
+                      <th style={{ padding: "14px 16px", textAlign: "center", fontWeight: 600, color: "#4B5563", borderRight: "1px solid #E5E7EB", whiteSpace: "nowrap" }}>Vendors</th>
+                      <th style={{ padding: "14px 16px", textAlign: "center", fontWeight: 600, color: "#4B5563", borderRight: "1px solid #E5E7EB", whiteSpace: "nowrap" }}>L1 Vendor</th>
+                      <th style={{ padding: "14px 16px", textAlign: "center", fontWeight: 600, color: "#4B5563", borderRight: "1px solid #E5E7EB", whiteSpace: "nowrap" }}>Lowest Price</th>
+                      <th style={{ padding: "14px 16px", textAlign: "center", fontWeight: 600, color: "#4B5563", borderRight: "1px solid #E5E7EB", whiteSpace: "nowrap" }}>Status</th>
+                      <th style={{ padding: "14px 16px", textAlign: "center", fontWeight: 600, color: "#4B5563", borderRight: "1px solid #E5E7EB", whiteSpace: "nowrap" }}>Last Updated</th>
+                      <th style={{ padding: "14px 16px", textAlign: "center", fontWeight: 600, color: "#4B5563", borderRight: "1px solid #E5E7EB", whiteSpace: "nowrap" }}>Created By</th>
+                      <th style={{ padding: "14px 16px", textAlign: "center", fontWeight: 600, color: "#4B5563", whiteSpace: "nowrap" }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {COMPARISON_ROWS.map((row, i) => (
-                      <tr key={i} style={{ borderBottom: i < COMPARISON_ROWS.length - 1 ? "1px solid #E5E7EB" : "none" }}>
-                        <td style={{ padding: "16px", textAlign: "center", color: "#6B7280", borderRight: "1px solid #E5E7EB" }}>{row.id}</td>
-                        <td style={{ padding: "16px", textAlign: "center", color: "#6B7280", borderRight: "1px solid #E5E7EB" }}>{row.firm}</td>
-                        <td style={{ padding: "16px", textAlign: "center", color: "#6B7280", borderRight: "1px solid #E5E7EB" }}>{row.title}</td>
-                        <td style={{ padding: "16px", textAlign: "center", color: "#6B7280" }}>{row.customer}</td>
+                    {MODAL_ROWS.map((row, i) => (
+                      <tr key={i} style={{ borderBottom: i < MODAL_ROWS.length - 1 ? "1px solid #E5E7EB" : "none" }}>
+                        <td style={{ padding: "14px 16px", textAlign: "center", color: "#2563EB", fontWeight: 600, borderRight: "1px solid #E5E7EB", whiteSpace: "nowrap" }}>{row.id}</td>
+                        <td style={{ padding: "14px 16px", textAlign: "center", color: "#374151", borderRight: "1px solid #E5E7EB" }}>{row.firm}</td>
+                        <td style={{ padding: "14px 16px", textAlign: "center", color: "#374151", borderRight: "1px solid #E5E7EB" }}>{row.title}</td>
+                        <td style={{ padding: "14px 16px", textAlign: "center", color: "#374151", borderRight: "1px solid #E5E7EB" }}>{row.customer}</td>
+                        <td style={{ padding: "14px 16px", textAlign: "center", borderRight: "1px solid #E5E7EB" }}>
+                          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 24, height: 24, borderRadius: "50%", border: "1px solid #E5E7EB", color: "#6B7280", fontSize: 12 }}>{row.vendors}</span>
+                        </td>
+                        <td style={{ padding: "14px 16px", textAlign: "center", borderRight: "1px solid #E5E7EB" }}>
+                          <span style={{ background: "#EFF6FF", color: "#2563EB", padding: "4px 12px", borderRadius: 16, fontSize: 12, fontWeight: 500 }}>{row.l1Vendor}</span>
+                        </td>
+                        <td style={{ padding: "14px 16px", textAlign: "center", color: "#374151", borderRight: "1px solid #E5E7EB", whiteSpace: "nowrap" }}>{row.lowestPrice}</td>
+                        <td style={{ padding: "14px 16px", textAlign: "center", borderRight: "1px solid #E5E7EB" }}>
+                          <span style={{ background: "#FEF2F2", color: "#EF4444", border: "1px solid #FECACA", padding: "4px 12px", borderRadius: 16, fontSize: 12, fontWeight: 500 }}>{row.status}</span>
+                        </td>
+                        <td style={{ padding: "14px 16px", textAlign: "center", color: "#374151", borderRight: "1px solid #E5E7EB", whiteSpace: "nowrap" }}>{row.updated}</td>
+                        <td style={{ padding: "14px 16px", textAlign: "center", color: "#374151", borderRight: "1px solid #E5E7EB" }}>{row.createdBy}</td>
+                        <td style={{ padding: "14px 16px", textAlign: "center" }}>
+                          <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+                            <span onClick={() => navigate("/comparison-sheet-detail")} style={{ display: "flex", alignItems: "center", gap: 4, color: "#374151", cursor: "pointer", fontWeight: 500, whiteSpace: "nowrap" }}><Eye size={14} /> View</span>
+                            <span onClick={() => navigate("/comparison-sheet-detail")} style={{ display: "flex", alignItems: "center", gap: 4, color: "#374151", cursor: "pointer", fontWeight: 500, whiteSpace: "nowrap" }}><Edit size={14} /> Edit</span>
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -203,47 +221,67 @@ const ComparisonSheet = () => {
           {/* Notifications Panel */}
           {showNotifications && (
             <>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 40 }} onClick={() => setShowNotifications(false)} />
-              <div style={{ position: "absolute", top: 16, right: 16, width: 420, background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1)", zIndex: 50, display: "flex", flexDirection: "column", maxHeight: "calc(100% - 32px)" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "20px 24px", borderBottom: "1px solid #E5E7EB" }}>
-                  <div>
-                    <h2 style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 16, fontWeight: 600, color: "#111827", margin: "0 0 4px" }}>
-                      <Bell size={18} /> Notifications
-                    </h2>
-                    <p style={{ fontSize: 13, color: "#6B7280", margin: 0 }}>Workflow alerts, tasks & updates</p>
+              <div
+                onClick={() => setShowNotifications(false)}
+                style={{
+                  position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+                  backgroundColor: "rgba(255,255,255,0.4)",
+                  backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)",
+                  zIndex: 999,
+                }}
+              />
+              <div style={{
+                position: "fixed", top: 0, right: 0, bottom: 0, width: 450,
+                background: "#fff", zIndex: 1000, boxShadow: "-4px 0 24px rgba(0,0,0,0.1)",
+                display: "flex", flexDirection: "column", fontFamily: FONT,
+              }}>
+                <div style={{ padding: "20px 24px", borderBottom: "1px solid #E5E7EB" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <Bell size={20} color="#111827" />
+                      <h2 style={{ fontSize: 18, fontWeight: 600, color: "#111827", margin: 0 }}>Notifications</h2>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      <button style={{ background: "none", border: "none", color: "#2563EB", fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                        <CheckCircle2 size={14} /> Mark all as read
+                      </button>
+                      <button onClick={() => setShowNotifications(false)} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+                        <X size={20} color="#9CA3AF" />
+                      </button>
+                    </div>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <span style={{ fontSize: 13, color: "#2563EB", fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-                      <CheckCircle2 size={14} /> Mark all as read
-                    </span>
-                    <X size={18} color="#9CA3AF" style={{ cursor: "pointer" }} onClick={() => setShowNotifications(false)} />
-                  </div>
+                  <p style={{ fontSize: 13, color: "#6B7280", margin: 0 }}>Workflow alerts, tasks & updates</p>
                 </div>
 
-                <div style={{ padding: 24, overflowY: "auto", display: "flex", flexDirection: "column", gap: 16 }}>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: "#6B7280", margin: "0 0 4px" }}>Notifications</p>
-                  
-                  {NOTIFICATIONS.map((notif, i) => (
-                    <div key={i} style={{ border: "1px solid #E5E7EB", borderRadius: 8, padding: 16, background: "#fff", boxShadow: "0 1px 2px rgba(0,0,0,0.05)" }}>
-                      <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 12 }}>
-                        {notif.type === "alert" ? <AlertCircle size={18} color="#EF4444" style={{ marginTop: 2 }} /> : <FileText size={18} color="#2563EB" style={{ marginTop: 2 }} />}
-                        <div style={{ flex: 1 }}>
-                          <h4 style={{ fontSize: 14, fontWeight: 600, color: "#111827", margin: "0 0 6px" }}>{notif.title}</h4>
-                          <div style={{ display: "flex", gap: 12, fontSize: 13, color: "#6B7280" }}>
-                            {notif.details.map((d, j) => (
-                              <span key={j}>{d.label}: {d.value}</span>
-                            ))}
+                <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px", background: "#FAFAFA" }}>
+                  <p style={{ fontSize: 13, fontWeight: 500, color: "#6B7280", marginBottom: 12, marginTop: 0 }}>Notifications</p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    {NOTIFICATIONS.map((notif, i) => (
+                      <div key={i} style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, padding: 16, boxShadow: "0 1px 2px rgba(0,0,0,0.05)" }}>
+                        <div style={{ display: "flex", gap: 12 }}>
+                          <div style={{ marginTop: 2 }}>
+                            {notif.type === "alert" ? <AlertCircle size={18} color="#DC2626" /> : <FileText size={18} color="#2563EB" />}
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <h4 style={{ fontSize: 14, fontWeight: 600, color: "#111827", margin: "0 0 8px" }}>{notif.title}</h4>
+                            <div style={{ fontSize: 12, color: "#4B5563", lineHeight: 1.6, marginBottom: 12 }}>
+                              {notif.details.map((d, j) => (
+                                <div key={j}><strong>{d.label}:</strong> {d.value}</div>
+                              ))}
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+                              <span style={{ fontSize: 11, color: "#9CA3AF" }}>{notif.time || ""}</span>
+                              {notif.action && (
+                                <button style={{ background: "#000", color: "#fff", border: "none", borderRadius: 4, padding: "6px 12px", fontSize: 12, fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontFamily: FONT }}>
+                                  {notif.action}
+                                </button>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-                        <span style={{ fontSize: 12, color: "#9CA3AF" }}>{notif.time}</span>
-                        <button style={{ background: "#111827", color: "#fff", border: "none", padding: "8px 16px", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
-                          {notif.action}
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             </>
