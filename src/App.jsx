@@ -12,6 +12,7 @@ import RFPAnalysisForm from "./pages/dashboard/RFPAnalysisForm";
 import PreSalesChecklist from "./pages/dashboard/PreSalesChecklist";
 import TenderChecklist from "./pages/dashboard/TenderChecklist";
 import SOFDashboard    from "./pages/dashboard/SOFDashboard";
+import SalesOrderForm  from "./pages/dashboard/SalesOrderForm";
 import PlaceholderPage from "./pages/PlaceholderPage";
 
 const ph = title => <PlaceholderPage title={title} />;
@@ -33,6 +34,7 @@ const App = () => (
       <Route path="/pre-sales-checklist" element={<PreSalesChecklist />} />
       <Route path="/tender-checklist" element={<TenderChecklist />} />
       <Route path="/sof-dashboard"    element={<SOFDashboard />} />
+      <Route path="/sales-order-form" element={<SalesOrderForm />} />
       <Route path="/sales-coordinator"element={ph("Sales Coordinator Dashboard")} />
       <Route path="/tracker"          element={ph("Tracker")} />
       <Route path="/task-inbox"       element={ph("Task Inbox")} />

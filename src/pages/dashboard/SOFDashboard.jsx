@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Plus, Search, Filter, Bell, X, ArrowRight, Play } from "lucide-react";
 import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
@@ -70,6 +71,7 @@ const COLUMNS = [
 ];
 
 const SOFDashboard = () => {
+  const navigate = useNavigate();
   const [showAlert, setShowAlert] = useState(true);
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState("All");
@@ -92,6 +94,7 @@ const SOFDashboard = () => {
               <p style={{ fontSize: 13, color: "#6B7280", margin: 0 }}>Last updated: 2 hours ago</p>
             </div>
             <button
+              onClick={() => navigate("/sales-order-form")}
               style={{
                 display: "flex", alignItems: "center", gap: 6,
                 padding: "9px 20px", border: "none", borderRadius: 6,
