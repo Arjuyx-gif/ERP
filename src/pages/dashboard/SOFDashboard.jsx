@@ -219,7 +219,7 @@ const SOFDashboard = () => {
                   <span><strong>Customer:</strong> Customer Name</span>
                 </div>
                 <div style={{ display: "flex", gap: 12 }}>
-                  <button style={{
+                  <button onClick={() => navigate("/sales-order-form")} style={{
                     padding: "6px 16px", background: "#2563EB", border: "none", borderRadius: 6,
                     color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: FONT
                   }}>

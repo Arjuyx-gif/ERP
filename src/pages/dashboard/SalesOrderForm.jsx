@@ -112,12 +112,35 @@ const CustomDropdown = ({ label, placeholder, options, value, onChange }) => {
 };
 
 /* ─── Main Component ─── */
+const emptyContact = () => ({ id: Date.now() + Math.random(), contactPerson: "", mobileNo: "", landlineNo: "", emailId: "" });
+const emptyItem = (sno) => ({ id: Date.now() + Math.random(), sno, description: "", quantity: "", total: "" });
+
 const SalesOrderForm = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(1);
   const [showUploadModal, setShowUploadModal] = useState(true);
   const [sdRequired, setSdRequired] = useState(false);
   const [isEditingReview, setIsEditingReview] = useState(false);
+  const [contactRows, setContactRows] = useState([emptyContact()]);
+  const [requirementRows, setRequirementRows] = useState([emptyItem(1)]);
+  const [addonRows, setAddonRows] = useState([emptyItem(1)]);
+
+  const addContactRow = () => setContactRows(r => [...r, emptyContact()]);
+  const removeContactRow = (id) => setContactRows(r => r.filter(x => x.id !== id));
+  const updateContact = (id, field, val) => setContactRows(r => r.map(x => x.id === id ? { ...x, [field]: val } : x));
+
+  const addRequirementRow = () => setRequirementRows(r => [...r, emptyItem(r.length + 1)]);
+  const removeRequirementRow = (id) => setRequirementRows(r => r.filter(x => x.id !== id).map((x, i) => ({ ...x, sno: i + 1 })));
+  const updateRequirement = (id, field, val) => setRequirementRows(r => r.map(x => x.id === id ? { ...x, [field]: val } : x));
+
+  const addAddonRow = () => setAddonRows(r => [...r, emptyItem(r.length + 1)]);
+  const removeAddonRow = (id) => setAddonRows(r => r.filter(x => x.id !== id).map((x, i) => ({ ...x, sno: i + 1 })));
+  const updateAddon = (id, field, val) => setAddonRows(r => r.map(x => x.id === id ? { ...x, [field]: val } : x));
+
+  const calcTotal = (rows) => {
+    const sum = rows.reduce((acc, r) => acc + (parseFloat(r.total.replace(/[^0-9.]/g, "")) || 0), 0);
+    return sum > 0 ? `₹${sum.toFixed(2)}` : "₹0.00";
+  };
 
   const STEPS = ALL_STEPS.filter(s => sdRequired ? true : s.id !== "beneficiary").map((s, index) => ({ ...s, num: index + 1 }));
   const currentStepId = STEPS[activeStep - 1]?.id || "sales";
@@ -220,7 +243,7 @@ const SalesOrderForm = () => {
                 <div style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, padding: "28px 32px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
                     <h2 style={{ fontSize: 20, fontWeight: 700, color: "#111827", margin: 0 }}>Customer Contact Details</h2>
-                    <button style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", background: "#0044FF", color: "#fff", border: "none", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                    <button onClick={addContactRow} style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", background: "#0044FF", color: "#fff", border: "none", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
                       + Add Row
                     </button>
                   </div>
@@ -235,18 +258,17 @@ const SalesOrderForm = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13 }} /></td>
-                        <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13 }} /></td>
-                        <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13 }} /></td>
-                        <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13 }} /></td>
-                        <td style={{ padding: "12px 16px", textAlign: "center" }}>
-                          <div style={{ display: "flex", gap: 16, justifyContent: "center" }}>
-                            <Trash2 size={18} color="#EF4444" style={{ cursor: "pointer" }} />
-                            <Check size={18} color="#16A34A" style={{ cursor: "pointer", strokeWidth: 3 }} />
-                          </div>
-                        </td>
-                      </tr>
+                      {contactRows.map((row, i) => (
+                        <tr key={row.id} style={{ borderTop: i > 0 ? "1px solid #E5E7EB" : "none" }}>
+                          <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" value={row.contactPerson} onChange={e => updateContact(row.id, "contactPerson", e.target.value)} style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13, boxSizing: "border-box" }} /></td>
+                          <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" value={row.mobileNo} onChange={e => updateContact(row.id, "mobileNo", e.target.value)} style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13, boxSizing: "border-box" }} /></td>
+                          <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" value={row.landlineNo} onChange={e => updateContact(row.id, "landlineNo", e.target.value)} style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13, boxSizing: "border-box" }} /></td>
+                          <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" value={row.emailId} onChange={e => updateContact(row.id, "emailId", e.target.value)} style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13, boxSizing: "border-box" }} /></td>
+                          <td style={{ padding: "12px 16px", textAlign: "center" }}>
+                            <Trash2 size={18} color="#EF4444" style={{ cursor: "pointer" }} onClick={() => removeContactRow(row.id)} />
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -257,7 +279,7 @@ const SalesOrderForm = () => {
                   <div style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, padding: "28px 32px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
                       <h2 style={{ fontSize: 20, fontWeight: 700, color: "#111827", margin: 0 }}>Requirement Details</h2>
-                      <button style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", background: "#0044FF", color: "#fff", border: "none", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                      <button onClick={addRequirementRow} style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", background: "#0044FF", color: "#fff", border: "none", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
                         + Add Row
                       </button>
                     </div>
@@ -272,21 +294,20 @@ const SalesOrderForm = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td style={{ padding: "12px 16px", borderRight: "1px solid #E5E7EB", textAlign: "center", color: "#6B7280" }}>1</td>
-                          <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13 }} /></td>
-                          <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="number" style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13, textAlign: "center" }} /></td>
-                          <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13, textAlign: "center" }} /></td>
-                          <td style={{ padding: "12px 16px", textAlign: "center" }}>
-                            <div style={{ display: "flex", gap: 16, justifyContent: "center" }}>
-                              <Trash2 size={18} color="#EF4444" style={{ cursor: "pointer" }} />
-                              <Check size={18} color="#16A34A" style={{ cursor: "pointer", strokeWidth: 3 }} />
-                            </div>
-                          </td>
-                        </tr>
+                        {requirementRows.map((row, i) => (
+                          <tr key={row.id} style={{ borderTop: i > 0 ? "1px solid #E5E7EB" : "none" }}>
+                            <td style={{ padding: "12px 16px", borderRight: "1px solid #E5E7EB", textAlign: "center", color: "#6B7280" }}>{row.sno}</td>
+                            <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" value={row.description} onChange={e => updateRequirement(row.id, "description", e.target.value)} style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13, boxSizing: "border-box" }} /></td>
+                            <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="number" value={row.quantity} onChange={e => updateRequirement(row.id, "quantity", e.target.value)} style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13, textAlign: "center", boxSizing: "border-box" }} /></td>
+                            <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" value={row.total} onChange={e => updateRequirement(row.id, "total", e.target.value)} style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13, textAlign: "center", boxSizing: "border-box" }} /></td>
+                            <td style={{ padding: "12px 16px", textAlign: "center" }}>
+                              <Trash2 size={18} color="#EF4444" style={{ cursor: "pointer" }} onClick={() => removeRequirementRow(row.id)} />
+                            </td>
+                          </tr>
+                        ))}
                         <tr style={{ borderTop: "1px solid #E5E7EB" }}>
                           <td colSpan={3} style={{ padding: "12px 16px", borderRight: "1px solid #E5E7EB", textAlign: "right", fontWeight: 700, color: "#111827" }}>Grand Total:</td>
-                          <td style={{ padding: "12px 16px", borderRight: "1px solid #E5E7EB", textAlign: "center", fontWeight: 700, color: "#111827" }}>₹0.00</td>
+                          <td style={{ padding: "12px 16px", borderRight: "1px solid #E5E7EB", textAlign: "center", fontWeight: 700, color: "#111827" }}>{calcTotal(requirementRows)}</td>
                           <td style={{ padding: "12px 16px" }}></td>
                         </tr>
                       </tbody>
@@ -296,7 +317,7 @@ const SalesOrderForm = () => {
                   <div style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, padding: "28px 32px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
                       <h2 style={{ fontSize: 20, fontWeight: 700, color: "#111827", margin: 0 }}>Add on Items Details (if any)</h2>
-                      <button style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", background: "#0044FF", color: "#fff", border: "none", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                      <button onClick={addAddonRow} style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", background: "#0044FF", color: "#fff", border: "none", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
                         + Add Row
                       </button>
                     </div>
@@ -311,21 +332,20 @@ const SalesOrderForm = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td style={{ padding: "12px 16px", borderRight: "1px solid #E5E7EB", textAlign: "center", color: "#6B7280" }}>1</td>
-                          <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13 }} /></td>
-                          <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="number" style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13, textAlign: "center" }} /></td>
-                          <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13, textAlign: "center" }} /></td>
-                          <td style={{ padding: "12px 16px", textAlign: "center" }}>
-                            <div style={{ display: "flex", gap: 16, justifyContent: "center" }}>
-                              <Trash2 size={18} color="#EF4444" style={{ cursor: "pointer" }} />
-                              <Check size={18} color="#16A34A" style={{ cursor: "pointer", strokeWidth: 3 }} />
-                            </div>
-                          </td>
-                        </tr>
+                        {addonRows.map((row, i) => (
+                          <tr key={row.id} style={{ borderTop: i > 0 ? "1px solid #E5E7EB" : "none" }}>
+                            <td style={{ padding: "12px 16px", borderRight: "1px solid #E5E7EB", textAlign: "center", color: "#6B7280" }}>{row.sno}</td>
+                            <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" value={row.description} onChange={e => updateAddon(row.id, "description", e.target.value)} style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13, boxSizing: "border-box" }} /></td>
+                            <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="number" value={row.quantity} onChange={e => updateAddon(row.id, "quantity", e.target.value)} style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13, textAlign: "center", boxSizing: "border-box" }} /></td>
+                            <td style={{ padding: 0, borderRight: "1px solid #E5E7EB" }}><input type="text" value={row.total} onChange={e => updateAddon(row.id, "total", e.target.value)} style={{ width: "100%", padding: "12px 16px", border: "none", outline: "none", background: "transparent", fontSize: 13, textAlign: "center", boxSizing: "border-box" }} /></td>
+                            <td style={{ padding: "12px 16px", textAlign: "center" }}>
+                              <Trash2 size={18} color="#EF4444" style={{ cursor: "pointer" }} onClick={() => removeAddonRow(row.id)} />
+                            </td>
+                          </tr>
+                        ))}
                         <tr style={{ borderTop: "1px solid #E5E7EB" }}>
                           <td colSpan={3} style={{ padding: "12px 16px", borderRight: "1px solid #E5E7EB", textAlign: "right", fontWeight: 700, color: "#111827" }}>Grand Total:</td>
-                          <td style={{ padding: "12px 16px", borderRight: "1px solid #E5E7EB", textAlign: "center", fontWeight: 700, color: "#111827" }}>₹0.00</td>
+                          <td style={{ padding: "12px 16px", borderRight: "1px solid #E5E7EB", textAlign: "center", fontWeight: 700, color: "#111827" }}>{calcTotal(addonRows)}</td>
                           <td style={{ padding: "12px 16px" }}></td>
                         </tr>
                       </tbody>
