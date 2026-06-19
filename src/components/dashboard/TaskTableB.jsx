@@ -188,7 +188,7 @@ const TaskTableB = ({ fullscreen = false, onAction, onAlertNotifyClick }) => (
                   fontSize: 12,
                   fontWeight: 600,
                   color: "#6B7280",
-                  textAlign: "left",
+                  textAlign: "center",
                   whiteSpace: "nowrap",
                   width: col.width,
                   minWidth: col.width,
@@ -231,33 +231,34 @@ const TaskTableB = ({ fullscreen = false, onAction, onAlertNotifyClick }) => (
                     color: "#2563EB",
                     fontWeight: 600,
                     whiteSpace: "nowrap",
+                    textAlign: "center",
                   }}
                 >
                   {row.id}
                 </td>
 
                 {/* Firm Name */}
-                <td style={{ padding: "13px 14px", fontSize: 13, color: "#374151" }}>
+                <td style={{ padding: "13px 14px", fontSize: 13, color: "#374151", textAlign: "center" }}>
                   {row.firm}
                 </td>
 
                 {/* Tender Title */}
-                <td style={{ padding: "13px 14px", fontSize: 13, color: "#374151" }}>
+                <td style={{ padding: "13px 14px", fontSize: 13, color: "#374151", textAlign: "center" }}>
                   {row.title}
                 </td>
 
                 {/* Customer */}
-                <td style={{ padding: "13px 14px", fontSize: 13, color: "#374151" }}>
+                <td style={{ padding: "13px 14px", fontSize: 13, color: "#374151", textAlign: "center" }}>
                   {row.customer}
                 </td>
 
                 {/* Pre-sales Checklist */}
-                <td style={{ padding: "13px 14px", fontSize: 13, color: "#374151" }}>
+                <td style={{ padding: "13px 14px", fontSize: 13, color: "#374151", textAlign: "center" }}>
                   {row.presalesChecklist}
                 </td>
 
                 {/* Alert & Notify */}
-                <td style={{ padding: "13px 14px" }}>
+                <td style={{ padding: "13px 14px", textAlign: "center" }}>
                   <AlertNotifyCell text={row.alertNotify} onClick={() => onAlertNotifyClick?.(row)} />
                 </td>
 
@@ -269,6 +270,7 @@ const TaskTableB = ({ fullscreen = false, onAction, onAlertNotifyClick }) => (
                     fontWeight: 500,
                     ...OEM_STATUS_COLOR(row.oemStatus),
                     whiteSpace: "nowrap",
+                    textAlign: "center",
                   }}
                 >
                   {row.oemStatus}
@@ -281,6 +283,7 @@ const TaskTableB = ({ fullscreen = false, onAction, onAlertNotifyClick }) => (
                     fontSize: 13,
                     fontWeight: 500,
                     ...QR_STATUS_COLOR(row.queryResponse),
+                    textAlign: "center",
                   }}
                 >
                   {row.queryResponse}
@@ -293,6 +296,7 @@ const TaskTableB = ({ fullscreen = false, onAction, onAlertNotifyClick }) => (
                     fontSize: 13,
                     color: "#374151",
                     whiteSpace: "nowrap",
+                    textAlign: "center",
                   }}
                 >
                   {row.deadline}
@@ -305,13 +309,14 @@ const TaskTableB = ({ fullscreen = false, onAction, onAlertNotifyClick }) => (
                     fontSize: 13,
                     color: "#6B7280",
                     whiteSpace: "nowrap",
+                    textAlign: "center",
                   }}
                 >
                   {row.updated}
                 </td>
 
                 {/* Actions */}
-                <td style={{ padding: "13px 14px" }}>
+                <td style={{ padding: "13px 14px", textAlign: "center" }}>
                   <ActionButton
                     type={row.actionType}
                     onClick={() => onAction?.(row)}

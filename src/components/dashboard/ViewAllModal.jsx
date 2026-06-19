@@ -20,7 +20,7 @@ const TH = {
   background: "#F8FAFC",
   borderBottom: "2px solid #E5E7EB",
   whiteSpace: "nowrap",
-  textAlign: "left",
+  textAlign: "center",
   position: "sticky",
   top: 0,
   zIndex: 2,
@@ -41,13 +41,13 @@ const cell = (bg, extra = {}) => ({
 // ─── Typed cell helpers ────────────────────────────────────────────────────────
 // ID: monospace blue bold
 const TDId = ({ bg, children }) => (
-  <td style={cell(bg, { fontWeight: 700, color: "#2563EB", fontSize: 12, letterSpacing: "0.02em" })}>
+  <td style={cell(bg, { fontWeight: 700, color: "#2563EB", fontSize: 12, letterSpacing: "0.02em", textAlign: "center" })}>
     {children}
   </td>
 );
-// Long text: left-aligned, soft truncation
+// Long text: centered, soft truncation
 const TDText = ({ bg, children, bold }) => (
-  <td style={cell(bg, { maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", fontWeight: bold ? 600 : 400 })}>
+  <td style={cell(bg, { maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", fontWeight: bold ? 600 : 400, textAlign: "center" })}>
     {children}
   </td>
 );

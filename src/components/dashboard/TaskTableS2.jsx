@@ -88,7 +88,7 @@ const TaskTableS2 = ({ fullscreen = false }) => (
               style={{
                 padding: "12px 14px",
                 fontSize: 12, fontWeight: 600, color: "#667085",
-                textAlign: "left", whiteSpace: "nowrap",
+                textAlign: "center", whiteSpace: "nowrap",
                 width: col.width, minWidth: col.width,
                 background: "#F8FAFC",
               }}
@@ -110,22 +110,22 @@ const TaskTableS2 = ({ fullscreen = false }) => (
                 transition: "background 0.1s",
               }}
             >
-              <td style={{ padding: "14px 14px", fontSize: 13, color: "#2563EB", fontWeight: 600, whiteSpace: "nowrap" }}>
+              <td style={{ padding: "14px 14px", fontSize: 13, color: "#2563EB", fontWeight: 600, whiteSpace: "nowrap", textAlign: "center" }}>
                 {row.id}
               </td>
-              <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054" }}>{row.firm}</td>
-              <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054" }}>{row.title}</td>
-              <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054" }}>{row.customer}</td>
-              <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", whiteSpace: "nowrap" }}>{row.value}</td>
-              <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", whiteSpace: "nowrap" }}>{row.deadline}</td>
-              <td style={{ padding: "14px 14px", fontSize: 13, color: row.statusColor, fontWeight: 500 }}>{row.status}</td>
-              <td style={{ padding: "14px 14px", fontSize: 13, color: "#667085", whiteSpace: "nowrap" }}>{row.updated}</td>
-              <td style={{ padding: "14px 14px" }}>
+              <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", textAlign: "center" }}>{row.firm}</td>
+              <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", textAlign: "center" }}>{row.title}</td>
+              <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", textAlign: "center" }}>{row.customer}</td>
+              <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", whiteSpace: "nowrap", textAlign: "center" }}>{row.value}</td>
+              <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", whiteSpace: "nowrap", textAlign: "center" }}>{row.deadline}</td>
+              <td style={{ padding: "14px 14px", fontSize: 13, color: row.statusColor, fontWeight: 500, textAlign: "center" }}>{row.status}</td>
+              <td style={{ padding: "14px 14px", fontSize: 13, color: "#667085", whiteSpace: "nowrap", textAlign: "center" }}>{row.updated}</td>
+              <td style={{ padding: "14px 14px", textAlign: "center" }}>
                 <span style={{ fontSize: 12, fontWeight: 600, color: row.completion === 100 ? "#16A34A" : "#344054" }}>
                   {row.completion}%
                 </span>
               </td>
-              <td style={{ padding: "14px 14px" }}>
+              <td style={{ padding: "14px 14px", textAlign: "center" }}>
                 {row.actionLabel && (
                   <button
                     style={{
