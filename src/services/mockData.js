@@ -260,7 +260,7 @@ export const SIDEBAR_NAV = [
     children: [
       { label: "RFP Dashboard", path: "/rfp-dashboard" },
       { label: "Pre-sales Checklist", path: "/pre-sales-checklist" },
-      { label: "Comparison Sheet" },
+      { label: "Comparison Sheet", path: "/comparison-sheet" },
       { label: "SOF", path: "/sof-dashboard" },
     ],
   },
