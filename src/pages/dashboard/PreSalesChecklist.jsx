@@ -350,11 +350,14 @@ const PreSalesChecklist = () => {
                             const isDraft = row.status === "Draft";
                             return (
                               <td key={col.key} style={modalTdStyle(col, cIdx, FULL_COLS.length)}>
-                                <button style={{
-                                  display: "inline-flex", alignItems: "center", gap: 5,
-                                  background: "none", border: "none", cursor: "pointer",
-                                  fontSize: 13, fontWeight: 600, fontFamily: FONT, color: "#374151",
-                                }}>
+                                <button
+                                  onClick={() => navigate("/tender-checklist")}
+                                  style={{
+                                    display: "inline-flex", alignItems: "center", gap: 5,
+                                    background: "none", border: "none", cursor: "pointer",
+                                    fontSize: 13, fontWeight: 600, fontFamily: FONT, color: "#374151",
+                                  }}
+                                >
                                   {isDraft
                                     ? <><FileEdit size={14} color="#6B7280" /> Continue</>
                                     : <><Eye size={14} color="#6B7280" /> View</>}
@@ -453,6 +456,10 @@ const PreSalesChecklist = () => {
                           return (
                             <td key={col.key} style={modalTdStyle(col, cIdx, FULL_COLS.length)}>
                               <button
+                                onClick={() => {
+                                  setShowViewModal(false);
+                                  navigate("/tender-checklist");
+                                }}
                                 style={{
                                   display: "inline-flex", alignItems: "center", gap: 5,
                                   background: "none", border: "none", cursor: "pointer",
