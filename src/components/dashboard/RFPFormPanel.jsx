@@ -502,6 +502,33 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
               >
                 Close
               </button>
+            ) : card.action === "Edit & Resubmit" ? (
+              /* Edit & Resubmit flow */
+              <>
+                <button
+                  type="button"
+                  style={{
+                    padding: "9px 20px", border: "1px solid #E2E8F0", borderRadius: 8,
+                    background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151",
+                    cursor: "pointer", fontFamily: FONT,
+                    display: "flex", alignItems: "center", gap: 6,
+                  }}
+                >
+                  <Download size={15} /> Download
+                </button>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  style={{
+                    padding: "9px 24px", border: "none", borderRadius: 8,
+                    background: "#16A34A", fontSize: 13, fontWeight: 600, color: "#fff",
+                    cursor: "pointer", fontFamily: FONT,
+                    display: "flex", alignItems: "center", gap: 6,
+                  }}
+                >
+                  Submit
+                </button>
+              </>
             ) : card.rejectionRemark ? (
               /* Rejected card — read-only view, just close */
               <button
