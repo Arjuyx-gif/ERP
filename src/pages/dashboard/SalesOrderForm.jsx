@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Save, Upload, X, Check, Clock, ChevronDown, Trash2, Download, Pencil, FileCheck } from "lucide-react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -119,8 +119,9 @@ const emptyItem = (sno) => ({ id: Date.now() + Math.random(), sno, description: 
 
 const SalesOrderForm = () => {
   const navigate = useNavigate();
-  const [activeStep, setActiveStep] = useState(1);
-  const [showUploadModal, setShowUploadModal] = useState(true);
+  const location = useLocation();
+  const [activeStep, setActiveStep] = useState(location.state?.step || 1);
+  const [showUploadModal, setShowUploadModal] = useState(location.state?.showUploadModal ?? true);
   const [sdRequired, setSdRequired] = useState(false);
   const [isEditingReview, setIsEditingReview] = useState(false);
   const [contactRows, setContactRows] = useState([emptyContact()]);

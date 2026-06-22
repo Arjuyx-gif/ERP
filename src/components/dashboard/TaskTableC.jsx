@@ -1,4 +1,5 @@
 import { Eye, Upload, Edit3 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { TASK_DASHBOARD_C_TABLE_ROWS } from "../../services/mockData";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
@@ -38,7 +39,9 @@ const ACTION_MAP = {
   "Edit":            row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "Edit & Resubmit", rejectionRemark: "Sent back for rework due to incomplete documentation." }),
 };
 
-const TaskTableC = ({ fullscreen = false, onViewRFP }) => (
+const TaskTableC = ({ fullscreen = false, onViewRFP }) => {
+  const navigate = useNavigate();
+  return (
   <div style={{
     background: "#fff",
     borderRadius: 10,
@@ -110,8 +113,12 @@ const TaskTableC = ({ fullscreen = false, onViewRFP }) => (
                 {row.actionLabel && (
                   <button
                     onClick={() => {
-                      const builder = ACTION_MAP[row.actionLabel];
-                      if (builder) onViewRFP?.(builder(row));
+                      if (row.actionLabel === "View SOF" || row.actionLabel === "Start SOF") {
+                        navigate("/sales-order-form", { state: { step: 10, showUploadModal: false } });
+                      } else {
+                        const builder = ACTION_MAP[row.actionLabel];
+                        if (builder) onViewRFP?.(builder(row));
+                      }
                     }}
                     style={{
                       display: "inline-flex", alignItems: "center", gap: 6,
@@ -140,6 +147,7 @@ const TaskTableC = ({ fullscreen = false, onViewRFP }) => (
       </tbody>
     </table>
   </div>
-);
+  );
+};
 
 export default TaskTableC;

@@ -1,4 +1,5 @@
 import { Eye, Upload, Edit3 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -81,7 +82,9 @@ const ACTION_MAP = {
   "Start SOF":       row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
 };
 
-const TaskTableS2 = ({ fullscreen = false, onViewRFP }) => (
+const TaskTableS2 = ({ fullscreen = false, onViewRFP }) => {
+  const navigate = useNavigate();
+  return (
   <div style={{
     background: "#fff",
     borderRadius: 10,
@@ -139,8 +142,12 @@ const TaskTableS2 = ({ fullscreen = false, onViewRFP }) => (
                 {row.actionLabel && (
                   <button
                     onClick={() => {
-                      const builder = ACTION_MAP[row.actionLabel];
-                      if (builder) onViewRFP?.(builder(row));
+                      if (row.actionLabel === "View SOF" || row.actionLabel === "Start SOF") {
+                        navigate("/sales-order-form", { state: { step: 10, showUploadModal: false } });
+                      } else {
+                        const builder = ACTION_MAP[row.actionLabel];
+                        if (builder) onViewRFP?.(builder(row));
+                      }
                     }}
                     style={{
                       display: "inline-flex", alignItems: "center", gap: 6,
@@ -169,6 +176,7 @@ const TaskTableS2 = ({ fullscreen = false, onViewRFP }) => (
       </tbody>
     </table>
   </div>
-);
+  );
+};
 
 export default TaskTableS2;
