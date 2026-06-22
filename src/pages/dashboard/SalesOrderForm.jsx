@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Save, Upload, X, Check, Clock, ChevronDown, Trash2, Download, Pencil } from "lucide-react";
+import { ChevronLeft, ChevronRight, Save, Upload, X, Check, Clock, ChevronDown, Trash2, Download, Pencil, FileCheck } from "lucide-react";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
 
@@ -124,6 +126,76 @@ const SalesOrderForm = () => {
   const [contactRows, setContactRows] = useState([emptyContact()]);
   const [requirementRows, setRequirementRows] = useState([emptyItem(1)]);
   const [addonRows, setAddonRows] = useState([emptyItem(1)]);
+  const [uploadedFiles, setUploadedFiles] = useState({ rfp: null, po: null });
+  const rfpInputRef = useRef(null);
+  const poInputRef = useRef(null);
+
+  const handleFileSelect = (type, e) => {
+    const file = e.target.files[0];
+    if (file) setUploadedFiles(prev => ({ ...prev, [type]: file }));
+  };
+
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    const pageW = doc.internal.pageSize.getWidth();
+
+    // Title
+    doc.setFontSize(20);
+    doc.setTextColor(13, 71, 161);
+    doc.text("Sales Order Form", pageW / 2, 22, { align: "center" });
+
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Generated: ${new Date().toLocaleDateString("en-IN")}`, pageW / 2, 30, { align: "center" });
+
+    let y = 40;
+
+    const addSection = (title, fields) => {
+      if (y > 260) { doc.addPage(); y = 20; }
+      doc.setFontSize(14);
+      doc.setTextColor(17, 24, 39);
+      doc.text(title, 14, y);
+      y += 2;
+      doc.setDrawColor(37, 99, 235);
+      doc.setLineWidth(0.5);
+      doc.line(14, y, pageW - 14, y);
+      y += 8;
+
+      doc.setFontSize(10);
+      fields.forEach(([label, value]) => {
+        if (y > 275) { doc.addPage(); y = 20; }
+        doc.setTextColor(100);
+        doc.text(label + ":", 14, y);
+        doc.setTextColor(30);
+        doc.text(value || "—", 70, y);
+        y += 7;
+      });
+      y += 6;
+    };
+
+    addSection("Sales Details", [
+      ["Sales Rep", ""], ["Department", ""], ["Address", ""],
+      ["Customer Name", ""], ["Customer RFP No", ""],
+    ]);
+
+    addSection("Contact Details", contactRows.map((c, i) => [
+      `Contact ${i + 1}`, `${c.contactPerson || "—"} | ${c.mobileNo || "—"} | ${c.emailId || "—"}`
+    ]));
+
+    addSection("Requirement", requirementRows.map((r, i) => [
+      `Item ${i + 1}`, `${r.description || "—"} | Qty: ${r.quantity || "—"} | Total: ${r.total || "—"}`
+    ]));
+
+    addSection("Security Deposit", [
+      ["SD Required", sdRequired ? "Yes" : "No"],
+    ]);
+
+    addSection("Payment Terms", [
+      ["On Delivery", ""], ["After Installation", ""], ["Milestone", ""],
+    ]);
+
+    doc.save("Sales_Order_Form.pdf");
+  };
 
   const addContactRow = () => setContactRows(r => [...r, emptyContact()]);
   const removeContactRow = (id) => setContactRows(r => r.filter(x => x.id !== id));
@@ -497,7 +569,7 @@ const SalesOrderForm = () => {
                     )}
                   </div>
                   <div style={{ display: "flex", gap: 12 }}>
-                    <button style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT }}>
+                    <button onClick={handleDownloadPDF} style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT }}>
                       <Download size={16} /> Download PDF
                     </button>
                     <button onClick={() => navigate("/sof-dashboard")} style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 20px", border: "none", borderRadius: 6, background: "#16A34A", color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: FONT }}>
@@ -607,7 +679,7 @@ const SalesOrderForm = () => {
             {/* Quick Actions */}
             <div style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, padding: "20px 20px 16px" }}>
               <h3 style={{ fontSize: 16, fontWeight: 700, color: "#111827", margin: "0 0 12px" }}>Quick Actions</h3>
-              <button style={{
+              <button onClick={handleDownloadPDF} style={{
                 display: "flex", alignItems: "center", gap: 8, width: "100%",
                 padding: "9px 14px", border: "1px solid #E5E7EB", borderRadius: 6,
                 background: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT,
@@ -639,17 +711,63 @@ const SalesOrderForm = () => {
             <h3 style={{ fontSize: 22, fontWeight: 600, color: "#0D47A1", margin: "0 0 8px", textAlign: "center" }}>Upload RFP & PO Documents</h3>
             <p style={{ fontSize: 15, color: "#4B5563", margin: "0 0 24px", textAlign: "center" }}>Please upload the required files to Continue.</p>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 32, paddingLeft: 24 }}>
+            {/* Hidden file inputs */}
+            <input type="file" ref={rfpInputRef} style={{ display: "none" }} accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png" onChange={e => handleFileSelect("rfp", e)} />
+            <input type="file" ref={poInputRef} style={{ display: "none" }} accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png" onChange={e => handleFileSelect("po", e)} />
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 32, paddingLeft: 0 }}>
               {/* RFP Document */}
-              <div style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer", color: "#111827" }}>
-                <Upload size={22} strokeWidth={1.5} />
-                <span style={{ fontSize: 16, fontWeight: 400 }}>RFP Document (Tender ID)</span>
+              <div
+                onClick={() => rfpInputRef.current?.click()}
+                style={{
+                  display: "flex", alignItems: "center", gap: 12, cursor: "pointer",
+                  padding: "12px 16px", borderRadius: 8,
+                  border: uploadedFiles.rfp ? "1px solid #86EFAC" : "1px dashed #D1D5DB",
+                  background: uploadedFiles.rfp ? "#F0FDF4" : "#FAFAFA",
+                  transition: "all 0.2s",
+                }}
+              >
+                {uploadedFiles.rfp
+                  ? <FileCheck size={20} color="#16A34A" />
+                  : <Upload size={20} strokeWidth={1.5} color="#6B7280" />}
+                <div style={{ flex: 1 }}>
+                  <span style={{ fontSize: 14, fontWeight: 500, color: uploadedFiles.rfp ? "#16A34A" : "#111827" }}>
+                    {uploadedFiles.rfp ? uploadedFiles.rfp.name : "RFP Document (Tender ID)"}
+                  </span>
+                  {uploadedFiles.rfp && (
+                    <span style={{ display: "block", fontSize: 11, color: "#6B7280", marginTop: 2 }}>
+                      {(uploadedFiles.rfp.size / 1024).toFixed(1)} KB
+                    </span>
+                  )}
+                </div>
+                {uploadedFiles.rfp && <Check size={16} color="#16A34A" strokeWidth={3} />}
               </div>
 
               {/* Purchase Order */}
-              <div style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer", color: "#111827" }}>
-                <Upload size={22} strokeWidth={1.5} />
-                <span style={{ fontSize: 16, fontWeight: 400 }}>Purchase Order (PO)</span>
+              <div
+                onClick={() => poInputRef.current?.click()}
+                style={{
+                  display: "flex", alignItems: "center", gap: 12, cursor: "pointer",
+                  padding: "12px 16px", borderRadius: 8,
+                  border: uploadedFiles.po ? "1px solid #86EFAC" : "1px dashed #D1D5DB",
+                  background: uploadedFiles.po ? "#F0FDF4" : "#FAFAFA",
+                  transition: "all 0.2s",
+                }}
+              >
+                {uploadedFiles.po
+                  ? <FileCheck size={20} color="#16A34A" />
+                  : <Upload size={20} strokeWidth={1.5} color="#6B7280" />}
+                <div style={{ flex: 1 }}>
+                  <span style={{ fontSize: 14, fontWeight: 500, color: uploadedFiles.po ? "#16A34A" : "#111827" }}>
+                    {uploadedFiles.po ? uploadedFiles.po.name : "Purchase Order (PO)"}
+                  </span>
+                  {uploadedFiles.po && (
+                    <span style={{ display: "block", fontSize: 11, color: "#6B7280", marginTop: 2 }}>
+                      {(uploadedFiles.po.size / 1024).toFixed(1)} KB
+                    </span>
+                  )}
+                </div>
+                {uploadedFiles.po && <Check size={16} color="#16A34A" strokeWidth={3} />}
               </div>
             </div>
 
@@ -660,6 +778,7 @@ const SalesOrderForm = () => {
                   padding: "10px 24px", border: "none", borderRadius: 8,
                   background: "#0044FF", color: "#fff", fontSize: 15, fontWeight: 500,
                   cursor: "pointer", fontFamily: FONT,
+                  opacity: (!uploadedFiles.rfp && !uploadedFiles.po) ? 0.6 : 1,
                 }}
               >
                 Submit
