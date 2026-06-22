@@ -1,19 +1,20 @@
 import { useState, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { SIDEBAR_NAV } from "../../services/mockData";
+import { SIDEBAR_NAV, ROUTE_PARENT } from "../../services/mockData";
 import DynamicIcon from "../ui/DynamicIcon";
 import ciplLogo from "../../assets/cipl-logo-white 1.png";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const effectivePath = ROUTE_PARENT[location.pathname] ?? location.pathname;
 
-  // Auto-expand any parent whose child matches the current path
+  // Auto-expand any parent whose child matches the current (or effective parent) path
   const defaultExpanded = useMemo(() => {
     const map = {};
     SIDEBAR_NAV.forEach(item => {
-      if (item.children?.some(c => c.path === location.pathname)) {
+      if (item.children?.some(c => c.path === effectivePath)) {
         map[item.label] = true;
       }
     });
@@ -82,10 +83,7 @@ const Sidebar = () => {
               {item.children && expanded[item.label] && (
                 <div>
                   {item.children.map(child => {
-                    const isChildActive = !!child.path && (
-                      child.path === location.pathname ||
-                      (child.path === "/pre-sales-checklist" && location.pathname === "/tender-checklist")
-                    );
+                    const isChildActive = !!child.path && child.path === effectivePath;
                     return (
                       <div
                         key={child.label}

@@ -278,6 +278,14 @@ export const SIDEBAR_NAV = [
   { iconName: "settings", label: "Settings", path: "/settings" },
 ];
 
+// Maps sub-routes to the parent sidebar route that should stay highlighted
+export const ROUTE_PARENT = {
+  "/task-inbox": "/sc-dashboard",
+  "/sales-order-form": "/sof-dashboard",
+  "/comparison-sheet-detail": "/comparison-sheet",
+  "/tender-checklist": "/pre-sales-checklist",
+};
+
 // ─── View-All Table Rows (per column) ─────────────────────────────────────────
 // Each entry is an array of complete row objects for the "View All" modal table.
 // `variant` is a semantic key — ViewAllModal maps it to visual styles, keeping

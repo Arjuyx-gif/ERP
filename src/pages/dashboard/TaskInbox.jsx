@@ -5,12 +5,13 @@ import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
 import SCNotificationPanel from "../../components/dashboard/SCNotificationPanel";
 import RFPFormPanel from "../../components/dashboard/RFPFormPanel";
+import SOFViewPanel from "../../components/dashboard/SOFViewPanel";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
 const TASK_TABS = [
   { id: "new", label: "New Task (2)", icon: Clock },
-  { id: "completed", label: "Completed (0)", icon: CheckCircle },
+  { id: "completed", label: "Completed (3)", icon: CheckCircle },
   { id: "pending", label: "Pending/ On Hold (0)", icon: XCircle },
 ];
 
@@ -63,6 +64,46 @@ const TASKS = [
     time: "2026-04-22 09:30 AM",
     primaryAction: { type: "dropdown", label: "Generate Release Letter", icon: Play, options: ["CIPL", "NIPL"] },
     secondaryAction: null,
+  },
+];
+
+const COMPLETED_TASKS = [
+  {
+    id: 1,
+    title: "SOF Validation - PID ID",
+    priority: null,
+    customer: "Customer Name",
+    orderNo: "ORD NO.",
+    value: "₹ Price",
+    firm: "Firm Name",
+    submittedBy: "Dept",
+    time: "2026-04-22 09:30 AM",
+    primaryAction: { type: "button", label: "View SOF", icon: Eye },
+    secondaryAction: null,
+  },
+  {
+    id: 2,
+    title: "EMD Request - Tender No.",
+    priority: "High",
+    customer: "Customer Name",
+    emdAmount: "₹ Price",
+    firm: "Firm Name",
+    submittedBy: "Dept",
+    time: "2026-04-22 09:30 AM",
+    primaryAction: { type: "button", label: "View EMD (CIPL)", icon: Eye },
+    secondaryAction: null,
+  },
+  {
+    id: 3,
+    title: "EMD Return Request - Tender No.",
+    priority: null,
+    customer: "Customer Name",
+    emdAmount: "₹ Price",
+    firm: "Firm Name",
+    submittedBy: "Dept",
+    time: "2026-04-22 09:30 AM",
+    primaryAction: { type: "button", label: "View EMD Release Letter (Firm)", icon: Eye },
+    secondaryAction: { label: "View EMD Release Letter (Firm)", icon: Eye },
   },
 ];
 
@@ -174,10 +215,13 @@ const TaskInboxCard = ({ task, onAction }) => {
           task.primaryAction.type === "dropdown" ? (
             <DropdownButton {...task.primaryAction} />
           ) : (
-            <button style={{
-              background: "#2563EB", color: "#fff", border: "none", borderRadius: 6,
-              padding: "8px 16px", fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, cursor: "pointer",
-            }}>
+            <button
+              onClick={() => onAction(task.primaryAction.label, task)}
+              style={{
+                background: "#2563EB", color: "#fff", border: "none", borderRadius: 6,
+                padding: "8px 16px", fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, cursor: "pointer",
+              }}
+            >
               {task.primaryAction.icon && <task.primaryAction.icon size={14} />}
               {task.primaryAction.label}
             </button>
@@ -206,10 +250,13 @@ const TaskInbox = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [activeTab, setActiveTab] = useState("new");
   const [activeTask, setActiveTask] = useState(null);
+  const [showSOFPanel, setShowSOFPanel] = useState(false);
   const navigate = useNavigate();
 
   const handleAction = (actionLabel, task) => {
-    if (actionLabel === "View RFP & Remark") {
+    if (actionLabel === "View SOF") {
+      setShowSOFPanel(true);
+    } else if (actionLabel === "View RFP & Remark") {
       setActiveTask({
         id: task.id,
         tender: task.title,
@@ -237,11 +284,11 @@ const TaskInbox = () => {
               <Bell size={20} color="#4B5563" />
               <div style={{ position: "absolute", top: -2, right: 0, width: 8, height: 8, background: "#EF4444", borderRadius: "50%", border: "2px solid #fff" }} />
             </button>
-            <button onClick={() => navigate("/sc-dashboard")} style={{ background: "#fff", color: "#374151", border: "1px solid #D1D5DB", padding: "8px 16px", borderRadius: 6, fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+            <button onClick={() => navigate("/sc-dashboard")} style={{ background: "#fff", color: "#155DFC", border: "1px solid #D1D5DB", padding: "8px 16px", borderRadius: 6, fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
               <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
               Dashboard
             </button>
-            <button style={{ background: "#3B82F6", color: "#fff", border: "none", padding: "8px 16px", borderRadius: 6, fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+            <button style={{ background: "#155DFC", color: "#fff", border: "none", padding: "8px 16px", borderRadius: 6, fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
               <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
               Task Inbox
             </button>
@@ -288,11 +335,21 @@ const TaskInbox = () => {
 
             {/* Task List */}
             <div style={{ padding: "0 32px" }}>
-              {TASKS.map((task, i) => (
+              {activeTab === "new" && TASKS.map((task, i) => (
                 <div key={task.id} style={{ borderBottom: i < TASKS.length - 1 ? "1px solid #F1F5F9" : "none" }}>
                   <TaskInboxCard task={task} onAction={handleAction} />
                 </div>
               ))}
+              {activeTab === "completed" && COMPLETED_TASKS.map((task, i) => (
+                <div key={task.id} style={{ borderBottom: i < COMPLETED_TASKS.length - 1 ? "1px solid #F1F5F9" : "none" }}>
+                  <TaskInboxCard task={task} onAction={handleAction} />
+                </div>
+              ))}
+              {activeTab === "pending" && (
+                <div style={{ padding: "48px 0", textAlign: "center", color: "#9CA3AF", fontSize: 14 }}>
+                  No pending tasks
+                </div>
+              )}
             </div>
 
           </div>
@@ -312,6 +369,10 @@ const TaskInbox = () => {
           card={activeTask}
           onClose={() => setActiveTask(null)}
         />
+      )}
+
+      {showSOFPanel && (
+        <SOFViewPanel onClose={() => setShowSOFPanel(false)} />
       )}
     </div>
   );
