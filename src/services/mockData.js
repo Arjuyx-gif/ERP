@@ -264,8 +264,14 @@ export const SIDEBAR_NAV = [
       { label: "SOF", path: "/sof-dashboard" },
     ],
   },
-  { iconName: "users", label: "Sales Coordinator", expandable: true, path: "/sales-coordinator" },
-  { iconName: "inbox", label: "Task Inbox", expandable: true, path: "/task-inbox" },
+  {
+    iconName: "users", label: "Sales Coordinator", expandable: true,
+    children: [
+      { label: "RFP Dashboard", path: "/sc-rfp-dashboard" },
+      { label: "SOF", path: "/sc-sof-dashboard" },
+      { label: "SC Dashboard", path: "/sc-dashboard" },
+    ],
+  },
   { iconName: "trending-up", label: "Tracker", expandable: true, path: "/tracker" },
   { iconName: "bar-chart", label: "Reports", path: "/reports" },
   { iconName: "database", label: "Master Data", path: "/master-data" },

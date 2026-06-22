@@ -15,6 +15,8 @@ import ComparisonSheetDetail from "./pages/dashboard/ComparisonSheetDetail";
 import TenderChecklist from "./pages/dashboard/TenderChecklist";
 import SOFDashboard    from "./pages/dashboard/SOFDashboard";
 import SalesOrderForm  from "./pages/dashboard/SalesOrderForm";
+import SCDashboard     from "./pages/dashboard/SCDashboard";
+import TaskInbox       from "./pages/dashboard/TaskInbox";
 import PlaceholderPage from "./pages/PlaceholderPage";
 
 const ph = title => <PlaceholderPage title={title} />;
@@ -39,9 +41,11 @@ const App = () => (
       <Route path="/tender-checklist" element={<TenderChecklist />} />
       <Route path="/sof-dashboard"    element={<SOFDashboard />} />
       <Route path="/sales-order-form" element={<SalesOrderForm />} />
-      <Route path="/sales-coordinator"element={ph("Sales Coordinator Dashboard")} />
+      <Route path="/sc-dashboard"     element={<SCDashboard />} />
+      <Route path="/sc-rfp-dashboard" element={ph("SC RFP Dashboard")} />
+      <Route path="/sc-sof-dashboard" element={ph("SC SOF")} />
+      <Route path="/task-inbox"       element={<TaskInbox />} />
       <Route path="/tracker"          element={ph("Tracker")} />
-      <Route path="/task-inbox"       element={ph("Task Inbox")} />
       <Route path="/reports"          element={ph("Reports")} />
       <Route path="/master-data"      element={ph("Master Data")} />
       <Route path="/settings"         element={ph("Settings")} />
