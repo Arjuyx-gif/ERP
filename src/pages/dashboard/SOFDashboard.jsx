@@ -309,7 +309,7 @@ const SOFDashboard = () => {
                       {row.actionType === "view" ? (
                         <button style={{
                           display: "inline-flex", alignItems: "center", gap: 8,
-                          background: "#0D47A1", border: "none", borderRadius: 8, color: "#fff",
+                          background: "#155DFC", border: "none", borderRadius: 8, color: "#fff",
                           padding: "8px 16px", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT,
                           whiteSpace: "nowrap",
                         }}>

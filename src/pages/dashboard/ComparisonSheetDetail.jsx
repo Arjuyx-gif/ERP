@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Search, Download, Edit, Save, Check, Eye, X, Maximize2 } from "lucide-react";
+import { Search, Download, Edit, Save, Check, Eye, X, Maximize2, Award, TrendingDown, Package, TrendingUp, Layers, CheckCircle2, Clock, Star, FileText, MessageSquare } from "lucide-react";
 import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
 const COMPANY_LABELS = ["CIPL", "Vendor/company name", "Vendor/company name", "Vendor/company name", "Vendor/company name"];
-const COMPANY_BG    = ["#DCFCE7", "#CFFAFE", "#CFFAFE", "#F3F4F6", "#F3F4F6"];
-const COMPANY_COLOR = ["#16A34A", "#0891B2", "#0891B2", "#6B7280", "#6B7280"];
-const COMPANY_BORDER= ["#DCFCE7", "#CFFAFE", "#CFFAFE", "#E5E7EB", "#E5E7EB"];
+const COMPANY_BG    = ["#4ADE80", "linear-gradient(to right, #86EFAC, #D1FAE5)", "linear-gradient(to right, #86EFAC, #D1FAE5)", "#ffffff", "#ffffff"];
+const COMPANY_COLOR = ["#ffffff", "#065F46", "#065F46", "#6B7280", "#6B7280"];
+const COMPANY_BORDER= ["#4ADE80", "#A7F3D0", "#A7F3D0", "#E5E7EB", "#E5E7EB"];
 const TABLE_ROWS = [
   { sno: 1, tender: "Tender SITC", description: "Description", units: 12 },
   { sno: 2, tender: "Tender SITC", description: "Description", units: 12 },
@@ -18,11 +18,11 @@ const TABLE_ROWS = [
 ];
 
 const KPI_CARDS = [
-  { icon: "🏆", bg: "#DCFCE7", label: "L1 Vendor (Most Competitive)", value: "L1 Vendor name", sub: "6 items lowest" },
-  { icon: "💰", bg: "#CFFAFE", label: "Lowest Total Code",            value: "₹price",         sub: "Sum of all L1 prices" },
-  { icon: "📦", bg: "#DBEAFE", label: "Average Price",                value: "₹price",         sub: "Across all vendors" },
-  { icon: "📈", bg: "#FEF3C7", label: "Highest Price",                value: "₹price",         sub: "Across all vendors" },
-  { icon: "📋", bg: "#F3E8FF", label: "Total Items",                  value: "Count",          sub: "Total items/Units" },
+  { icon: Award,        iconColor: "#0D9488", topBorder: "#0D9488", label: "L1 Vendor (Most Competitive)", value: "L1 Vendor name", sub: "6 items lowest" },
+  { icon: TrendingDown, iconColor: "#10B981", topBorder: "#10B981", label: "Lowest Total Code",            value: "₹price",         sub: "Sum of all L1 prices" },
+  { icon: Package,      iconColor: "#3B82F6", topBorder: "#3B82F6", label: "Average Price",                value: "₹price",         sub: "Across all vendors" },
+  { icon: TrendingUp,   iconColor: "#F59E0B", topBorder: "#F59E0B", label: "Highest Price",                value: "₹price",         sub: "Across all vendors" },
+  { icon: Layers,       iconColor: "#8B5CF6", topBorder: "#8B5CF6", label: "Total Items",                  value: "Count",          sub: "Total items/Units" },
 ];
 
 const INFO_CARDS = [
@@ -36,8 +36,18 @@ const INFO_CARDS = [
 const TH = ({ children, style = {} }) => (
   <th style={{
     padding: "10px 14px", fontSize: 12, fontWeight: 600, color: "#fff",
-    background: "#111827", textAlign: "center", whiteSpace: "nowrap",
+    background: "#1F2937", textAlign: "center", whiteSpace: "nowrap",
     border: "1px solid #374151", ...style,
+  }}>
+    {children}
+  </th>
+);
+
+const SubTH = ({ children, style = {} }) => (
+  <th style={{
+    padding: "10px 14px", fontSize: 11, fontWeight: 600, color: "#374151",
+    background: "#F9FAFB", textAlign: "center", whiteSpace: "nowrap",
+    border: "1px solid #E5E7EB", ...style,
   }}>
     {children}
   </th>
@@ -111,12 +121,37 @@ const ComparisonSheetDetail = () => {
   const [rowData, setRowData] = useState(() =>
     TABLE_ROWS.map((_, ri) => ({
       companies: COMPANY_LABELS.map((_, ci) => ({
-        makeModel: "",
+        makeModel: ci === 0 ? "Model X" : (ci === 1 || ci === 2) && ri < 3 ? "Model Y" : "",
         rateExcl: "1,30,000",
         rateIncl: ci === [0,1,1,0,0][ri] ? "1,50,000" : "1,59,000",
       })),
     }))
   );
+
+  const getVendorChipStyle = (ci) => {
+    const totalRows = TABLE_ROWS.length;
+    let filledRows = 0;
+    rowData.forEach(row => {
+      const cell = row.companies[ci];
+      if (cell.makeModel && cell.makeModel.trim() !== "") {
+        filledRows++;
+      }
+    });
+
+    if (filledRows === totalRows) {
+      return { background: "#4ADE80", color: "#ffffff", border: "1px solid #4ADE80" };
+    } else if (filledRows > 0) {
+      return { background: "linear-gradient(to right, #6EE7B7, #ffffff)", color: "#374151", border: "1px solid #E5E7EB" };
+    } else {
+      const firstEmptyCi = COMPANY_LABELS.findIndex((_, idx) => {
+        return rowData.every(r => !r.companies[idx].makeModel || r.companies[idx].makeModel.trim() === "");
+      });
+      if (ci === firstEmptyCi) {
+         return { background: "#ffffff", color: "#374151", border: "1px dashed #3B82F6" };
+      }
+      return { background: "#ffffff", color: "#374151", border: "1px solid #E5E7EB" };
+    }
+  };
 
   const updateCell = (ri, ci, field, val) =>
     setRowData(prev => prev.map((r, idx) =>
@@ -191,11 +226,11 @@ const ComparisonSheetDetail = () => {
             <div style={{ display: "flex", gap: 12 }}>
               {INFO_CARDS.map((card, i) => (
                 <div key={i} style={{
-                  flex: 1, background: "#fff", border: "1px solid #E5E7EB",
+                  flex: 1, background: "#F8FAFC", border: "1px solid #F1F5F9",
                   borderRadius: 8, padding: "14px 16px",
                 }}>
-                  <div style={{ fontSize: 12, color: "#6B7280", fontWeight: 500, marginBottom: 6 }}>{card.label}</div>
-                  <div style={{ fontSize: 13, color: "#374151", fontWeight: 500 }}>{card.value}</div>
+                  <div style={{ fontSize: 12, color: "#64748B", fontWeight: 500, marginBottom: 6 }}>{card.label}</div>
+                  <div style={{ fontSize: 13, color: "#475569", fontWeight: 500 }}>{card.value}</div>
                 </div>
               ))}
             </div>
@@ -221,12 +256,12 @@ const ComparisonSheetDetail = () => {
               <span style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>Vendors:</span>
               {COMPANY_LABELS.map((name, i) => (
                 <div key={i} style={{
-                  padding: "8px 18px", borderRadius: 6, fontSize: 13, fontWeight: 600,
-                  background: COMPANY_BG[i], color: COMPANY_COLOR[i],
-                  border: `1px solid ${COMPANY_BORDER[i]}`, cursor: "pointer",
-                  textAlign: "center",
+                  padding: "8px 18px", borderRadius: 8, fontSize: 13, fontWeight: 600,
+                  cursor: "pointer", textAlign: "center",
+                  whiteSpace: "pre-wrap", lineHeight: 1.3,
+                  ...getVendorChipStyle(i)
                 }}>
-                  {name}
+                  {name.replace("/", "/\n")}
                 </div>
               ))}
             </div>
@@ -241,12 +276,12 @@ const ComparisonSheetDetail = () => {
                 <div style={{ display: "flex", gap: 12 }}>
                   {KPI_CARDS.map((k, i) => (
                     <div key={i} style={{
-                      flex: 1, background: "#fff", border: "1px solid #E5E7EB",
+                      flex: 1, background: "#fff", border: "1px solid #E5E7EB", borderTop: `4px solid ${k.topBorder}`,
                       borderRadius: 10, padding: "16px 12px",
                       display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 6,
                     }}>
-                      <div style={{ width: 40, height: 40, borderRadius: 10, background: k.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
-                        {k.icon}
+                      <div style={{ width: 40, height: 40, borderRadius: 10, background: k.iconColor, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>
+                        <k.icon size={20} />
                       </div>
                       <div style={{ fontSize: 11, color: "#6B7280", fontWeight: 500, lineHeight: 1.4 }}>{k.label}</div>
                       <div style={{ fontSize: 15, fontWeight: 700, color: "#111827" }}>{k.value}</div>
@@ -273,19 +308,19 @@ const ComparisonSheetDetail = () => {
                   <table style={{ borderCollapse: "collapse", fontSize: 12, fontFamily: FONT }}>
                     <thead>
                       <tr>
-                        <TH rowSpan={2} style={{ position: "sticky", top: 0, left: 0,   zIndex: 5, width: 50,  minWidth: 50  }}>S.No</TH>
-                        <TH rowSpan={2} style={{ position: "sticky", top: 0, left: 50,  zIndex: 5, width: 110, minWidth: 110 }}>Tender</TH>
-                        <TH rowSpan={2} style={{ position: "sticky", top: 0, left: 160, zIndex: 5, width: 200, minWidth: 200, textAlign: "left" }}>Description of Work / Item(s)</TH>
-                        <TH rowSpan={2} style={{ position: "sticky", top: 0, left: 360, zIndex: 5, width: 60,  minWidth: 60  }}>Units</TH>
+                        <TH rowSpan={2} style={{ position: "sticky", top: 0, zIndex: 3, width: 50,  minWidth: 50  }}>S.No</TH>
+                        <TH rowSpan={2} style={{ position: "sticky", top: 0, zIndex: 3, width: 110, minWidth: 110 }}>Tender</TH>
+                        <TH rowSpan={2} style={{ position: "sticky", top: 0, zIndex: 3, width: 200, minWidth: 200, textAlign: "left" }}>Description of Work / Item(s)</TH>
+                        <TH rowSpan={2} style={{ position: "sticky", top: 0, zIndex: 3, width: 60,  minWidth: 60  }}>Units</TH>
                         {COMPANY_LABELS.map((name, i) => (
                           <TH key={i} colSpan={3} style={{ position: "sticky", top: 0, zIndex: 3, borderLeft: "2px solid #374151" }}>{name}</TH>
                         ))}
                       </tr>
                       <tr>
                         {COMPANY_LABELS.flatMap((_, i) => [
-                          <TH key={`${i}-mm`} style={{ position: "sticky", top: 37, zIndex: 3, fontWeight: 500, fontSize: 11, borderLeft: "2px solid #374151" }}>Make &amp; Model</TH>,
-                          <TH key={`${i}-ex`} style={{ position: "sticky", top: 37, zIndex: 3, fontWeight: 500, fontSize: 11 }}>Rate (excl. Tax)</TH>,
-                          <TH key={`${i}-in`} style={{ position: "sticky", top: 37, zIndex: 3, fontWeight: 500, fontSize: 11 }}>Rate (incl. Tax)</TH>,
+                          <SubTH key={`${i}-mm`} style={{ position: "sticky", top: 37, zIndex: 3, borderLeft: "1px solid #E5E7EB" }}>Make &amp; Model</SubTH>,
+                          <SubTH key={`${i}-ex`} style={{ position: "sticky", top: 37, zIndex: 3 }}>Rate (excl. Tax)</SubTH>,
+                          <SubTH key={`${i}-in`} style={{ position: "sticky", top: 37, zIndex: 3 }}>Rate (incl. Tax)</SubTH>,
                         ])}
                       </tr>
                     </thead>
@@ -295,12 +330,12 @@ const ComparisonSheetDetail = () => {
                         const rowBg = ri % 2 === 0 ? "#fff" : "#FAFAFA";
                         return (
                           <tr key={ri} style={{ background: rowBg }}>
-                            <TD style={{ position: "sticky", left: 0,   zIndex: 1, background: rowBg, color: "#6B7280", width: 50  }}>{row.sno}</TD>
-                            <TD style={{ position: "sticky", left: 50,  zIndex: 1, background: rowBg, width: 110 }}>
+                            <TD style={{ background: rowBg, color: "#6B7280", width: 50  }}>{row.sno}</TD>
+                            <TD style={{ background: rowBg, width: 110 }}>
                               <span style={{ background: "#DBEAFE", color: "#1D4ED8", padding: "3px 8px", borderRadius: 4, fontWeight: 600, fontSize: 11 }}>{row.tender}</span>
                             </TD>
-                            <TD style={{ position: "sticky", left: 160, zIndex: 1, background: rowBg, textAlign: "left", color: "#344054", width: 200 }}>{row.description}</TD>
-                            <TD style={{ position: "sticky", left: 360, zIndex: 1, background: rowBg, color: "#344054", width: 60, borderRight: "2px solid #E5E7EB" }}>{row.units}</TD>
+                            <TD style={{ background: rowBg, textAlign: "left", color: "#344054", width: 200 }}>{row.description}</TD>
+                            <TD style={{ background: rowBg, color: "#344054", width: 60, borderRight: "2px solid #E5E7EB" }}>{row.units}</TD>
                             {COMPANY_LABELS.flatMap((_, ci) => {
                               const cell = rowData[ri].companies[ci];
                               const isL1 = ci === l1Idx;
@@ -316,7 +351,7 @@ const ComparisonSheetDetail = () => {
                                   <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
                                     <CellInput value={cell.rateIncl} onChange={v => updateCell(ri, ci, "rateIncl", v)} placeholder="₹0" />
                                     {isL1
-                                      ? <span style={{ flexShrink: 0, background: "#16A34A", color: "#fff", borderRadius: 4, padding: "2px 5px", fontSize: 10, fontWeight: 700 }}>L1</span>
+                                      ? <span style={{ display: "flex", alignItems: "center", gap: 3, flexShrink: 0, background: "#16A34A", color: "#fff", borderRadius: 4, padding: "2px 5px", fontSize: 10, fontWeight: 700 }}><Award size={10} /> L1</span>
                                       : pct && <span style={{ flexShrink: 0, color: "#DC2626", fontSize: 11, fontWeight: 600, whiteSpace: "nowrap" }}>{pct}</span>
                                     }
                                   </div>
@@ -347,28 +382,30 @@ const ComparisonSheetDetail = () => {
                 {/* Quick Actions */}
                 <div style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, padding: "20px" }}>
                   <h3 style={{ fontSize: 14, fontWeight: 700, color: "#111827", margin: "0 0 14px", display: "flex", alignItems: "center", gap: 8 }}>
-                    ⚡ Quick Actions
+                    <CheckCircle2 size={18} color="#111827" /> Quick Actions
                   </h3>
                   <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                     <button style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff", fontSize: 13, color: "#374151", cursor: "pointer", fontFamily: FONT, width: "100%", textAlign: "left" }}>
-                      ⭐ Auto-Select L1 Vendors
+                      <Star size={16} /> Auto-Select L1 Vendors
                     </button>
                     <div>
                       <label style={{ fontSize: 12, fontWeight: 500, color: "#374151", display: "block", marginBottom: 6 }}>Mark Final Vendor</label>
                       <input type="text" style={{ width: "100%", padding: "8px 12px", border: "1px solid #E5E7EB", borderRadius: 6, fontSize: 13, fontFamily: FONT, outline: "none", boxSizing: "border-box" }} />
                     </div>
                     <div>
-                      <label style={{ fontSize: 12, fontWeight: 500, color: "#374151", display: "block", marginBottom: 6 }}>💬 Add Notes / Remarks</label>
+                      <label style={{ fontSize: 12, fontWeight: 500, color: "#374151", display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+                        <MessageSquare size={14} /> Add Notes / Remarks
+                      </label>
                       <textarea
                         placeholder="Enter decision notes, remarks, or special conditions..."
                         style={{ width: "100%", padding: "8px 12px", border: "1px solid #E5E7EB", borderRadius: 6, fontSize: 13, fontFamily: FONT, outline: "none", resize: "vertical", minHeight: 72, boxSizing: "border-box", color: "#6B7280" }}
                       />
                     </div>
                     <button onClick={() => setShowBidDetails(true)} style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff", fontSize: 13, color: "#374151", cursor: "pointer", fontFamily: FONT, width: "100%", textAlign: "left" }}>
-                      📄 Bid Details
+                      <FileText size={16} /> Bid Details
                     </button>
                     <button onClick={() => setShowRFP(true)} style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff", fontSize: 13, color: "#374151", cursor: "pointer", fontFamily: FONT, width: "100%", textAlign: "left" }}>
-                      📄 View RFP
+                      <FileText size={16} /> View RFP
                     </button>
                   </div>
                 </div>
@@ -376,7 +413,7 @@ const ComparisonSheetDetail = () => {
                 {/* Recent Activity */}
                 <div style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, padding: "20px" }}>
                   <h3 style={{ fontSize: 14, fontWeight: 700, color: "#111827", margin: "0 0 14px", display: "flex", alignItems: "center", gap: 8 }}>
-                    🕐 Recent Activity
+                    <Clock size={18} color="#111827" /> Recent Activity
                   </h3>
                   <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                     <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#DBEAFE", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 14 }}>👤</div>
@@ -411,19 +448,19 @@ const ComparisonSheetDetail = () => {
               <table style={{ borderCollapse: "collapse", fontSize: 12, fontFamily: FONT }}>
                 <thead>
                   <tr>
-                    <TH rowSpan={2} style={{ position: "sticky", top: 0, left: 0,   zIndex: 5, width: 50,  minWidth: 50  }}>S.No</TH>
-                    <TH rowSpan={2} style={{ position: "sticky", top: 0, left: 50,  zIndex: 5, width: 110, minWidth: 110 }}>Tender</TH>
-                    <TH rowSpan={2} style={{ position: "sticky", top: 0, left: 160, zIndex: 5, width: 200, minWidth: 200, textAlign: "left" }}>Description of Work / Item(s)</TH>
-                    <TH rowSpan={2} style={{ position: "sticky", top: 0, left: 360, zIndex: 5, width: 60,  minWidth: 60  }}>Units</TH>
+                    <TH rowSpan={2} style={{ position: "sticky", top: 0, zIndex: 3, width: 50,  minWidth: 50  }}>S.No</TH>
+                    <TH rowSpan={2} style={{ position: "sticky", top: 0, zIndex: 3, width: 110, minWidth: 110 }}>Tender</TH>
+                    <TH rowSpan={2} style={{ position: "sticky", top: 0, zIndex: 3, width: 200, minWidth: 200, textAlign: "left" }}>Description of Work / Item(s)</TH>
+                    <TH rowSpan={2} style={{ position: "sticky", top: 0, zIndex: 3, width: 60,  minWidth: 60  }}>Units</TH>
                     {COMPANY_LABELS.map((name, i) => (
                       <TH key={i} colSpan={3} style={{ position: "sticky", top: 0, zIndex: 3, borderLeft: "2px solid #374151" }}>{name}</TH>
                     ))}
                   </tr>
                   <tr>
                     {COMPANY_LABELS.flatMap((_, i) => [
-                      <TH key={`${i}-mm`} style={{ position: "sticky", top: 37, zIndex: 3, fontWeight: 500, fontSize: 11, borderLeft: "2px solid #374151" }}>Make &amp; Model</TH>,
-                      <TH key={`${i}-ex`} style={{ position: "sticky", top: 37, zIndex: 3, fontWeight: 500, fontSize: 11 }}>Rate (excl. Tax)</TH>,
-                      <TH key={`${i}-in`} style={{ position: "sticky", top: 37, zIndex: 3, fontWeight: 500, fontSize: 11 }}>Rate (incl. Tax)</TH>,
+                      <SubTH key={`${i}-mm`} style={{ position: "sticky", top: 37, zIndex: 3, borderLeft: "1px solid #E5E7EB" }}>Make &amp; Model</SubTH>,
+                      <SubTH key={`${i}-ex`} style={{ position: "sticky", top: 37, zIndex: 3 }}>Rate (excl. Tax)</SubTH>,
+                      <SubTH key={`${i}-in`} style={{ position: "sticky", top: 37, zIndex: 3 }}>Rate (incl. Tax)</SubTH>,
                     ])}
                   </tr>
                 </thead>
@@ -433,12 +470,12 @@ const ComparisonSheetDetail = () => {
                     const rowBg = ri % 2 === 0 ? "#fff" : "#FAFAFA";
                     return (
                       <tr key={ri} style={{ background: rowBg }}>
-                        <TD style={{ position: "sticky", left: 0,   zIndex: 1, background: rowBg, color: "#6B7280", width: 50  }}>{row.sno}</TD>
-                        <TD style={{ position: "sticky", left: 50,  zIndex: 1, background: rowBg, width: 110 }}>
+                        <TD style={{ background: rowBg, color: "#6B7280", width: 50  }}>{row.sno}</TD>
+                        <TD style={{ background: rowBg, width: 110 }}>
                           <span style={{ background: "#DBEAFE", color: "#1D4ED8", padding: "3px 8px", borderRadius: 4, fontWeight: 600, fontSize: 11 }}>{row.tender}</span>
                         </TD>
-                        <TD style={{ position: "sticky", left: 160, zIndex: 1, background: rowBg, textAlign: "left", color: "#344054", width: 200 }}>{row.description}</TD>
-                        <TD style={{ position: "sticky", left: 360, zIndex: 1, background: rowBg, color: "#344054", width: 60, borderRight: "2px solid #E5E7EB" }}>{row.units}</TD>
+                        <TD style={{ background: rowBg, textAlign: "left", color: "#344054", width: 200 }}>{row.description}</TD>
+                        <TD style={{ background: rowBg, color: "#344054", width: 60, borderRight: "2px solid #E5E7EB" }}>{row.units}</TD>
                         {COMPANY_LABELS.flatMap((_, ci) => {
                           const cell = rowData[ri].companies[ci];
                           const isL1 = ci === l1Idx;
