@@ -238,8 +238,10 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
   const [showAdditionalDocs,    setShowAdditionalDocs]    = useState(false);
   const [showEMDReturnModal,    setShowEMDReturnModal]    = useState(false);
   const [showViewTaskModal,     setShowViewTaskModal]     = useState(false);
+  const [rejectionNote,         setRejectionNote]         = useState("");
 
   useEffect(() => { setTaskPhase(null); }, [card?.id, card?.action]);
+  useEffect(() => { setRejectionNote(card?.rejectionRemark || ""); }, [card?.id]);
 
   useEffect(() => {
     setShowApprovalModal(card?.action === "Send Notification");
@@ -431,20 +433,32 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
               />
             </Section>
 
-            {/* Remark - Rejection (only on rejected cards) */}
-            {card.rejectionRemark && (
-              <Section title="Remark - Rejection" accent="#C62828">
-                <div style={{ fontSize: 11.5, fontWeight: 500, color: "#374151", marginBottom: 5 }}>
-                  Rejection Remarks
+            {/* Remark - Rejected (shown for all rejected-status cards) */}
+            {(card.status === "Rejected" || card.rejectionRemark) && (
+              <div style={{
+                background: "#FEF2F2", borderRadius: 10, padding: "16px 18px",
+                border: "1px solid #FECACA", marginBottom: 14,
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                  <div style={{ width: 3, height: 14, background: "#DC2626", borderRadius: 2, flexShrink: 0 }} />
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#DC2626" }}>Remark - Rejected</span>
                 </div>
+                <p style={{ fontSize: 12, color: "#EF4444", margin: "0 0 12px 11px" }}>
+                  State the reason this tender was rejected.
+                </p>
                 <textarea
                   rows={4}
-                  readOnly
-                  defaultValue={card.rejectionRemark}
-                  placeholder="Enter any additional remarks..."
-                  style={{ ...inputStyle, resize: "none" }}
+                  value={rejectionNote}
+                  onChange={e => setRejectionNote(e.target.value)}
+                  placeholder="Enter rejection remarks..."
+                  style={{
+                    width: "100%", border: "1px solid #FECACA", borderRadius: 7,
+                    padding: "8px 11px", fontSize: 13, color: "#374151", fontFamily: FONT,
+                    boxSizing: "border-box", outline: "none", background: "#fff",
+                    resize: "none",
+                  }}
                 />
-              </Section>
+              </div>
             )}
 
             {/* Attach File button — for "Complete Tasks" or "View Task" action */}

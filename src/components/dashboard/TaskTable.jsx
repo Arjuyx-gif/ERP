@@ -98,13 +98,13 @@ const TaskTable = ({ fullscreen = false, onViewRFP }) => (
                   <button
                     onClick={() => {
                       if (row.actionLabel === "Approve RFP") {
-                        onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, action: "Approve RFP" });
+                        onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, status: row.status, action: "Approve RFP" });
                       } else if (row.actionLabel === "View RFP") {
-                        onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, action: "View RFP Form" });
+                        onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, status: row.status, action: "View RFP Form" });
                       } else if (row.actionLabel === "Send to MD Sir") {
-                        onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, action: "Approved View" });
+                        onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, status: row.status, action: "Approved View" });
                       } else if (row.actionLabel === "Forwarded to MD Sir" || row.actionLabel === "View PO") {
-                        onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, action: "View RFP Form" });
+                        onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, status: row.status, action: "View RFP Form" });
                       }
                     }}
                     style={{
