@@ -113,7 +113,14 @@ const SelectField = ({ label, placeholder, options = [] }) => {
   );
 };
 
-const SOFViewPanel = ({ onClose }) => (
+const DEPT_ITEMS = [
+  "Purchase Department – Place vendor order",
+  "Accounts Department – Process approvals/payments",
+  "Service Team (Enterprise) – Plan installation",
+  "Stores Department – Check & reserve inventory",
+];
+
+const SOFViewPanel = ({ onClose, mode = "view" }) => (
   <>
     {/* Backdrop */}
     <div
@@ -150,7 +157,11 @@ const SOFViewPanel = ({ onClose }) => (
             </div>
             <div>
               <div style={{ fontSize: 14, fontWeight: 700, color: "#101828" }}>SOF Details – Order/PID No.</div>
-              <div style={{ fontSize: 11.5, color: "#667085", marginTop: 1 }}>Sales Order Form</div>
+              <div style={{ fontSize: 11.5, color: "#667085", marginTop: 1 }}>
+                {mode === "review"
+                  ? "Please review all the information below before validation"
+                  : "Sales Order Form"}
+              </div>
             </div>
           </div>
           <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "#667085", display: "flex", alignItems: "center", padding: 6, borderRadius: 6 }}>
@@ -342,6 +353,25 @@ const SOFViewPanel = ({ onClose }) => (
           </div>
         </Section>
 
+        {/* Department Relevance — review mode only */}
+        {mode === "review" && (
+          <div style={{
+            background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 10,
+            padding: "14px 16px", marginBottom: 4,
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span style={{ fontSize: 13, fontWeight: 700, color: "#1D4ED8" }}>Department Relevance</span>
+            </div>
+            <div style={{ fontSize: 12, color: "#1E40AF", marginBottom: 6 }}>Upon approval, notifications will be sent to:</div>
+            <ul style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 4 }}>
+              {DEPT_ITEMS.map((item, i) => (
+                <li key={i} style={{ fontSize: 12, color: "#1E40AF" }}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
       </div>
 
       {/* Footer */}
@@ -350,24 +380,49 @@ const SOFViewPanel = ({ onClose }) => (
         display: "flex", justifyContent: "space-between", gap: 10,
         background: "#fff", flexShrink: 0,
       }}>
-        <button onClick={onClose} style={{
-          flex: 1, padding: "9px 0", border: "1px solid #E5E7EB", borderRadius: 8,
-          background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151",
-          cursor: "pointer", fontFamily: FONT,
-        }}>
-          Close
-        </button>
-        <button style={{
-          flex: 1, padding: "9px 0", border: "none", borderRadius: 8,
-          background: "#2563EB", fontSize: 13, fontWeight: 600, color: "#fff",
-          cursor: "pointer", fontFamily: FONT,
-          display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-        }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />
-          </svg>
-          View Details
-        </button>
+        {mode === "review" ? (
+          <>
+            <button onClick={onClose} style={{
+              flex: 1, padding: "9px 0", border: "1px solid #FECACA", borderRadius: 8,
+              background: "#FEF2F2", fontSize: 13, fontWeight: 600, color: "#DC2626",
+              cursor: "pointer", fontFamily: FONT,
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+            }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              Reject
+            </button>
+            <button onClick={onClose} style={{
+              flex: 1, padding: "9px 0", border: "none", borderRadius: 8,
+              background: "#16A34A", fontSize: 13, fontWeight: 600, color: "#fff",
+              cursor: "pointer", fontFamily: FONT,
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+            }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Confirm
+            </button>
+          </>
+        ) : (
+          <>
+            <button onClick={onClose} style={{
+              flex: 1, padding: "9px 0", border: "1px solid #E5E7EB", borderRadius: 8,
+              background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151",
+              cursor: "pointer", fontFamily: FONT,
+            }}>
+              Close
+            </button>
+            <button style={{
+              flex: 1, padding: "9px 0", border: "none", borderRadius: 8,
+              background: "#2563EB", fontSize: 13, fontWeight: 600, color: "#fff",
+              cursor: "pointer", fontFamily: FONT,
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+            }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />
+              </svg>
+              View Details
+            </button>
+          </>
+        )}
       </div>
 
     </div>

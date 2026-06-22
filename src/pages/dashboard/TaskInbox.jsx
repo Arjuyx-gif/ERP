@@ -250,12 +250,14 @@ const TaskInbox = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [activeTab, setActiveTab] = useState("new");
   const [activeTask, setActiveTask] = useState(null);
-  const [showSOFPanel, setShowSOFPanel] = useState(false);
+  const [sofPanelMode, setSofPanelMode] = useState(null); // null | "view" | "review"
   const navigate = useNavigate();
 
   const handleAction = (actionLabel, task) => {
     if (actionLabel === "View SOF") {
-      setShowSOFPanel(true);
+      setSofPanelMode("view");
+    } else if (actionLabel === "Review & Validate") {
+      setSofPanelMode("review");
     } else if (actionLabel === "Generate EMD Form (CIPL)") {
       navigate("/emd-form");
     } else if (actionLabel === "View RFP & Remark") {
@@ -282,7 +284,7 @@ const TaskInbox = () => {
             <div style={{ fontSize: 12, color: "#6B7280" }}>Last updated: 2 hours ago</div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <button onClick={() => setShowNotifications(true)} style={{ background: "none", border: "none", cursor: "pointer", position: "relative" }}>
+            <button onClick={() => setShowNotifications(true)} style={{ background  : "none", border: "none", cursor: "pointer", position: "relative" }}>
               <Bell size={20} color="#4B5563" />
               <div style={{ position: "absolute", top: -2, right: 0, width: 8, height: 8, background: "#EF4444", borderRadius: "50%", border: "2px solid #fff" }} />
             </button>
@@ -373,8 +375,8 @@ const TaskInbox = () => {
         />
       )}
 
-      {showSOFPanel && (
-        <SOFViewPanel onClose={() => setShowSOFPanel(false)} />
+      {sofPanelMode && (
+        <SOFViewPanel mode={sofPanelMode} onClose={() => setSofPanelMode(null)} />
       )}
     </div>
   );
