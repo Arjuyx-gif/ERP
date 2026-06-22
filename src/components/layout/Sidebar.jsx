@@ -82,7 +82,10 @@ const Sidebar = () => {
               {item.children && expanded[item.label] && (
                 <div>
                   {item.children.map(child => {
-                    const isChildActive = !!child.path && child.path === location.pathname;
+                    const isChildActive = !!child.path && (
+                      child.path === location.pathname ||
+                      (child.path === "/pre-sales-checklist" && location.pathname === "/tender-checklist")
+                    );
                     return (
                       <div
                         key={child.label}

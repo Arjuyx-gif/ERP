@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Save, Upload, Check, Pencil, Plus, Download } from "lucide-react";
+import { Save, Upload, Check, Pencil, Plus, Download, Trash2 } from "lucide-react";
 import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
 
@@ -64,7 +64,11 @@ const TenderChecklist = () => {
   };
 
   const addItem = () => {
-    setItems(prev => [...prev, { id: prev.length, label: "", remarks: "", status: "" }]);
+    setItems(prev => [...prev, { id: Date.now(), label: "", remarks: "", status: "" }]);
+  };
+
+  const deleteItem = (idx) => {
+    setItems(prev => prev.filter((_, i) => i !== idx));
   };
 
   const handleSubmit = () => {
@@ -242,9 +246,10 @@ const TenderChecklist = () => {
                 <thead>
                   <tr>
                     <th style={{ ...thBase, width: 80 }}>S.No</th>
-                    <th style={{ ...thBase, textAlign: "left", width: "35%" }}>Particulars</th>
-                    <th style={{ ...thBase, textAlign: "left", width: "30%" }}>Remarks</th>
-                    <th style={{ ...thBase, width: "20%", borderRight: "none" }}>Status</th>
+                    <th style={{ ...thBase, textAlign: "left", width: editing ? "32%" : "35%" }}>Particulars</th>
+                    <th style={{ ...thBase, textAlign: "left", width: editing ? "27%" : "30%" }}>Remarks</th>
+                    <th style={{ ...thBase, width: "20%", borderRight: editing ? "1px solid #E5E7EB" : "none" }}>Status</th>
+                    {editing && <th style={{ ...thBase, width: 70, borderRight: "none" }}>Delete</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -277,7 +282,7 @@ const TenderChecklist = () => {
                           />
                         ) : item.remarks}
                       </td>
-                      <td style={{ ...tdBase, textAlign: "center", borderRight: "none", color: "#9CA3AF" }}>
+                      <td style={{ ...tdBase, textAlign: "center", borderRight: editing ? "1px solid #E5E7EB" : "none", color: "#9CA3AF" }}>
                         {editing ? (
                           <input
                             type="text"
@@ -288,6 +293,21 @@ const TenderChecklist = () => {
                           />
                         ) : item.status}
                       </td>
+                      {editing && (
+                        <td style={{ ...tdBase, textAlign: "center", borderRight: "none" }}>
+                          <button
+                            onClick={() => deleteItem(i)}
+                            style={{
+                              display: "inline-flex", alignItems: "center", justifyContent: "center",
+                              width: 32, height: 32, borderRadius: 6,
+                              background: "#FEF2F2", border: "1px solid #FECACA",
+                              cursor: "pointer", padding: 0,
+                            }}
+                          >
+                            <Trash2 size={14} color="#DC2626" />
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>

@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Plus, Search, Filter, ArrowUpDown, Eye, X, FileEdit } from "lucide-react";
+import { Plus, Search, Filter, ArrowUpDown, Eye, X, FileEdit, Bell, Check } from "lucide-react";
 import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
 
@@ -37,6 +37,7 @@ const CHECKLIST_ROWS = [
 ];
 
 const STATUS_OPTIONS = ["All Status", "Pending", "In Progress", "Completed"];
+const SORT_OPTIONS = ["By Deadline", "Priority", "Newest First", "Oldest First", "Tender Value", "Last Updated"];
 
 // ── Column definitions ─────────────────────────────────────────────────────────
 
@@ -121,6 +122,8 @@ const PreSalesChecklist = () => {
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [showStatusDrop, setShowStatusDrop] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
+  const [sortOption, setSortOption] = useState("By Deadline");
+  const [showSortDrop, setShowSortDrop] = useState(false);
 
   // Merge submitted entry from TenderChecklist into the rows
   const allRows = useMemo(() => {
@@ -168,7 +171,7 @@ const PreSalesChecklist = () => {
                 <p style={{ fontSize: 12, color: "#9CA3AF", margin: 0 }}>Last updated: 2 hours ago</p>
               </div>
               <button
-                onClick={() => navigate("/rfp-analysis-form")}
+                onClick={() => navigate("/tender-checklist")}
                 style={{
                   display: "flex", alignItems: "center", gap: 6,
                   padding: "9px 20px", border: "none", borderRadius: 8,
@@ -180,26 +183,63 @@ const PreSalesChecklist = () => {
               </button>
             </div>
 
-            {/* Search bar */}
+            {/* Search bar + Bell + Tabs — all inline */}
             <div style={{
-              display: "flex", alignItems: "center", gap: 10, marginBottom: 20,
-              background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8,
-              padding: "10px 14px", maxWidth: 600,
+              display: "flex", alignItems: "center", gap: 16, marginBottom: 20,
             }}>
-              <Search size={16} color="#9CA3AF" />
-              <input
-                type="text"
-                placeholder="Search RFP ID / Customer..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                style={{
-                  flex: 1, border: "none", outline: "none", fontSize: 13,
-                  color: "#111", fontFamily: FONT, background: "transparent",
-                }}
-              />
+              {/* Search */}
+              <div style={{
+                display: "flex", alignItems: "center", gap: 10, flex: 1,
+                background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8,
+                padding: "10px 14px",
+              }}>
+                <Search size={16} color="#9CA3AF" />
+                <input
+                  type="text"
+                  placeholder="Search RFP ID / Customer..."
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  style={{
+                    flex: 1, border: "none", outline: "none", fontSize: 13,
+                    color: "#111", fontFamily: FONT, background: "transparent",
+                  }}
+                />
+              </div>
+
+              {/* Bell icon */}
+              <button style={{
+                display: "flex", alignItems: "center", justifyContent: "center",
+                width: 36, height: 36, background: "none", border: "none", cursor: "pointer",
+              }}>
+                <Bell size={20} color="#374151" />
+              </button>
+
+              {/* Tab pills */}
+              <div style={{
+                display: "flex", background: "#F3F4F6", borderRadius: 8,
+                border: "1px solid #E5E7EB", overflow: "hidden", flexShrink: 0,
+              }}>
+                {TABS.map(t => (
+                  <button
+                    key={t}
+                    onClick={() => setTab(t)}
+                    style={{
+                      padding: "8px 16px", border: "none",
+                      background: tab === t ? "#fff" : "transparent",
+                      fontSize: 12, fontWeight: tab === t ? 600 : 400,
+                      color: tab === t ? "#111" : "#6B7280",
+                      cursor: "pointer", fontFamily: FONT,
+                      boxShadow: tab === t ? "0 1px 3px rgba(0,0,0,0.06)" : "none",
+                      borderRadius: tab === t ? 6 : 0,
+                    }}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* Filter row */}
+            {/* Filter row: All Status + By Deadline + View */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
                 {/* Status dropdown */}
@@ -245,57 +285,63 @@ const PreSalesChecklist = () => {
                   )}
                 </div>
 
-                {/* Sort */}
-                <button style={{
-                  display: "flex", alignItems: "center", gap: 6,
+                {/* Sort dropdown */}
+                <div style={{ position: "relative" }}>
+                  <button
+                    onClick={() => setShowSortDrop(s => !s)}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 6,
+                      padding: "8px 14px", border: "1px solid #E5E7EB", borderRadius: 8,
+                      background: "#fff", fontSize: 13, color: "#374151",
+                      cursor: "pointer", fontFamily: FONT,
+                    }}
+                  >
+                    <ArrowUpDown size={14} color="#6B7280" />
+                    {sortOption}
+                  </button>
+                  {showSortDrop && (
+                    <div style={{
+                      position: "absolute", top: "calc(100% + 4px)", left: 0,
+                      background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10,
+                      boxShadow: "0 4px 16px rgba(0,0,0,0.10)", zIndex: 20,
+                      minWidth: 180, overflow: "hidden", padding: "4px 0",
+                    }}>
+                      {SORT_OPTIONS.map(opt => (
+                        <div
+                          key={opt}
+                          onClick={() => { setSortOption(opt); setShowSortDrop(false); }}
+                          style={{
+                            padding: "10px 16px", fontSize: 14,
+                            cursor: "pointer", fontFamily: FONT,
+                            display: "flex", alignItems: "center", gap: 8,
+                            background: sortOption === opt ? "#EFF6FF" : "transparent",
+                            fontWeight: sortOption === opt ? 600 : 400,
+                            color: sortOption === opt ? "#2563EB" : "#374151",
+                          }}
+                          onMouseEnter={e => { if (sortOption !== opt) e.currentTarget.style.background = "#F9FAFB"; }}
+                          onMouseLeave={e => { if (sortOption !== opt) e.currentTarget.style.background = "transparent"; }}
+                        >
+                          {sortOption === opt && <Check size={16} color="#2563EB" strokeWidth={2.5} />}
+                          {opt}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* View button */}
+              <button
+                onClick={() => setShowViewModal(true)}
+                style={{
+                  display: "flex", alignItems: "center", gap: 5,
                   padding: "8px 14px", border: "1px solid #E5E7EB", borderRadius: 8,
                   background: "#fff", fontSize: 13, color: "#374151",
                   cursor: "pointer", fontFamily: FONT,
-                }}>
-                  <ArrowUpDown size={14} color="#6B7280" />
-                  By Deadline
-                </button>
-              </div>
-
-              {/* Tabs + View */}
-              <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                {/* Tab pills */}
-                <div style={{
-                  display: "flex", background: "#F3F4F6", borderRadius: 8,
-                  border: "1px solid #E5E7EB", overflow: "hidden",
-                }}>
-                  {TABS.map(t => (
-                    <button
-                      key={t}
-                      onClick={() => setTab(t)}
-                      style={{
-                        padding: "8px 16px", border: "none",
-                        background: tab === t ? "#fff" : "transparent",
-                        fontSize: 12, fontWeight: tab === t ? 600 : 400,
-                        color: tab === t ? "#111" : "#6B7280",
-                        cursor: "pointer", fontFamily: FONT,
-                        boxShadow: tab === t ? "0 1px 3px rgba(0,0,0,0.06)" : "none",
-                        borderRadius: tab === t ? 6 : 0,
-                      }}
-                    >
-                      {t}
-                    </button>
-                  ))}
-                </div>
-
-                {/* View button */}
-                <button
-                  onClick={() => setShowViewModal(true)}
-                  style={{
-                    display: "flex", alignItems: "center", gap: 5,
-                    padding: "8px 14px", border: "1px solid #E5E7EB", borderRadius: 8,
-                    background: "#fff", fontSize: 13, color: "#374151",
-                    cursor: "pointer", fontFamily: FONT,
-                  }}
-                >
-                  <Eye size={14} color="#6B7280" /> View
-                </button>
-              </div>
+                }}
+              >
+                <Eye size={14} color="#6B7280" /> View
+              </button>
             </div>
           </div>
 
