@@ -17,6 +17,7 @@ import SOFDashboard    from "./pages/dashboard/SOFDashboard";
 import SalesOrderForm  from "./pages/dashboard/SalesOrderForm";
 import SCDashboard     from "./pages/dashboard/SCDashboard";
 import TaskInbox       from "./pages/dashboard/TaskInbox";
+import EMDForm         from "./pages/dashboard/EMDForm";
 import PlaceholderPage from "./pages/PlaceholderPage";
 
 const ph = title => <PlaceholderPage title={title} />;
@@ -45,6 +46,7 @@ const App = () => (
       <Route path="/sc-rfp-dashboard" element={ph("SC RFP Dashboard")} />
       <Route path="/sc-sof-dashboard" element={ph("SC SOF")} />
       <Route path="/task-inbox"       element={<TaskInbox />} />
+      <Route path="/emd-form"         element={<EMDForm />} />
       <Route path="/tracker"          element={ph("Tracker")} />
       <Route path="/reports"          element={ph("Reports")} />
       <Route path="/master-data"      element={ph("Master Data")} />

@@ -256,6 +256,8 @@ const TaskInbox = () => {
   const handleAction = (actionLabel, task) => {
     if (actionLabel === "View SOF") {
       setShowSOFPanel(true);
+    } else if (actionLabel === "Generate EMD Form (CIPL)") {
+      navigate("/emd-form");
     } else if (actionLabel === "View RFP & Remark") {
       setActiveTask({
         id: task.id,

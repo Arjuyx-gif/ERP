@@ -281,6 +281,7 @@ export const SIDEBAR_NAV = [
 // Maps sub-routes to the parent sidebar route that should stay highlighted
 export const ROUTE_PARENT = {
   "/task-inbox": "/sc-dashboard",
+  "/emd-form": "/sc-dashboard",
   "/sales-order-form": "/sof-dashboard",
   "/comparison-sheet-detail": "/comparison-sheet",
   "/tender-checklist": "/pre-sales-checklist",
