@@ -68,10 +68,10 @@ const RFPDashboard = () => {
     return () => clearTimeout(t);
   }, []);
 
-  // Show Pre-Bid reminder whenever user switches to Task Dashboard S (no chain)
+  // Show Pre-Bid reminder whenever user switches to Task Dashboard S (chains to Pending Query)
   useEffect(() => {
     if (activeTab === "Task Dashboard S") {
-      setActiveModal({ ...PRE_BID_MODAL, noChain: true });
+      setActiveModal(PRE_BID_MODAL);
     }
   }, [activeTab]);
 
@@ -642,7 +642,7 @@ const RFPDashboard = () => {
             : activeTab === "Task Dashboard S"
               ? <TaskTableC onViewRFP={handleViewRFP} />
               : activeTab === "Task Dashboard S2"
-                ? <TaskTableS2 />
+                ? <TaskTableS2 onViewRFP={handleViewRFP} />
                 : activeTab.startsWith("Task Dashboard")
                   ? <TaskTable onViewRFP={handleViewRFP} />
                   : board}
@@ -680,7 +680,7 @@ const RFPDashboard = () => {
               : activeTab === "Task Dashboard S"
                 ? <TaskTableC fullscreen onViewRFP={handleViewRFP} />
                 : activeTab === "Task Dashboard S2"
-                  ? <TaskTableS2 fullscreen />
+                  ? <TaskTableS2 fullscreen onViewRFP={handleViewRFP} />
                   : activeTab.startsWith("Task Dashboard")
                     ? <TaskTable fullscreen />
                     : board}

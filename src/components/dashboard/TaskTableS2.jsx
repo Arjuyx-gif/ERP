@@ -3,27 +3,27 @@ import { Eye, Upload, Edit3 } from "lucide-react";
 const FONT = "'Inter','Segoe UI',sans-serif";
 
 const COLUMNS = [
-  { key: "id",         label: "Tender/ Order ID", width: 140 },
-  { key: "firm",       label: "Firm Name",         width: 120 },
-  { key: "title",      label: "Tender Title",      width: 130 },
-  { key: "customer",   label: "Customer",          width: 140 },
-  { key: "value",      label: "Value",             width: 90  },
-  { key: "deadline",   label: "Deadline",          width: 110 },
-  { key: "status",     label: "Status",            width: 190 },
-  { key: "updated",    label: "Updated",           width: 110 },
-  { key: "completion", label: "Completion",        width: 100 },
-  { key: "actions",    label: "Actions",           width: 160 },
+  { key: "id", label: "Tender/ Order ID", width: 140 },
+  { key: "firm", label: "Firm Name", width: 120 },
+  { key: "title", label: "Tender Title", width: 130 },
+  { key: "customer", label: "Customer", width: 140 },
+  { key: "value", label: "Value", width: 90 },
+  { key: "deadline", label: "Deadline", width: 110 },
+  { key: "status", label: "Status", width: 190 },
+  { key: "updated", label: "Updated", width: 110 },
+  { key: "completion", label: "Completion", width: 100 },
+  { key: "actions", label: "Actions", width: 160 },
 ];
 
 const ROW_BG = {
   yellow: "#FFFDE7",
-  green:  "#E8F5E9",
+  green: "#E8F5E9",
 };
 
 const ACTION_ICON = {
-  eye:    Eye,
+  eye: Eye,
   upload: Upload,
-  edit:   Edit3,
+  edit: Edit3,
 };
 
 const ROWS = [
@@ -35,7 +35,7 @@ const ROWS = [
   },
   {
     id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name",
-    value: "₹2 Cr.", deadline: "25/04/2026", status: "Doc. Uploaded Query & Response",
+    value: "₹2 Cr.", deadline: "25/04/2026", status: "Query & Response",
     statusColor: "#D97706", updated: "Yesterday", completion: 0,
     highlight: "yellow", actionIcon: "upload", actionLabel: "Upload",
   },
@@ -71,7 +71,17 @@ const ROWS = [
   },
 ];
 
-const TaskTableS2 = ({ fullscreen = false }) => (
+const ACTION_MAP = {
+  "Upload PO":       row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View PO" }),
+  "Continue":        row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
+  "Continue RFP":    row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
+  "Upload":          row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "Complete Tasks", isQuery: true, showQueryUploadZone: true }),
+  "View":            row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
+  "View SOF":        row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
+  "Start SOF":       row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
+};
+
+const TaskTableS2 = ({ fullscreen = false, onViewRFP }) => (
   <div style={{
     background: "#fff",
     borderRadius: 10,
@@ -128,6 +138,10 @@ const TaskTableS2 = ({ fullscreen = false }) => (
               <td style={{ padding: "14px 14px", textAlign: "center" }}>
                 {row.actionLabel && (
                   <button
+                    onClick={() => {
+                      const builder = ACTION_MAP[row.actionLabel];
+                      if (builder) onViewRFP?.(builder(row));
+                    }}
                     style={{
                       display: "inline-flex", alignItems: "center", gap: 6,
                       padding: "6px 12px", border: "1px solid #E2E8F0", borderRadius: 6,

@@ -31,7 +31,9 @@ const ACTION_ICON = {
 const ACTION_MAP = {
   "Upload PO":       row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View PO" }),
   "Continue":        row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
+  "Upload":          row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "Complete Tasks", isQuery: true, showQueryUploadZone: true }),
   "View":            row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
+  "View SOF":        row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
   "Edit & Resubmit": row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "Edit & Resubmit", rejectionRemark: "Please correct the EMD amount according to the revised guidelines." }),
   "Edit":            row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "Edit & Resubmit", rejectionRemark: "Sent back for rework due to incomplete documentation." }),
 };

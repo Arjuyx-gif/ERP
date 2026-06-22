@@ -496,7 +496,7 @@ export const TASK_TABLE_B_ROWS = [
   {
     id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name",
     presalesChecklist: "Completed", alertNotify: "View Teams & Remarks",
-    oemStatus: "Completed", queryResponse: "Doc. Uploaded Query & Response",
+    oemStatus: "Completed", queryResponse: "Query & Response",
     deadline: "10/06/2026", updated: "Yesterday",
     actionType: "upload", highlight: null,
   },
@@ -547,7 +547,7 @@ export const TASK_TABLE_ROWS = [
 export const TASK_DASHBOARD_C_TABLE_ROWS = [
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "PO Awaiting",                   statusColor: "#D97706", updated: "Today",      completion: 0,   actionLabel: "Upload PO",        actionIcon: "upload", highlight: "yellow" },
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "In Progress",                  statusColor: "#1565C0", updated: "2 hrs ago",  completion: 65,  actionLabel: "Continue",         actionIcon: "edit",   highlight: null    },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Doc. Uploaded Query & Response", statusColor: "#D97706", updated: "Yesterday",  completion: 0,   actionLabel: "Upload",           actionIcon: "upload", highlight: "yellow" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Query & Response", statusColor: "#D97706", updated: "Yesterday",  completion: 0,   actionLabel: "Upload",           actionIcon: "upload", highlight: "yellow" },
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Submitted",                     statusColor: "#16A34A", updated: "Yesterday",  completion: 100, actionLabel: "View",             actionIcon: "eye",    highlight: "green"  },
   { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Order Placed",                  statusColor: "#374151", updated: "Today",      completion: 80,  actionLabel: "View SOF",         actionIcon: "eye",    highlight: null    },
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Rework",                        statusColor: "#DC2626", updated: "Today",      completion: 80,  actionLabel: "Edit & Resubmit",  actionIcon: "edit",   highlight: "red"   },
