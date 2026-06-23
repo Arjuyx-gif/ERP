@@ -8,7 +8,10 @@ import ciplLogo from "../../assets/cipl-logo-white 1.png";
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const effectivePath = ROUTE_PARENT[location.pathname] ?? location.pathname;
+  let effectivePath = ROUTE_PARENT[location.pathname] ?? location.pathname;
+  if (location.pathname === "/sales-order-form" && location.state?.fromSC) {
+    effectivePath = "/sc-sof-dashboard";
+  }
 
   // Auto-expand any parent whose child matches the current (or effective parent) path
   const defaultExpanded = useMemo(() => {

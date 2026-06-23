@@ -70,6 +70,7 @@ const SCDashboard = () => {
   const navigate = useNavigate();
 
   const handleAction = (actionLabel, notif) => {
+    setShowNotifications(false);
     if (actionLabel === "View RFP & Remark") {
       setActiveTask({
         id: notif.id,
@@ -77,7 +78,8 @@ const SCDashboard = () => {
         customer: notif.customer || "Customer Name",
         action: "View RFP & Remark"
       });
-      setShowNotifications(false);
+    } else if (actionLabel === "View SOF") {
+      navigate("/sales-order-form", { state: { step: 10, showUploadModal: false, fromSC: true } });
     }
   };
 

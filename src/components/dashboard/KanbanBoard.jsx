@@ -5,7 +5,7 @@ import KanbanCard from "./KanbanCard";
 // Pure presentational component. Receives columns from the parent (via the
 // useDashboard hook) and fires onViewAll(col) when a column header is clicked.
 
-const KanbanBoard = ({ columns, onViewAll, onViewRFP }) => (
+const KanbanBoard = ({ columns, onViewAll, onViewRFP, isSalesCoordinator }) => (
   <div style={{
     display: "flex", gap: 14,
     minWidth: "max-content", paddingBottom: 8,
@@ -50,7 +50,7 @@ const KanbanBoard = ({ columns, onViewAll, onViewRFP }) => (
           padding: "10px 8px 8px", minHeight: 80,
         }}>
           {col.cards.map((card, idx) => (
-            <KanbanCard key={idx} card={card} onViewRFP={(augmentedCard) => onViewRFP?.(augmentedCard || card)} />
+            <KanbanCard key={idx} card={card} onViewRFP={(augmentedCard) => onViewRFP?.(augmentedCard || card)} isSalesCoordinator={isSalesCoordinator} />
           ))}
         </div>
 

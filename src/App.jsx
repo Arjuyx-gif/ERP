@@ -43,8 +43,8 @@ const App = () => (
       <Route path="/sof-dashboard"    element={<SOFDashboard />} />
       <Route path="/sales-order-form" element={<SalesOrderForm />} />
       <Route path="/sc-dashboard"     element={<SCDashboard />} />
-      <Route path="/sc-rfp-dashboard" element={ph("SC RFP Dashboard")} />
-      <Route path="/sc-sof-dashboard" element={ph("SC SOF")} />
+      <Route path="/sc-rfp-dashboard" element={<RFPDashboard />} />
+      <Route path="/sc-sof-dashboard" element={<SOFDashboard />} />
       <Route path="/task-inbox"       element={<TaskInbox />} />
       <Route path="/emd-form"         element={<EMDForm />} />
       <Route path="/tracker"          element={ph("Tracker")} />

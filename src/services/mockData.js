@@ -45,14 +45,14 @@ export const KANBAN_COLUMNS = [
     color: "#E3F0FB", countBg: "#4A90D9",
     cards: [
       {
-        id: "TDN-2026-001", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
+        id: "TND-2026-001", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
         tender: "Tender Title", customer: "Customer Name", amount: "500Cr.",
         tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
         details: { status: "Result Awaited", preBidDate: "20/04/2026", preBidTime: "Time", preBidVenue: "Venue", deadline: "Apr 25, 2026" },
         action: "View RFP Form",
       },
       {
-        id: "TDN-2026-002", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
+        id: "TND-2026-002", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
         tender: "Tender Title", customer: "Customer Name", amount: "500Cr.",
         tags: ["CIPL", "UVT", "NIPL"], tagColors: { CIPL: "#E3F0FB", UVT: "#F3E5F5", NIPL: "#E8F5E9" },
         details: { status: "Approval Awaiting", preBidDate: "20/04/2026", preBidTime: "Time", preBidVenue: "Venue", deadline: "Apr 25, 2026" },
@@ -65,7 +65,7 @@ export const KANBAN_COLUMNS = [
     color: "#FFF8E1", countBg: "#F5A623",
     cards: [
       {
-        id: "TDN-2026-005", status: "Pending", statusColor: "#F5A623", statusBg: "#FFF4E0",
+        id: "TND-2026-005", status: "Pending", statusColor: "#F5A623", statusBg: "#FFF4E0",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
         details: { status: "MD Office - Approval Waiting", deadline: "Apr 25, 2026" },
@@ -79,7 +79,7 @@ export const KANBAN_COLUMNS = [
     color: "#FFF3E0", countBg: "#FF9800",
     cards: [
       {
-        id: "TDN-2026-005", status: "Approved", statusColor: "#4CAF50", statusBg: "#E8F5E9",
+        id: "TND-2026-005", status: "Approved", statusColor: "#4CAF50", statusBg: "#E8F5E9",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL", "UVT", "NIPL"], tagColors: { CIPL: "#E3F0FB", UVT: "#F3E5F5", NIPL: "#E8F5E9" },
         details: { status: "Send Alert", deadline: "Apr 25, 2026" },
@@ -95,7 +95,7 @@ export const KANBAN_COLUMNS = [
     color: "#F3E5F5", countBg: "#9C27B0",
     cards: [
       {
-        id: "TDN-2026-004", status: "In Progress", statusColor: "#1565C0", statusBg: "#E3F0FB",
+        id: "TND-2026-004", status: "In Progress", statusColor: "#1565C0", statusBg: "#E3F0FB",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL", "UVT"], tagColors: { CIPL: "#E3F0FB", UVT: "#F3E5F5" },
         details: { status: "Docs. Pending", deadline: "Apr 25, 2026" },
@@ -112,7 +112,7 @@ export const KANBAN_COLUMNS = [
     color: "#E8F5E9", countBg: "#4CAF50",
     cards: [
       {
-        id: "TDN-2026-009", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
+        id: "TND-2026-009", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL", "UVT"], tagColors: { CIPL: "#E3F0FB", UVT: "#F3E5F5" },
         details: { status: "Bid Submitted - Date", dueDate: "Apr 25, 2026", dueTime: "Time" },
@@ -125,7 +125,7 @@ export const KANBAN_COLUMNS = [
     color: "#FFF8E1", countBg: "#FFC107",
     cards: [
       {
-        id: "TDN-2026-009", status: "Pending", statusColor: "#F5A623", statusBg: "#FFF4E0",
+        id: "TND-2026-009", status: "Pending", statusColor: "#F5A623", statusBg: "#FFF4E0",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL", "UVT"], tagColors: { CIPL: "#E3F0FB", UVT: "#F3E5F5" },
         details: { status: "Docs - pending", dueDate: "Apr 25, 2026", dueTime: "Time" },
@@ -139,7 +139,7 @@ export const KANBAN_COLUMNS = [
     color: "#FBE9E7", countBg: "#FF5722",
     cards: [
       {
-        id: "TDN-2026-009", status: "Pending", statusColor: "#F5A623", statusBg: "#FFF4E0",
+        id: "TND-2026-009", status: "Pending", statusColor: "#F5A623", statusBg: "#FFF4E0",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL", "UVT"], tagColors: { CIPL: "#E3F0FB", UVT: "#F3E5F5" },
         details: { status: "Result Awaited", deadline: "Apr 30, 2026" },
@@ -152,7 +152,7 @@ export const KANBAN_COLUMNS = [
     color: "#E8F5E9", countBg: "#2E7D32",
     cards: [
       {
-        id: "TDN-2026-007", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
+        id: "TND-2026-007", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
         details: { status: "PO Received", deadline: "Apr 30, 2026" },
@@ -160,14 +160,14 @@ export const KANBAN_COLUMNS = [
         statusBadge: { text: "PO Received", iconName: "bell", color: "#F5A623", bg: "#FFF4E0" },
       },
       {
-        id: "TDN-2026-017", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
+        id: "TND-2026-017", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: [], tagColors: {},
         details: { status: "PO Awaiting", deadline: "Apr 30, 2026" },
         statusBadge: { text: "PO Awaiting", iconName: "alert", color: "#F5A623", bg: "#FFF4E0" },
       },
       {
-        id: "TDN-2026-017", status: "Bid Canceled", statusColor: "#F44336", statusBg: "#FBE9E7",
+        id: "TND-2026-017", status: "Bid Canceled", statusColor: "#F44336", statusBg: "#FBE9E7",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: [], tagColors: {},
         details: { status: "Bid Canceled", deadline: "Apr 30, 2026" },
@@ -180,7 +180,7 @@ export const KANBAN_COLUMNS = [
     color: "#E3F0FB", countBg: "#1565C0",
     cards: [
       {
-        id: "TDN-2026-007", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
+        id: "TND-2026-007", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
         details: { status: "Start with SOF", deadline: "Apr 30, 2026" },
@@ -195,7 +195,7 @@ export const KANBAN_COLUMNS = [
     color: "#FBE9E7", countBg: "#C62828",
     cards: [
       {
-        id: "TDN-2026-012", status: "Lost", statusColor: "#C62828", statusBg: "#FBE9E7",
+        id: "TND-2026-012", status: "Lost", statusColor: "#C62828", statusBg: "#FBE9E7",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["UVT", "Lost", "NIPL", "Lost"],
         tagColors: {

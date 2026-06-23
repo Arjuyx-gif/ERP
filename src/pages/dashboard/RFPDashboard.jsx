@@ -1,7 +1,7 @@
 // src/pages/dashboard/RFPDashboard.jsx
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Search, Bell, SlidersHorizontal, Eye, Minimize2, Plus } from "lucide-react";
+import { Search, Bell, SlidersHorizontal, Eye, Minimize2, Plus, ArrowUpDown } from "lucide-react";
 
 import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
@@ -24,6 +24,7 @@ import { TASK_DASHBOARD_A_KPI_CARDS } from "../../services/mockData";
 const RFPDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const isSalesCoordinator = location.pathname === "/sc-rfp-dashboard";
 
   // ── Data from service layer (swap service implementation for real API) ──────
   const { kpiCards, columns: initialColumns, notifications, loading, error } = useDashboard();
@@ -38,7 +39,7 @@ const RFPDashboard = () => {
   const [activeModal, setActiveModal] = useState(null);
   const [activeTab, setActiveTab] = useState(location.state?.tab ?? "Dashboard");
   const [search, setSearch] = useState("");
-  const [stageFilter] = useState("All Stages");
+  const [stageFilter, setStageFilter] = useState("All Stages");
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [deadlineFilter, setDeadlineFilter] = useState("By Deadline");
   const [tabFilter, setTabFilter] = useState("All");
@@ -52,9 +53,9 @@ const RFPDashboard = () => {
   const PRE_BID_MODAL = {
     title: "Pre-Bid Meeting Reminder",
     subtitle: "You have 1 upcoming pre-bid meeting:",
-    rfpId: "TDN-2026-006", tenderTitle: "Tender title", customer: "Customer Name",
+    rfpId: "TND-2026-006", tenderTitle: "Tender title", customer: "Customer Name",
     details: [
-      { text: "Tender ID - TDN-2026-001" },
+      { text: "Tender ID - TND-2026-001" },
       { text: "Apr 5, 2024", icon: "calendar" },
       { text: "2:00 PM", icon: "timer" },
       { text: "Online", icon: "globe" },
@@ -80,7 +81,7 @@ const RFPDashboard = () => {
       setTimeout(() => setActiveModal({
         title: "Pending Query Response",
         subtitle: "You have 1 pending query response(s):",
-        rfpId: "TDN-2026-006", tenderTitle: "Tender title", customer: "Customer Name",
+        rfpId: "TND-2026-006", tenderTitle: "Tender title", customer: "Customer Name",
         deadlinePill: "05-05-2026",
       }), 200);
     } else {
@@ -446,7 +447,7 @@ const RFPDashboard = () => {
         : col.cards.filter(c => c.status === statusFilter),
     }));
 
-  const board = <KanbanBoard columns={visibleColumns} onViewAll={setViewAllCol} onViewRFP={handleViewRFP} />;
+  const board = <KanbanBoard columns={visibleColumns} onViewAll={setViewAllCol} onViewRFP={handleViewRFP} isSalesCoordinator={isSalesCoordinator} />;
 
   return (
     <div style={{
@@ -469,7 +470,7 @@ const RFPDashboard = () => {
               </h1>
               <p style={{ fontSize: 12, color: "#888", margin: "0 0 16px" }}>Last updated: 2 hours ago</p>
             </div>
-            {activeTab.startsWith("Task Dashboard") && activeTab !== "Task Dashboard PS" && (
+            {!isSalesCoordinator && activeTab.startsWith("Task Dashboard") && activeTab !== "Task Dashboard PS" && (
               <button
                 onClick={() => {
                   if (activeTab === "Task Dashboard S2") {
@@ -582,49 +583,64 @@ const RFPDashboard = () => {
           </div>
 
           {/* Dashboard / Task Dashboard tabs */}
-          <div style={{ display: "flex", borderBottom: "2px solid #E2E8F0" }}>
-            {["Dashboard", "Task Dashboard SM", "Task Dashboard PS", "Task Dashboard S", "Task Dashboard S2"].map(tab => {
-              const isLocked = (activeTab === "Task Dashboard S" || activeTab === "Task Dashboard S2") && tab === "Dashboard";
-              const isActive = activeTab === tab;
-              return (
-                <button
-                  key={tab}
-                  onClick={() => { if (!isLocked) setActiveTab(tab); }}
-                  disabled={isLocked}
-                  style={{
-                    padding: "10px 20px", background: "none", border: "none",
-                    borderBottom: isActive ? "2px solid #2979FF" : "2px solid transparent",
-                    marginBottom: "-2px",
-                    color: isLocked ? "#C8C8C8" : isActive ? "#2979FF" : "#888",
-                    fontWeight: isActive ? 700 : 400,
-                    fontSize: 14,
-                    cursor: isLocked ? "not-allowed" : "pointer",
-                    fontFamily: "inherit",
-                    opacity: isLocked ? 0.5 : 1,
-                  }}
-                >
-                  {tab}
-                </button>
-              );
-            })}
-          </div>
+          {!isSalesCoordinator && (
+            <div style={{ display: "flex", borderBottom: "2px solid #E2E8F0" }}>
+              {["Dashboard", "Task Dashboard SM", "Task Dashboard PS", "Task Dashboard S", "Task Dashboard S2"].map(tab => {
+                const isLocked = (activeTab === "Task Dashboard S" || activeTab === "Task Dashboard S2") && tab === "Dashboard";
+                const isActive = activeTab === tab;
+                return (
+                  <button
+                    key={tab}
+                    onClick={() => { if (!isLocked) setActiveTab(tab); }}
+                    disabled={isLocked}
+                    style={{
+                      padding: "10px 20px", background: "none", border: "none",
+                      borderBottom: isActive ? "2px solid #2979FF" : "2px solid transparent",
+                      marginBottom: "-2px",
+                      color: isLocked ? "#C8C8C8" : isActive ? "#2979FF" : "#888",
+                      fontWeight: isActive ? 700 : 400,
+                      fontSize: 14,
+                      cursor: isLocked ? "not-allowed" : "pointer",
+                      fontFamily: "inherit",
+                      opacity: isLocked ? 0.5 : 1,
+                    }}
+                  >
+                    {tab}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Filter bar */}
         <div style={{ padding: "12px 28px", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
           <SlidersHorizontal size={16} color="#888" />
           {[
+            { val: stageFilter, set: setStageFilter, opts: ["All Stages", "RFP Analysis", "Awaiting Approval", "Alert / Notify", "Approved", "Submitted", "Won", "PO Pending"] },
             { val: statusFilter, set: setStatusFilter, opts: ["All Status", "Completed", "Pending", "In Progress", "Under Review", "Approval Pending", "Rejected"] },
-            { val: deadlineFilter, set: setDeadlineFilter, opts: ["By Deadline", "Priority", "Newest First", "Oldest First", "Tender Value", "Last Updated"] },
           ].map((f, i) => (
             <select key={i} value={f.val} onChange={e => f.set(e.target.value)} style={{
               padding: "7px 12px", border: "1px solid #E2E8F0", borderRadius: 8,
-              fontSize: 13, color: "#333", background: "#fff", cursor: "pointer",
+              fontSize: 13, color: "#333", background: "#F8FAFC", cursor: "pointer",
               outline: "none", fontFamily: "inherit",
             }}>
               {f.opts.map(o => <option key={o}>{o}</option>)}
             </select>
           ))}
+
+          <div style={{ width: 1, height: 16, background: "#CBD5E1", margin: "0 4px" }} />
+
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <ArrowUpDown size={14} color="#888" />
+            <select value={deadlineFilter} onChange={e => setDeadlineFilter(e.target.value)} style={{
+              padding: "7px 12px", border: "1px solid #E2E8F0", borderRadius: 8,
+              fontSize: 13, color: "#333", background: "#F8FAFC", cursor: "pointer",
+              outline: "none", fontFamily: "inherit",
+            }}>
+              {["By Deadline", "Priority", "Newest First", "Oldest First", "Tender Value", "Last Updated"].map(o => <option key={o}>{o}</option>)}
+            </select>
+          </div>
           <div style={{ flex: 1 }} />
           <button onClick={() => setKanbanFullscreen(true)} style={{
             background: "#fff", border: "1px solid #E2E8F0", borderRadius: 8,

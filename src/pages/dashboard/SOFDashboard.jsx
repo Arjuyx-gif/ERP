@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Plus, Search, Filter, Bell, X, ArrowRight, Play } from "lucide-react";
 import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
@@ -72,6 +72,8 @@ const COLUMNS = [
 
 const SOFDashboard = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isSalesCoordinator = location.pathname === "/sc-sof-dashboard";
   const [showAlert, setShowAlert] = useState(true);
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState("All");
@@ -90,20 +92,24 @@ const SOFDashboard = () => {
           {/* Header Area */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
             <div>
-              <h1 style={{ fontSize: 24, fontWeight: 700, color: "#111827", margin: "0 0 4px" }}>SOF Action Board</h1>
+              <h1 style={{ fontSize: 24, fontWeight: 700, color: "#111827", margin: "0 0 4px" }}>
+                {isSalesCoordinator ? "Sales Coordinator SOF Action Board" : "SOF Action Board"}
+              </h1>
               <p style={{ fontSize: 13, color: "#6B7280", margin: 0 }}>Last updated: 2 hours ago</p>
             </div>
-            <button
-              onClick={() => navigate("/sales-order-form")}
-              style={{
-                display: "flex", alignItems: "center", gap: 6,
-                padding: "9px 20px", border: "none", borderRadius: 6,
-                background: "#2563EB", color: "#fff",
-                fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: FONT,
-              }}
-            >
-              <Plus size={16} /> Create SOF
-            </button>
+            {!isSalesCoordinator && (
+              <button
+                onClick={() => navigate("/sales-order-form", { state: { fromSC: isSalesCoordinator } })}
+                style={{
+                  display: "flex", alignItems: "center", gap: 6,
+                  padding: "9px 20px", border: "none", borderRadius: 6,
+                  background: "#2563EB", color: "#fff",
+                  fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: FONT,
+                }}
+              >
+                <Plus size={16} /> Create SOF
+              </button>
+            )}
           </div>
 
           {/* Toolbar */}
@@ -219,7 +225,7 @@ const SOFDashboard = () => {
                   <span><strong>Customer:</strong> Customer Name</span>
                 </div>
                 <div style={{ display: "flex", gap: 12 }}>
-                  <button onClick={() => navigate("/sales-order-form")} style={{
+                  <button onClick={() => navigate("/sales-order-form", { state: { fromSC: isSalesCoordinator } })} style={{
                     padding: "6px 16px", background: "#2563EB", border: "none", borderRadius: 6,
                     color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: FONT
                   }}>
@@ -308,7 +314,7 @@ const SOFDashboard = () => {
                     <td style={{ padding: "14px 16px" }}>
                       {row.actionType === "view" ? (
                         <button
-                          onClick={() => navigate("/sales-order-form", { state: { step: 10, showUploadModal: false } })}
+                          onClick={() => navigate("/sales-order-form", { state: { step: 10, showUploadModal: false, fromSC: isSalesCoordinator } })}
                           style={{
                             display: "inline-flex", alignItems: "center", gap: 8,
                             background: "#155DFC", border: "none", borderRadius: 8, color: "#fff",

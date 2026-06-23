@@ -565,7 +565,7 @@ const ComparisonSheetDetail = () => {
                   <Check size={15} color="#16A34A" strokeWidth={3} />
                 </div>
                 <div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: "#111827" }}>RFP Details – TDN-2026-001</div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: "#111827" }}>RFP Details – TND-2026-001</div>
                   <div style={{ fontSize: 13, color: "#6B7280", marginTop: 2 }}>Tender Title</div>
                 </div>
               </div>

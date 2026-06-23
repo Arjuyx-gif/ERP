@@ -113,7 +113,7 @@ const TaskTableC = ({ fullscreen = false, onViewRFP }) => {
                   <button
                     onClick={() => {
                       if (row.actionLabel === "View SOF" || row.actionLabel === "Start SOF") {
-                        navigate("/sales-order-form", { state: { step: 10, showUploadModal: false } });
+                        navigate("/sales-order-form", { state: { step: 10, showUploadModal: false, fromSC: true } });
                       } else {
                         const builder = ACTION_MAP[row.actionLabel];
                         if (builder) onViewRFP?.(builder(row));

@@ -13,7 +13,7 @@ const btnStyle = {
   display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
 };
 
-const KanbanCard = ({ card, onViewRFP }) => {
+const KanbanCard = ({ card, onViewRFP, isSalesCoordinator }) => {
   const [checked, setChecked] = useState(card.checkedNotify || []);
   const toggle = (item) => setChecked(p => p.includes(item) ? p.filter(x => x !== item) : [...p, item]);
 
@@ -172,13 +172,15 @@ const KanbanCard = ({ card, onViewRFP }) => {
         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 6 }}>
           <button
             onClick={() => onViewRFP?.({ ...card, action: "View PO" })}
-            style={{ ...btnStyle, background: "#fff", color: "#111827", border: "1px solid #E5E7EB" }}
+            disabled={isSalesCoordinator}
+            style={{ ...btnStyle, background: "#fff", color: "#111827", border: "1px solid #E5E7EB", opacity: isSalesCoordinator ? 0.5 : 1, cursor: isSalesCoordinator ? "not-allowed" : "pointer" }}
           >
             <Eye size={14} /> View PO
           </button>
           <button
             onClick={() => onViewRFP?.({ ...card, action: "Additional Docs" })}
-            style={{ ...btnStyle, background: "#000", color: "#fff", border: "none", position: "relative", display: "block", textAlign: "center", padding: "10px 0" }}
+            disabled={isSalesCoordinator}
+            style={{ ...btnStyle, background: "#000", color: "#fff", border: "none", position: "relative", display: "block", textAlign: "center", padding: "10px 0", opacity: isSalesCoordinator ? 0.5 : 1, cursor: isSalesCoordinator ? "not-allowed" : "pointer" }}
           >
             <div style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", display: "flex" }}>
               <Upload size={14} />
@@ -195,33 +197,44 @@ const KanbanCard = ({ card, onViewRFP }) => {
         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 6 }}>
           <button
             onClick={() => onViewRFP?.({ ...card, action: "EMD Return" })}
-            style={{ ...btnStyle, background: "#fff", color: "#333", border: "1px solid #E2E8F0" }}
+            disabled={isSalesCoordinator}
+            style={{ ...btnStyle, background: "#fff", color: "#333", border: "1px solid #E2E8F0", opacity: isSalesCoordinator ? 0.5 : 1, cursor: isSalesCoordinator ? "not-allowed" : "pointer" }}
           >
             <ArrowUpRight size={13} /> Notify for EMD Return
           </button>
-          <button style={{ ...btnStyle, background: "#fff", color: "#333", border: "1px solid #E2E8F0" }}>
+          <button disabled={isSalesCoordinator} style={{ ...btnStyle, background: "#fff", color: "#333", border: "1px solid #E2E8F0", opacity: isSalesCoordinator ? 0.5 : 1, cursor: isSalesCoordinator ? "not-allowed" : "pointer" }}>
             <Eye size={13} /> View Comparison Sheet
           </button>
         </div>
       )}
 
       {/* CTA button */}
-      {card.action && (
-        <button
-          onClick={["View RFP Form", "Review Now", "Send Notification", "View", "Complete Tasks", "Bid Submitted", "View PO", "View Task"].includes(card.action) ? () => onViewRFP({ ...card, checkedNotify: checked }) : undefined}
-          style={{
-            width: "100%", marginTop: 4, padding: "8px 0",
-            background: isBlue ? "#2979FF" : "#fff",
-            color: isBlue ? "#fff" : "#2979FF",
-            border: isBlue ? "none" : "1px solid #2979FF",
-            borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer",
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-            fontFamily: "inherit",
-          }}
-        >
-          <Eye size={13} /> {card.action}
-        </button>
-      )}
+      {card.action && (() => {
+        let isAllowedForSC = ["View RFP Form", "Bid Submitted", "View Submission", "View Task"].includes(card.action);
+        if (card.action === "Complete Tasks" && !card.isQuery) {
+          isAllowedForSC = true;
+        }
+        const isDisabled = isSalesCoordinator && !isAllowedForSC;
+        return (
+          <button
+            disabled={isDisabled}
+            onClick={["View RFP Form", "Review Now", "Send Notification", "View", "Complete Tasks", "Bid Submitted", "View Submission", "View PO", "View Task"].includes(card.action) ? () => onViewRFP({ ...card, checkedNotify: checked }) : undefined}
+            style={{
+              width: "100%", marginTop: 4, padding: "8px 0",
+              background: isBlue ? "#2979FF" : "#fff",
+              color: isBlue ? "#fff" : "#2979FF",
+              border: isBlue ? "none" : "1px solid #2979FF",
+              borderRadius: 6, fontSize: 12, fontWeight: 600,
+              cursor: isDisabled ? "not-allowed" : "pointer",
+              opacity: isDisabled ? 0.5 : 1,
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+              fontFamily: "inherit",
+            }}
+          >
+            <Eye size={13} /> {card.action === "Bid Submitted" ? "View Submission" : card.action}
+          </button>
+        );
+      })()}
     </div>
   );
 };

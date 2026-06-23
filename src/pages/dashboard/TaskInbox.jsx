@@ -191,7 +191,7 @@ const TaskInbox = () => {
 
   const handleAction = (label, task) => {
     setShowNotifications(false);
-    if      (label === "View SOF")               setSofPanelMode("view");
+    if      (label === "View SOF")               navigate("/sales-order-form", { state: { step: 10, showUploadModal: false, fromSC: true } });
     else if (label === "Review & Validate")      setSofPanelMode("review");
     else if (label === "Generate EMD Form (CIPL)" || label === "View EMD (CIPL)") navigate("/emd-form");
     else if (label === "View RFP & Remark" || label === "View Remark & EMD")      
