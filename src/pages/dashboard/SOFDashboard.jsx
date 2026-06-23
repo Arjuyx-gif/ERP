@@ -307,12 +307,15 @@ const SOFDashboard = () => {
                     {/* Action */}
                     <td style={{ padding: "14px 16px" }}>
                       {row.actionType === "view" ? (
-                        <button style={{
-                          display: "inline-flex", alignItems: "center", gap: 8,
-                          background: "#155DFC", border: "none", borderRadius: 8, color: "#fff",
-                          padding: "8px 16px", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT,
-                          whiteSpace: "nowrap",
-                        }}>
+                        <button
+                          onClick={() => navigate("/sales-order-form", { state: { step: 11 } })}
+                          style={{
+                            display: "inline-flex", alignItems: "center", gap: 8,
+                            background: "#155DFC", border: "none", borderRadius: 8, color: "#fff",
+                            padding: "8px 16px", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT,
+                            whiteSpace: "nowrap",
+                          }}
+                        >
                           <Play size={16} strokeWidth={2} /> View SOF
                         </button>
                       ) : (

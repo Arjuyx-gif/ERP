@@ -6,8 +6,7 @@ import GlobalHeader from "../../components/layout/GlobalHeader";
 import SCNotificationPanel from "../../components/dashboard/SCNotificationPanel";
 import RFPFormPanel from "../../components/dashboard/RFPFormPanel";
 import SOFViewPanel from "../../components/dashboard/SOFViewPanel";
-
-const FONT = "'Inter','Segoe UI',sans-serif";
+import { FONT } from "../../styles/theme";
 
 const TOP_KPIS = [
   { title: "In process", value: 2, icon: Clock, color: "#F59E0B", bg: "#FEF3C7" },

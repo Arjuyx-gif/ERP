@@ -1,20 +1,9 @@
 import { useState } from "react";
 import { X, ChevronDown, Trash2, Check, XCircle } from "lucide-react";
+import { FONT, COLORS, Z, inputStyle, labelStyle, cellInputStyle } from "../../styles/theme";
 
-const FONT = "'Inter','Segoe UI',sans-serif";
-
-const labelStyle = { display: "block", fontSize: 12, fontWeight: 500, color: "#374151", marginBottom: 4 };
-const inputStyle = {
-  width: "100%", padding: "8px 11px", border: "1px solid #E5E7EB", borderRadius: 6,
-  fontSize: 13, color: "#374151", fontFamily: FONT, outline: "none",
-  boxSizing: "border-box", background: "#F9FAFB",
-};
 const textareaStyle = { ...inputStyle, resize: "vertical", minHeight: 80 };
-const cellInput = {
-  width: "100%", border: "1px solid #E5E7EB", borderRadius: 5,
-  padding: "5px 8px", fontSize: 12, fontFamily: FONT, outline: "none",
-  boxSizing: "border-box", background: "#F9FAFB",
-};
+const cellInput = cellInputStyle;
 
 const Field = ({ label, type = "text", placeholder = "", span }) => (
   <div style={span ? { gridColumn: `span ${span}` } : {}}>

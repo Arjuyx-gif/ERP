@@ -1,8 +1,7 @@
 import { Eye, Upload, Edit3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { TASK_DASHBOARD_C_TABLE_ROWS } from "../../services/mockData";
-
-const FONT = "'Inter','Segoe UI',sans-serif";
+import { FONT } from "../../styles/theme";
 
 const COLUMNS = [
   { key: "id",         label: "Tender/ Order ID", width: 140 },

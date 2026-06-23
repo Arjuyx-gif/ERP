@@ -5,8 +5,7 @@ import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-
-const FONT = "'Inter','Segoe UI',sans-serif";
+import { FONT, COLORS } from "../../styles/theme";
 
 const FORM_ROWS = [
   { sno: 1,  label: "Sales Person" },
