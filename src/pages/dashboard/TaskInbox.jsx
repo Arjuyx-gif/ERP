@@ -352,11 +352,11 @@ const SOFConfirmForm = ({ onClose }) => {
           <div style={{ padding: "20px 24px", borderBottom: "1px solid #F3F4F6", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             <div>
               <label style={{ display: "block", fontSize: 12, fontWeight: 500, color: "#374151", marginBottom: 5 }}>Customer Name</label>
-              <input type="text" style={inputStyle} />
+              <input type="text" disabled={sent} style={{ ...inputStyle, background: sent ? "#F9FAFB" : "#fff", color: sent ? "#9CA3AF" : "#374151", cursor: sent ? "default" : "text" }} />
             </div>
             <div>
               <label style={{ display: "block", fontSize: 12, fontWeight: 500, color: "#374151", marginBottom: 5 }}>Firm Name</label>
-              <input type="text" style={inputStyle} />
+              <input type="text" disabled={sent} style={{ ...inputStyle, background: sent ? "#F9FAFB" : "#fff", color: sent ? "#9CA3AF" : "#374151", cursor: sent ? "default" : "text" }} />
             </div>
           </div>
 
@@ -395,14 +395,16 @@ const SOFConfirmForm = ({ onClose }) => {
           <div style={{ padding: "16px 24px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
               <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>Department Notifications Summary</div>
-              <button
-                onClick={addDept}
-                style={{ display: "flex", alignItems: "center", gap: 5, padding: "6px 14px", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT }}
-                onMouseEnter={e => e.currentTarget.style.background = "#F9FAFB"}
-                onMouseLeave={e => e.currentTarget.style.background = "#fff"}
-              >
-                <Plus size={13} /> Add
-              </button>
+              {!sent && (
+                <button
+                  onClick={addDept}
+                  style={{ display: "flex", alignItems: "center", gap: 5, padding: "6px 14px", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT }}
+                  onMouseEnter={e => e.currentTarget.style.background = "#F9FAFB"}
+                  onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+                >
+                  <Plus size={13} /> Add
+                </button>
+              )}
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
               {/* Confirmed depts */}
@@ -419,16 +421,17 @@ const SOFConfirmForm = ({ onClose }) => {
                     <label style={{ display: "block", fontSize: 12, color: "#6B7280", marginBottom: 5 }}>Remarks</label>
                     <textarea
                       value={remarks[dept.key] || ""}
-                      onChange={e => setRemarks(r => ({ ...r, [dept.key]: e.target.value }))}
-                      style={{ ...inputStyle, minHeight: 90, resize: "vertical" }}
+                      onChange={e => !sent && setRemarks(r => ({ ...r, [dept.key]: e.target.value }))}
+                      disabled={sent}
+                      style={{ ...inputStyle, minHeight: 90, resize: sent ? "none" : "vertical", background: sent ? "#F9FAFB" : "#fff", color: sent ? "#9CA3AF" : "#374151", cursor: sent ? "default" : "text" }}
                       placeholder="Add remarks..."
                     />
                   </div>
                 );
               })}
 
-              {/* Pending (unselected) dept rows */}
-              {pendingDepts.map((p, idx) => (
+              {/* Pending (unselected) dept rows — hidden after sent */}
+              {!sent && pendingDepts.map((p, idx) => (
                 <div key={p.id} style={{ borderTop: depts.length > 0 || idx > 0 ? "1px solid #F3F4F6" : "none", paddingTop: depts.length > 0 || idx > 0 ? 16 : 0, marginTop: depts.length > 0 || idx > 0 ? 0 : 0, paddingBottom: idx < pendingDepts.length - 1 ? 16 : 0, marginBottom: idx < pendingDepts.length - 1 ? 0 : 0 }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
                     <span style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>Select Dept.</span>
