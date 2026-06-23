@@ -135,7 +135,7 @@ const TaskInboxCard = ({ task, onAction }) => (
         {[
           ["Customer",     task.customer],
           task.orderNo  && ["Order No.",    task.orderNo],
-          task.emdAmount && ["EMD Amount :", task.emdAmount],
+          task.emdAmount && ["EMD Amount ", task.emdAmount],
           task.value    && ["Value",        task.value],
           ["Firm",         task.firm],
           ["Submitted By", task.submittedBy],
