@@ -308,7 +308,7 @@ const SOFDashboard = () => {
                     <td style={{ padding: "14px 16px" }}>
                       {row.actionType === "view" ? (
                         <button
-                          onClick={() => navigate("/sales-order-form", { state: { step: 11 } })}
+                          onClick={() => navigate("/sales-order-form", { state: { step: 10, showUploadModal: false } })}
                           style={{
                             display: "inline-flex", alignItems: "center", gap: 8,
                             background: "#155DFC", border: "none", borderRadius: 8, color: "#fff",
