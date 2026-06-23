@@ -6,9 +6,9 @@ import GlobalHeader from "../../components/layout/GlobalHeader";
 const FONT = "'Inter','Segoe UI',sans-serif";
 
 const COMPANY_LABELS = ["CIPL", "Vendor/company name", "Vendor/company name", "Vendor/company name", "Vendor/company name"];
-const COMPANY_BG    = ["#4ADE80", "linear-gradient(to right, #86EFAC, #D1FAE5)", "linear-gradient(to right, #86EFAC, #D1FAE5)", "#ffffff", "#ffffff"];
+const COMPANY_BG    = ["#62D1AC", "linear-gradient(to right, #86EFAC, #D1FAE5)", "linear-gradient(to right, #86EFAC, #D1FAE5)", "#ffffff", "#ffffff"];
 const COMPANY_COLOR = ["#ffffff", "#065F46", "#065F46", "#6B7280", "#6B7280"];
-const COMPANY_BORDER= ["#4ADE80", "#A7F3D0", "#A7F3D0", "#E5E7EB", "#E5E7EB"];
+const COMPANY_BORDER= ["#62D1AC", "#A7F3D0", "#A7F3D0", "#E5E7EB", "#E5E7EB"];
 const TABLE_ROWS = [
   { sno: 1, tender: "Tender SITC", description: "Description", units: 12 },
   { sno: 2, tender: "Tender SITC", description: "Description", units: 12 },
@@ -139,7 +139,7 @@ const ComparisonSheetDetail = () => {
     });
 
     if (filledRows === totalRows) {
-      return { background: "#4ADE80", color: "#ffffff", border: "1px solid #4ADE80" };
+      return { background: "#62D1AC", color: "#ffffff", border: "1px solid #62D1AC" };
     } else if (filledRows > 0) {
       return { background: "linear-gradient(to right, #6EE7B7, #ffffff)", color: "#374151", border: "1px solid #E5E7EB" };
     } else {
