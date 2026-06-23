@@ -6,6 +6,7 @@ import GlobalHeader from "../../components/layout/GlobalHeader";
 import SCNotificationPanel from "../../components/dashboard/SCNotificationPanel";
 import RFPFormPanel from "../../components/dashboard/RFPFormPanel";
 import SOFViewPanel from "../../components/dashboard/SOFViewPanel";
+import SOFConfirmForm from "../../components/dashboard/SOFConfirmForm";
 import { FONT } from "../../styles/theme";
 
 const TOP_KPIS = [
@@ -67,6 +68,7 @@ const SCDashboard = () => {
   const [activeFilter, setActiveFilter] = useState("All");
   const [activeTask, setActiveTask] = useState(null);
   const [sofPanelMode, setSofPanelMode] = useState(null);
+  const [showConfirmForm, setShowConfirmForm] = useState(false);
   const navigate = useNavigate();
 
   const handleAction = (actionLabel, notif) => {
@@ -111,6 +113,10 @@ const SCDashboard = () => {
             </button>
           </div>
         </div>
+
+        {showConfirmForm ? (
+          <SOFConfirmForm onClose={() => setShowConfirmForm(false)} />
+        ) : (<>
 
         {/* Toolbar */}
         <div style={{ padding: "20px 32px 0", display: "flex", gap: 16, alignItems: "center" }}>
@@ -293,6 +299,7 @@ const SCDashboard = () => {
           </div>
 
         </div>
+        </>)}
       </div>
 
       {showNotifications && (
@@ -313,6 +320,7 @@ const SCDashboard = () => {
         <SOFViewPanel
           mode={sofPanelMode}
           onClose={() => setSofPanelMode(null)}
+          onConfirm={() => { setSofPanelMode(null); setShowConfirmForm(true); }}
         />
       )}
     </div>
