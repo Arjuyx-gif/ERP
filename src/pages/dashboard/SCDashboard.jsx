@@ -5,6 +5,7 @@ import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
 import SCNotificationPanel from "../../components/dashboard/SCNotificationPanel";
 import RFPFormPanel from "../../components/dashboard/RFPFormPanel";
+import SOFViewPanel from "../../components/dashboard/SOFViewPanel";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -66,6 +67,7 @@ const SCDashboard = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [activeFilter, setActiveFilter] = useState("All");
   const [activeTask, setActiveTask] = useState(null);
+  const [sofPanelMode, setSofPanelMode] = useState(null);
   const navigate = useNavigate();
 
   const handleAction = (actionLabel, notif) => {
@@ -209,7 +211,10 @@ const SCDashboard = () => {
                         </div>
                       </td>
                       <td style={{ padding: "12px 16px", textAlign: "center" }}>
-                        <button style={{ background: "none", border: "none", color: "#3B82F6", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4 }}>
+                        <button
+                          onClick={() => setSofPanelMode(row.status === "Pending" ? "review" : "view")}
+                          style={{ background: "none", border: "none", color: "#3B82F6", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4 }}
+                        >
                           {row.action} <ArrowRight size={14} />
                         </button>
                       </td>
@@ -300,6 +305,13 @@ const SCDashboard = () => {
         <RFPFormPanel
           card={activeTask}
           onClose={() => setActiveTask(null)}
+        />
+      )}
+
+      {sofPanelMode && (
+        <SOFViewPanel
+          mode={sofPanelMode}
+          onClose={() => setSofPanelMode(null)}
         />
       )}
     </div>

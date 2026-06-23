@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, ChevronDown, Trash2, Check } from "lucide-react";
+import { X, ChevronDown, Trash2, Check, XCircle } from "lucide-react";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -120,7 +120,105 @@ const DEPT_ITEMS = [
   "Stores Department – Check & reserve inventory",
 ];
 
-const SOFViewPanel = ({ onClose, mode = "view" }) => (
+const HIGHLIGHT_SECTIONS = ["Customer Details", "Pricing", "Technical Inputs", "Documents", "Others"];
+
+const RejectModal = ({ onCancel, onSubmit }) => {
+  const [reason, setReason] = useState("");
+  const [selected, setSelected] = useState([]);
+
+  const toggle = (s) => setSelected(v => v.includes(s) ? v.filter(x => x !== s) : [...v, s]);
+
+  return (
+    <>
+      {/* Modal backdrop — above panel (zIndex 962) */}
+      <div
+        onClick={onCancel}
+        style={{ position: "fixed", inset: 0, zIndex: 962, background: "rgba(0,0,0,0.18)" }}
+      />
+      {/* Modal box */}
+      <div style={{
+        position: "fixed", zIndex: 963,
+        top: "50%", left: "58%", transform: "translate(-50%, -50%)",
+        width: 420, background: "#fff", borderRadius: 12,
+        boxShadow: "0 8px 40px rgba(0,0,0,0.18)", fontFamily: FONT,
+        padding: "22px 22px 18px",
+      }}>
+        {/* Header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
+          <div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: "#111827", marginBottom: 2 }}>Reject SOF</div>
+            <div style={{ fontSize: 12, color: "#6B7280" }}>Provide detailed feedback for rework</div>
+          </div>
+          <button onClick={onCancel} style={{ background: "none", border: "none", cursor: "pointer", color: "#9CA3AF", padding: 2, marginTop: -2 }}>
+            <X size={16} />
+          </button>
+        </div>
+
+        {/* Rejection Reason */}
+        <label style={{ ...labelStyle, marginBottom: 6, fontSize: 13 }}>Rejection Reason</label>
+        <textarea
+          value={reason}
+          onChange={e => setReason(e.target.value)}
+          placeholder="Explain what needs to be corrected and why..."
+          style={{ ...textareaStyle, minHeight: 90, marginBottom: 14, fontSize: 13 }}
+        />
+
+        {/* Highlight Sections */}
+        <label style={{ ...labelStyle, marginBottom: 2, fontSize: 13 }}>Highlight Sections <span style={{ fontWeight: 400, color: "#9CA3AF" }}>(Optional)</span></label>
+        <div style={{ fontSize: 11, color: "#9CA3AF", marginBottom: 8 }}>Select sections that require attention</div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 14 }}>
+          {HIGHLIGHT_SECTIONS.map(s => {
+            const active = selected.includes(s);
+            return (
+              <button
+                key={s}
+                onClick={() => toggle(s)}
+                style={{
+                  padding: "5px 12px", borderRadius: 20, fontSize: 12, cursor: "pointer",
+                  fontFamily: FONT, transition: "all 0.15s",
+                  border: active ? "1px solid #2563EB" : "1px solid #E5E7EB",
+                  background: active ? "#EFF6FF" : "#fff",
+                  color: active ? "#2563EB" : "#374151",
+                  fontWeight: active ? 600 : 400,
+                }}
+              >{s}</button>
+            );
+          })}
+        </div>
+
+        {/* Info note */}
+        <div style={{ background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 8, padding: "10px 12px", fontSize: 12, color: "#15803D", marginBottom: 16, lineHeight: 1.5 }}>
+          This will create a task for the user to fix and resubmit the SOF. Make sure to provide clear, actionable feedback.
+        </div>
+
+        {/* Footer */}
+        <div style={{ display: "flex", gap: 10 }}>
+          <button onClick={onCancel} style={{
+            flex: 1, padding: "9px 0", border: "1px solid #E5E7EB", borderRadius: 8,
+            background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151",
+            cursor: "pointer", fontFamily: FONT,
+          }}>Cancel</button>
+          <button onClick={() => onSubmit(reason, selected)} style={{
+            flex: 1, padding: "9px 0", border: "none", borderRadius: 8,
+            background: "#DC2626", fontSize: 13, fontWeight: 600, color: "#fff",
+            cursor: "pointer", fontFamily: FONT,
+          }}>Reject &amp; Send Back</button>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const SOFViewPanel = ({ onClose, onConfirm, mode = "view" }) => {
+  const [showRejectModal, setShowRejectModal] = useState(false);
+
+  const handleReject = (reason, sections) => {
+    // Handle rejection logic here
+    setShowRejectModal(false);
+    onClose();
+  };
+
+  return (
   <>
     {/* Backdrop */}
     <div
@@ -382,7 +480,7 @@ const SOFViewPanel = ({ onClose, mode = "view" }) => (
       }}>
         {mode === "review" ? (
           <>
-            <button onClick={onClose} style={{
+            <button onClick={() => setShowRejectModal(true)} style={{
               flex: 1, padding: "9px 0", border: "1px solid #FECACA", borderRadius: 8,
               background: "#FEF2F2", fontSize: 13, fontWeight: 600, color: "#DC2626",
               cursor: "pointer", fontFamily: FONT,
@@ -391,7 +489,7 @@ const SOFViewPanel = ({ onClose, mode = "view" }) => (
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
               Reject
             </button>
-            <button onClick={onClose} style={{
+            <button onClick={() => { onClose(); onConfirm?.(); }} style={{
               flex: 1, padding: "9px 0", border: "none", borderRadius: 8,
               background: "#16A34A", fontSize: 13, fontWeight: 600, color: "#fff",
               cursor: "pointer", fontFamily: FONT,
@@ -426,7 +524,15 @@ const SOFViewPanel = ({ onClose, mode = "view" }) => (
       </div>
 
     </div>
+
+    {showRejectModal && (
+      <RejectModal
+        onCancel={() => setShowRejectModal(false)}
+        onSubmit={handleReject}
+      />
+    )}
   </>
-);
+  );
+};
 
 export default SOFViewPanel;
