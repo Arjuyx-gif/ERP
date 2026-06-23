@@ -121,7 +121,7 @@ const DropdownButton = ({ label, icon: Icon, options }) => {
 
 // ─── TaskInboxCard ─────────────────────────────────────────────────────────────
 
-const TaskInboxCard = ({ task, onAction }) => (
+const TaskInboxCard = ({ task, onAction, isCompleted }) => (
   <div style={{ background: COLORS.bgWhite, display: "flex", justifyContent: "space-between", padding: "24px 0" }}>
     <div style={{ flex: 1 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
@@ -159,7 +159,11 @@ const TaskInboxCard = ({ task, onAction }) => (
           : (
             <button
               onClick={() => onAction(task.primaryAction.label, task)}
-              style={{ background: COLORS.primary, color: COLORS.bgWhite, border: "none", borderRadius: 6, padding: "8px 16px", fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}
+              style={
+                isCompleted
+                  ? { background: COLORS.bgWhite, color: COLORS.textSecondary, border: `1px solid #D1D5DB`, borderRadius: 6, padding: "8px 16px", fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }
+                  : { background: COLORS.primary, color: COLORS.bgWhite, border: "none", borderRadius: 6, padding: "8px 16px", fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }
+              }
             >
               {task.primaryAction.icon && <task.primaryAction.icon size={14} />}
               {task.primaryAction.label}
@@ -270,7 +274,7 @@ const TaskInbox = () => {
                 ))}
                 {activeTab === "completed" && COMPLETED_TASKS.map((task, i) => (
                   <div key={task.id} style={{ borderBottom: i < COMPLETED_TASKS.length - 1 ? `1px solid #F1F5F9` : "none" }}>
-                    <TaskInboxCard task={task} onAction={handleAction} />
+                    <TaskInboxCard task={task} onAction={handleAction} isCompleted={true} />
                   </div>
                 ))}
                 {activeTab === "pending" && (

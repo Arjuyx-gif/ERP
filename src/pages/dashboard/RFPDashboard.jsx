@@ -65,9 +65,11 @@ const RFPDashboard = () => {
 
   // Auto-show Pre-Bid reminder on mount (chains to Pending Query Response)
   useEffect(() => {
-    const t = setTimeout(() => setActiveModal(PRE_BID_MODAL), 800);
-    return () => clearTimeout(t);
-  }, []);
+    if (!isSalesCoordinator) {
+      const t = setTimeout(() => setActiveModal(PRE_BID_MODAL), 800);
+      return () => clearTimeout(t);
+    }
+  }, [isSalesCoordinator]);
 
   // Show Pre-Bid reminder whenever user switches to Task Dashboard S (chains to Pending Query)
   useEffect(() => {

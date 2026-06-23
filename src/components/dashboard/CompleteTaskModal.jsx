@@ -386,29 +386,49 @@ const OEMDocsView = ({ onBack, onSubmitDocs, onUpload, files, removeFile }) => {
                 <Save size={14} /> Save Draft
               </button>
             )}
-            <button
-              onClick={() => {
-                showToast("Documents submitted successfully!");
-                setTimeout(() => {
-                  if (onSubmitDocs) onSubmitDocs();
-                  else onBack();
-                }, 800);
-              }}
-              style={{
-                padding: "9px 24px",
-                border: "none",
-                borderRadius: 8,
-                background: "#2979FF",
-                fontSize: 13,
-                fontWeight: 600,
-                color: "#fff",
-                cursor: "pointer",
-                fontFamily: FONT,
-                display: "flex", alignItems: "center", gap: 6
-              }}
-            >
-              <Send size={14} /> Submit
-            </button>
+            {!isSalesCoordinator ? (
+              <button
+                onClick={() => {
+                  showToast("Documents submitted successfully!");
+                  setTimeout(() => {
+                    if (onSubmitDocs) onSubmitDocs();
+                    else onBack();
+                  }, 800);
+                }}
+                style={{
+                  padding: "9px 24px",
+                  border: "none",
+                  borderRadius: 8,
+                  background: "#2979FF",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: "#fff",
+                  cursor: "pointer",
+                  fontFamily: FONT,
+                  display: "flex", alignItems: "center", gap: 6
+                }}
+              >
+                <Send size={14} /> Submit
+              </button>
+            ) : (
+              <button
+                onClick={onBack}
+                style={{
+                  padding: "9px 24px",
+                  border: "1px solid #D1D5DB",
+                  borderRadius: 8,
+                  background: "#fff",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: "#374151",
+                  cursor: "pointer",
+                  fontFamily: FONT,
+                  display: "flex", alignItems: "center", gap: 6
+                }}
+              >
+                <X size={14} /> Close
+              </button>
+            )}
           </div>
         </div>
       </div>

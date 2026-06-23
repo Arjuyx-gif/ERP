@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, CheckCircle2, Download, FileText, DownloadCloud } from "lucide-react";
+import { X, CheckCircle2, Download, FileText, DownloadCloud, Eye } from "lucide-react";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -185,7 +185,7 @@ const BidSubmissionModal = ({ card, onClose }) => {
                       </td>
                       <td style={{ padding: "12px 16px", borderBottom: i === DOCUMENTS.length - 1 ? "none" : "1px solid #E5E7EB", borderLeft: "1px solid #E5E7EB" }}>
                         <button style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, color: "#111827", fontFamily: FONT }}>
-                          <Download size={16} /> View
+                          <Eye size={16} /> View
                         </button>
                       </td>
                     </tr>
