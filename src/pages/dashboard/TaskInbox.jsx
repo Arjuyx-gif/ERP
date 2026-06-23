@@ -288,7 +288,7 @@ const TaskInbox = () => {
               <Bell size={20} color="#4B5563" />
               <div style={{ position: "absolute", top: -2, right: 0, width: 8, height: 8, background: "#EF4444", borderRadius: "50%", border: "2px solid #fff" }} />
             </button>
-            <button onClick={() => navigate("/sc-dashboard")} style={{ background: "#fff", color: "#155DFC", border: "1px solid #D1D5DB", padding: "8px 16px", borderRadius: 6, fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+            <button onClick={() => navigate("/sc-dashboard")} style={{ background: "#fff", color: "#000", border: "1px solid #D1D5DB", padding: "8px 16px", borderRadius: 6, fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
               <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
               Dashboard
             </button>
