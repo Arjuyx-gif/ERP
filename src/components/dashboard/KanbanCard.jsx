@@ -179,8 +179,7 @@ const KanbanCard = ({ card, onViewRFP, isSalesCoordinator }) => {
           </button>
           <button
             onClick={() => onViewRFP?.({ ...card, action: "Additional Docs" })}
-            disabled={isSalesCoordinator}
-            style={{ ...btnStyle, background: "#000", color: "#fff", border: "none", position: "relative", display: "block", textAlign: "center", padding: "10px 0", opacity: isSalesCoordinator ? 0.5 : 1, cursor: isSalesCoordinator ? "not-allowed" : "pointer" }}
+            style={{ ...btnStyle, background: "#000", color: "#fff", border: "none", position: "relative", display: "block", textAlign: "center", padding: "10px 0" }}
           >
             <div style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", display: "flex" }}>
               <Upload size={14} />
@@ -197,8 +196,7 @@ const KanbanCard = ({ card, onViewRFP, isSalesCoordinator }) => {
         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 6 }}>
           <button
             onClick={() => onViewRFP?.({ ...card, action: "EMD Return" })}
-            disabled={isSalesCoordinator}
-            style={{ ...btnStyle, background: "#fff", color: "#333", border: "1px solid #E2E8F0", opacity: isSalesCoordinator ? 0.5 : 1, cursor: isSalesCoordinator ? "not-allowed" : "pointer" }}
+            style={{ ...btnStyle, background: "#fff", color: "#333", border: "1px solid #E2E8F0" }}
           >
             <ArrowUpRight size={13} /> Notify for EMD Return
           </button>

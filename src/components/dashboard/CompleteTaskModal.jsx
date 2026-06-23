@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { X, Paperclip, ChevronRight, FileText, Trash2, ChevronLeft, Upload, Pencil, Download, Save, Send } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -44,6 +45,8 @@ const OEMDocsView = ({ onBack, onSubmitDocs, onUpload, files, removeFile }) => {
   const [toastMsg, setToastMsg] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [tableData, setTableData] = useState(() => OEM_DOCS_ROWS.map(row => [...row]));
+  const location = useLocation();
+  const isSalesCoordinator = location.pathname.includes("/sc-rfp-dashboard");
 
   const showToast = (msg) => {
     setToastMsg(msg);
@@ -325,40 +328,44 @@ const OEMDocsView = ({ onBack, onSubmitDocs, onUpload, files, removeFile }) => {
               onChange={handleUploadChange}
               style={{ display: "none" }}
             />
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              style={{
-                padding: "9px 16px", border: "none", borderRadius: 8, background: "none",
-                fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6
-              }}
-            >
-              <Upload size={14} /> Upload
-            </button>
-            <button
-              onClick={() => {
-                if (isEditing) {
-                  if (tableRef.current) {
-                    const rows = tableRef.current.querySelectorAll('tbody tr');
-                    const newData = Array.from(rows).map(row => {
-                      const cells = row.querySelectorAll('td');
-                      return Array.from(cells).map(cell => cell.textContent);
-                    });
-                    setTableData(newData);
-                  }
-                  setIsEditing(false);
-                  showToast("Edits saved successfully!");
-                } else {
-                  setIsEditing(true);
-                  showToast("Edit mode enabled. Click on any cell to edit.");
-                }
-              }}
-              style={{
-                padding: "9px 16px", border: isEditing ? "1px solid #E5E7EB" : "none", borderRadius: 8, background: isEditing ? "#F3F4F6" : "none",
-                fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6
-              }}
-            >
-              <Pencil size={14} /> {isEditing ? "Save Edits" : "Edit"}
-            </button>
+            {!isSalesCoordinator && (
+              <>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  style={{
+                    padding: "9px 16px", border: "none", borderRadius: 8, background: "none",
+                    fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6
+                  }}
+                >
+                  <Upload size={14} /> Upload
+                </button>
+                <button
+                  onClick={() => {
+                    if (isEditing) {
+                      if (tableRef.current) {
+                        const rows = tableRef.current.querySelectorAll('tbody tr');
+                        const newData = Array.from(rows).map(row => {
+                          const cells = row.querySelectorAll('td');
+                          return Array.from(cells).map(cell => cell.textContent);
+                        });
+                        setTableData(newData);
+                      }
+                      setIsEditing(false);
+                      showToast("Edits saved successfully!");
+                    } else {
+                      setIsEditing(true);
+                      showToast("Edit mode enabled. Click on any cell to edit.");
+                    }
+                  }}
+                  style={{
+                    padding: "9px 16px", border: isEditing ? "1px solid #E5E7EB" : "none", borderRadius: 8, background: isEditing ? "#F3F4F6" : "none",
+                    fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6
+                  }}
+                >
+                  <Pencil size={14} /> {isEditing ? "Save Edits" : "Edit"}
+                </button>
+              </>
+            )}
             <button
               onClick={() => showToast("Downloading OEM Documentation CSV...")}
               style={{
@@ -368,15 +375,17 @@ const OEMDocsView = ({ onBack, onSubmitDocs, onUpload, files, removeFile }) => {
             >
               <Download size={14} /> Download
             </button>
-            <button
-              onClick={() => showToast("Draft saved successfully!")}
-              style={{
-                padding: "9px 16px", border: "none", borderRadius: 8, background: "none",
-                fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6
-              }}
-            >
-              <Save size={14} /> Save Draft
-            </button>
+            {!isSalesCoordinator && (
+              <button
+                onClick={() => showToast("Draft saved successfully!")}
+                style={{
+                  padding: "9px 16px", border: "none", borderRadius: 8, background: "none",
+                  fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: 6
+                }}
+              >
+                <Save size={14} /> Save Draft
+              </button>
+            )}
             <button
               onClick={() => {
                 showToast("Documents submitted successfully!");
