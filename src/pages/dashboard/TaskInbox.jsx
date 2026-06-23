@@ -190,10 +190,12 @@ const TaskInbox = () => {
   const navigate = useNavigate();
 
   const handleAction = (label, task) => {
+    setShowNotifications(false);
     if      (label === "View SOF")               setSofPanelMode("view");
     else if (label === "Review & Validate")      setSofPanelMode("review");
-    else if (label === "Generate EMD Form (CIPL)") navigate("/emd-form");
-    else if (label === "View RFP & Remark")      setActiveTask({ id: task.id, tender: task.title, customer: task.customer, action: label });
+    else if (label === "Generate EMD Form (CIPL)" || label === "View EMD (CIPL)") navigate("/emd-form");
+    else if (label === "View RFP & Remark" || label === "View Remark & EMD")      
+      setActiveTask({ id: task.id, tender: task.tender || task.title, customer: task.customer, action: label });
   };
 
   return (
