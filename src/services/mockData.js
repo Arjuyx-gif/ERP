@@ -27,9 +27,9 @@ export const KPI_CARDS = [
 
 export const TASK_DASHBOARD_A_KPI_CARDS = [
   { label: "Total RFPs",               value: 15, iconName: "document",    color: "#1565C0", iconBg: "#E3F0FB" },
-  { label: "Approved & Sent to MD Sir", value: 14, iconName: "arrow-right", color: "#2563EB", iconBg: "#DBEAFE" },
+  { label: "Approved & Sent to MD", value: 14, iconName: "arrow-right", color: "#2563EB", iconBg: "#DBEAFE" },
   { label: "Returned to Team",          value: 5,  iconName: "refresh",     color: "#EA580C", iconBg: "#FFF7ED" },
-  { label: "Approved by MD Sir",        value: 3,  iconName: "tick",        color: "#16A34A", iconBg: "#DCFCE7" },
+  { label: "Approved by MD",        value: 3,  iconName: "tick",        color: "#16A34A", iconBg: "#DCFCE7" },
   { label: "Won Tenders",               value: 7,  iconName: "trophy",      color: "#16A34A", iconBg: "#DCFCE7" },
   { label: "Lost Tender",               value: 1,  iconName: "timer",       color: "#DC2626", iconBg: "#FEE2E2" },
   { label: "PO Awaited",                value: 4,  iconName: "briefcase",   color: "#92400E", iconBg: "#FEF3C7" },
@@ -549,9 +549,9 @@ export const TASK_TABLE_B_ROWS = [
 // highlight: null | "yellow" | "green" | "orange"
 export const TASK_TABLE_ROWS = [
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Approval Waiting",  statusColor: "#B45309", completion: 100, actionLabel: "Approve RFP",        actionIcon: "edit", highlight: "yellow" },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Approved",          statusColor: "#374151", completion: 100, actionLabel: "Send to MD Sir",      actionIcon: "send", highlight: null    },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Approved",          statusColor: "#374151", completion: 100, actionLabel: "Send to MD Sir",      actionIcon: "send", highlight: null    },
-  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Approved",          statusColor: "#374151", completion: 100, actionLabel: "Forwarded to MD Sir",  actionIcon: "send", highlight: "green" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Approved",          statusColor: "#374151", completion: 100, actionLabel: "Send to MD",      actionIcon: "send", highlight: null    },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Approved",          statusColor: "#374151", completion: 100, actionLabel: "Send to MD",      actionIcon: "send", highlight: null    },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Approved",          statusColor: "#374151", completion: 100, actionLabel: "Forwarded to MD",  actionIcon: "send", highlight: "green" },
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Rejected",          statusColor: "#DC2626", completion: 0,   actionLabel: "View RFP",             actionIcon: "eye",  highlight: "orange" },
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Won - PO Awaiting", statusColor: "#374151", completion: 100, actionLabel: "View RFP",             actionIcon: "eye",  highlight: null    },
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", salesPerson: "Sales Persons Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "PO Updated",        statusColor: "#374151", completion: 100, actionLabel: "View PO",              actionIcon: "eye",  highlight: null    },

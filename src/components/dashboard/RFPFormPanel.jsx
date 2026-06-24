@@ -558,7 +558,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
                 <XCircle size={15} color="#667085" /> Close
               </button>
             ) : card.action === "Approved View" || (card.action === "Approve RFP" && taskPhase === "approved") ? (
-              /* Approved state — Download + Send to MD Sir */
+              /* Approved state — Download + Send to MD */
               (
                 <>
                   <button
@@ -583,7 +583,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
                       boxShadow: "0 2px 6px rgba(27,94,32,0.3)",
                     }}
                   >
-                    <Send size={16} /> Send to MD Sir
+                    <Send size={16} /> Send to MD
                   </button>
                 </>
               )

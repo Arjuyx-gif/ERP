@@ -101,9 +101,9 @@ const TaskTable = ({ fullscreen = false, onViewRFP }) => (
                         onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, status: row.status, action: "Approve RFP" });
                       } else if (row.actionLabel === "View RFP") {
                         onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, status: row.status, action: "View RFP Form" });
-                      } else if (row.actionLabel === "Send to MD Sir") {
+                      } else if (row.actionLabel === "Send to MD") {
                         onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, status: row.status, action: "Approved View" });
-                      } else if (row.actionLabel === "Forwarded to MD Sir" || row.actionLabel === "View PO") {
+                      } else if (row.actionLabel === "Forwarded to MD" || row.actionLabel === "View PO") {
                         onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, status: row.status, action: "View RFP Form" });
                       }
                     }}
