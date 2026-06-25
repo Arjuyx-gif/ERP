@@ -348,7 +348,7 @@ const PurchaseTaskInbox = () => {
             {showFilterDrop && (
               <>
                 <div onClick={() => setShowFilterDrop(false)} style={{ position: "fixed", inset: 0, zIndex: 10 }} />
-                <div style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, background: "#fff", border: `1px solid ${COLORS.border}`, borderRadius: 8, boxShadow: "0 4px 16px rgba(0,0,0,0.10)", zIndex: 11, minWidth: 220, padding: "6px 0" }}>
+                <div style={{ position: "absolute", top: "calc(100% + 6px)", right: 0, background: "#fff", border: `1px solid ${COLORS.border}`, borderRadius: 8, boxShadow: "0 4px 16px rgba(0,0,0,0.10)", zIndex: 11, minWidth: 220, padding: "6px 0" }}>
                   {activeFilter && (
                     <button
                       onClick={() => { setActiveFilter(null); setShowFilterDrop(false); }}

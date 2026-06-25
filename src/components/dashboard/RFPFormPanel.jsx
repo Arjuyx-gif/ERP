@@ -640,10 +640,10 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
                   onClick={() => setShowRejectModal(true)}
                   style={{
                     flex: 1, padding: "12px 0", border: "none", borderRadius: 8,
-                    background: "#B71C1C", fontSize: 13, fontWeight: 700, color: "#fff",
+                    background: "#C10007", fontSize: 13, fontWeight: 700, color: "#fff",
                     cursor: "pointer", fontFamily: FONT,
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                    boxShadow: "0 2px 6px rgba(183,28,28,0.3)",
+                    boxShadow: "0 2px 6px rgba(193,0,7,0.3)",
                   }}
                 >
                   <XCircle size={16} /> Re-check
@@ -653,10 +653,10 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
                   onClick={() => { onApprove?.(card); onClose?.(); }}
                   style={{
                     flex: 1, padding: "12px 0", border: "none", borderRadius: 8,
-                    background: "#1B5E20", fontSize: 13, fontWeight: 700, color: "#fff",
+                    background: "#00A63E", fontSize: 13, fontWeight: 700, color: "#fff",
                     cursor: "pointer", fontFamily: FONT,
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                    boxShadow: "0 2px 6px rgba(27,94,32,0.3)",
+                    boxShadow: "0 2px 6px rgba(0,166,62,0.3)",
                   }}
                 >
                   <CheckCircle size={16} /> Approved
