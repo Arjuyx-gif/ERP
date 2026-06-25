@@ -17,6 +17,8 @@ import SOFDashboard    from "./pages/dashboard/SOFDashboard";
 import SalesOrderForm  from "./pages/dashboard/SalesOrderForm";
 import SCDashboard     from "./pages/dashboard/SCDashboard";
 import TaskInbox       from "./pages/dashboard/TaskInbox";
+import PurchaseTaskInbox from "./pages/dashboard/PurchaseTaskInbox";
+import PurchaseOrderForm from "./pages/dashboard/PurchaseOrderForm";
 import EMDForm         from "./pages/dashboard/EMDForm";
 import PlaceholderPage from "./pages/PlaceholderPage";
 
@@ -46,6 +48,13 @@ const App = () => (
       <Route path="/sc-rfp-dashboard" element={<RFPDashboard />} />
       <Route path="/sc-sof-dashboard" element={<SOFDashboard />} />
       <Route path="/task-inbox"       element={<TaskInbox />} />
+      <Route path="/purchase-task-inbox" element={<PurchaseTaskInbox />} />
+      <Route path="/purchase-order-form" element={<PurchaseOrderForm />} />
+      <Route path="/purchase-sof-details" element={<SalesOrderForm />} />
+      <Route path="/accounts-team-inbox" element={ph("Task Inbox - Accounts Team")} />
+      <Route path="/service-team-inbox"  element={ph("Task Inbox - Service Team")} />
+      <Route path="/store-team-inbox"    element={ph("Task Inbox - Store / Operation Team")} />
+      <Route path="/hr-team-inbox"       element={ph("Task Inbox - HR Team")} />
       <Route path="/emd-form"         element={<EMDForm />} />
       <Route path="/tracker"          element={ph("Tracker")} />
       <Route path="/reports"          element={ph("Reports")} />

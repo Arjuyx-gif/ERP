@@ -272,6 +272,16 @@ export const SIDEBAR_NAV = [
       { label: "SC Dashboard", path: "/sc-dashboard" },
     ],
   },
+  {
+    iconName: "inbox", label: "Task Inbox", expandable: true,
+    children: [
+      { label: "Purchase Team", path: "/purchase-task-inbox" },
+      { label: "Accounts Team", path: "/accounts-team-inbox" },
+      { label: "Service Team", path: "/service-team-inbox" },
+      { label: "Store / Operation Team", path: "/store-team-inbox" },
+      { label: "HR Team", path: "/hr-team-inbox" },
+    ],
+  },
   { iconName: "trending-up", label: "Tracker", expandable: true, path: "/tracker" },
   { iconName: "bar-chart", label: "Reports", path: "/reports" },
   { iconName: "database", label: "Master Data", path: "/master-data" },
@@ -280,11 +290,12 @@ export const SIDEBAR_NAV = [
 
 // Maps sub-routes to the parent sidebar route that should stay highlighted
 export const ROUTE_PARENT = {
-  "/task-inbox": "/sc-dashboard",
   "/emd-form": "/sc-dashboard",
   "/sales-order-form": "/sof-dashboard",
   "/comparison-sheet-detail": "/comparison-sheet",
   "/tender-checklist": "/pre-sales-checklist",
+  "/purchase-order-form": "/purchase-task-inbox",
+  "/purchase-sof-details": "/purchase-task-inbox",
 };
 
 // ─── View-All Table Rows (per column) ─────────────────────────────────────────
