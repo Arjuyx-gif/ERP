@@ -6,6 +6,7 @@ import GlobalHeader from "../../components/layout/GlobalHeader";
 import { FONT, COLORS } from "../../styles/theme";
 import ProcessPOModal from "../../components/dashboard/ProcessPOModal";
 import WorkflowTimelineModal from "../../components/dashboard/WorkflowTimelineModal";
+import SOFViewPanel from "../../components/dashboard/SOFViewPanel";
 
 // Mock Data for Purchase Task Inbox
 const NEW_TASKS = [
@@ -292,6 +293,7 @@ const PurchaseTaskInbox = () => {
   const [showAllTasks, setShowAllTasks] = useState(location.state?.showTaskBox || false);
   const [processModalOpen, setProcessModalOpen] = useState(false);
   const [workflowModalOpen, setWorkflowModalOpen] = useState(false);
+  const [showSOFDetails, setShowSOFDetails] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -528,8 +530,14 @@ const PurchaseTaskInbox = () => {
       </div>
 
       {showNotifications && <NotificationsPanel onClose={() => setShowNotifications(false)} />}
-      {processModalOpen && <ProcessPOModal onClose={() => setProcessModalOpen(false)} />}
+      {processModalOpen && (
+        <ProcessPOModal
+          onClose={() => setProcessModalOpen(false)}
+          onViewSOF={() => { setProcessModalOpen(false); setShowSOFDetails(true); }}
+        />
+      )}
       {workflowModalOpen && <WorkflowTimelineModal onClose={() => setWorkflowModalOpen(false)} />}
+      {showSOFDetails && <SOFViewPanel mode="view" onClose={() => setShowSOFDetails(false)} />}
     </div>
   );
 };

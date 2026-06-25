@@ -440,6 +440,39 @@ const SOFViewPanel = ({ onClose, onConfirm, mode = "view" }) => {
           </div>
         </Section>
 
+        {/* Accounts */}
+        <Section title="Accounts">
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            <Field label="Challan No" />
+            <Field label="Invoice No" />
+            <Field label="Challan Date" type="date" />
+            <Field label="Invoice Date" type="date" />
+            <Field label="Value of Invoice" span={2} />
+            <Field label="Signature (Accounts)" placeholder="Enter name" span={2} />
+          </div>
+        </Section>
+
+        {/* Operations / Stores */}
+        <Section title="Operations / Stores">
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <Field label="Mode of Delivery" placeholder="e.g., Courier, Truck, Air Freight" />
+            <Field label="Dispatched On" type="date" />
+            <Field label="Docket Number" />
+            <Field label="Signature (Operations/Stores)" />
+          </div>
+        </Section>
+
+        {/* Service */}
+        <Section title="Service">
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <Field label="Mode of Installation" placeholder="e.g., On-site, Remote, etc." />
+            <Field label="Outsourced" />
+            <Field label="Installation Completed On" type="date" />
+            <Field label="CSAT Report" type="textarea" placeholder="Customer Satisfaction Report details..." />
+            <Field label="Signature (Service)" />
+          </div>
+        </Section>
+
         {/* Department Relevance — review mode only */}
         {mode === "review" && (
           <div style={{
@@ -461,56 +494,33 @@ const SOFViewPanel = ({ onClose, onConfirm, mode = "view" }) => {
 
       </div>
 
-      {/* Footer */}
-      <div style={{
-        padding: "14px 20px", borderTop: "1px solid #EAECF0",
-        display: "flex", justifyContent: "space-between", gap: 10,
-        background: "#fff", flexShrink: 0,
-      }}>
-        {mode === "review" ? (
-          <>
-            <button onClick={() => setShowRejectModal(true)} style={{
-              flex: 1, padding: "9px 0", border: "1px solid #FECACA", borderRadius: 8,
-              background: "#FEF2F2", fontSize: 13, fontWeight: 600, color: "#DC2626",
-              cursor: "pointer", fontFamily: FONT,
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-            }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-              Reject
-            </button>
-            <button onClick={() => { onClose(); onConfirm?.(); }} style={{
-              flex: 1, padding: "9px 0", border: "none", borderRadius: 8,
-              background: "#16A34A", fontSize: 13, fontWeight: 600, color: "#fff",
-              cursor: "pointer", fontFamily: FONT,
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-            }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
-              Confirm
-            </button>
-          </>
-        ) : (
-          <>
-            <button onClick={onClose} style={{
-              flex: 1, padding: "9px 0", border: "1px solid #E5E7EB", borderRadius: 8,
-              background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151",
-              cursor: "pointer", fontFamily: FONT,
-            }}>
-              Close
-            </button>
-            <button style={{
-              flex: 1, padding: "9px 0", border: "none", borderRadius: 8,
-              background: "#2563EB", fontSize: 13, fontWeight: 600, color: "#fff",
-              cursor: "pointer", fontFamily: FONT,
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-            }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />
-              </svg>
-              View Details
-            </button>
-          </>
-        )}
-      </div>
+      {/* Footer — review mode only */}
+      {mode === "review" && (
+        <div style={{
+          padding: "14px 20px", borderTop: "1px solid #EAECF0",
+          display: "flex", justifyContent: "space-between", gap: 10,
+          background: "#fff", flexShrink: 0,
+        }}>
+          <button onClick={() => setShowRejectModal(true)} style={{
+            flex: 1, padding: "9px 0", border: "1px solid #FECACA", borderRadius: 8,
+            background: "#FEF2F2", fontSize: 13, fontWeight: 600, color: "#DC2626",
+            cursor: "pointer", fontFamily: FONT,
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+          }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Reject
+          </button>
+          <button onClick={() => { onClose(); onConfirm?.(); }} style={{
+            flex: 1, padding: "9px 0", border: "none", borderRadius: 8,
+            background: "#16A34A", fontSize: 13, fontWeight: 600, color: "#fff",
+            cursor: "pointer", fontFamily: FONT,
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+          }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Confirm
+          </button>
+        </div>
+      )}
 
     </div>
 

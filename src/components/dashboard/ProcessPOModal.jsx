@@ -1,12 +1,10 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { X, Upload, Plus } from "lucide-react";
+import { X, Upload } from "lucide-react";
 import { FONT, COLORS } from "../../styles/theme";
 
-const ProcessPOModal = ({ task, onClose }) => {
+const ProcessPOModal = ({ task, onClose, onViewSOF }) => {
   const [procurementStatus, setProcurementStatus] = useState("");
   const fileInputRef = useRef(null);
-  const navigate = useNavigate();
 
   const handleFileUpload = () => {
     if (fileInputRef.current) {
@@ -64,8 +62,8 @@ const ProcessPOModal = ({ task, onClose }) => {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px 24px", marginBottom: 32 }}>
             <div>
               <div style={{ fontSize: 11, color: COLORS.textSecondary, marginBottom: 4 }}>PID No.</div>
-              <div 
-                onClick={() => { onClose(); navigate("/purchase-sof-details"); }}
+              <div
+                onClick={() => onViewSOF?.()}
                 style={{ fontSize: 13, fontWeight: 600, color: COLORS.primary, cursor: "pointer", textDecoration: "none" }}
                 onMouseEnter={e => e.currentTarget.style.textDecoration = "underline"}
                 onMouseLeave={e => e.currentTarget.style.textDecoration = "none"}
