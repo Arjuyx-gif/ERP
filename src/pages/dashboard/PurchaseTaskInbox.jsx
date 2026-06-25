@@ -358,7 +358,13 @@ const PurchaseTaskInbox = () => {
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 12 }}>
                       <div style={{ fontSize: 12, color: COLORS.textMuted }}>Due: {task.dueDate}</div>
-                      <button style={{ background: COLORS.primary, color: COLORS.bgWhite, border: "none", padding: "8px 24px", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                      <button
+                        onClick={() => {
+                          if (task.action === "Start PO") navigate("/purchase-order-form");
+                          else if (task.action === "Complete PO") setProcessModalOpen(true);
+                        }}
+                        style={{ background: COLORS.primary, color: COLORS.bgWhite, border: "none", padding: "8px 24px", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+                      >
                         {task.action}
                       </button>
                     </div>
