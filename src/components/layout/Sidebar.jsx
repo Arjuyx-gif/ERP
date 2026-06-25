@@ -24,7 +24,7 @@ const Sidebar = () => {
     return map;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const [expanded, setExpanded] = useState({ "Sales & Pre-sales": true, ...defaultExpanded });
+  const [expanded, setExpanded] = useState(defaultExpanded);
 
   return (
     <div style={{
@@ -49,8 +49,9 @@ const Sidebar = () => {
               <div
                 onClick={() => {
                   if (item.expandable) {
-                    setExpanded(p => ({ ...p, [item.label]: !p[item.label] }));
+                    setExpanded(p => ({ [item.label]: !p[item.label] }));
                   } else if (item.path) {
+                    setExpanded({});
                     navigate(item.path);
                   }
                 }}
@@ -90,7 +91,7 @@ const Sidebar = () => {
                     return (
                       <div
                         key={child.label}
-                        onClick={() => { if (child.path) navigate(child.path); }}
+                        onClick={() => { if (child.path) { setExpanded({ [item.label]: true }); navigate(child.path); } }}
                         style={{
                           padding: "7px 16px 7px 42px",
                           background: isChildActive ? "#2979FF" : "transparent",
