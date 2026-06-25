@@ -6,9 +6,6 @@ import GlobalHeader from "../../components/layout/GlobalHeader";
 const FONT = "'Inter','Segoe UI',sans-serif";
 
 const COMPANY_LABELS = ["CIPL", "Vendor/company name", "Vendor/company name", "Vendor/company name", "Vendor/company name"];
-const COMPANY_BG    = ["#62D1AC", "linear-gradient(to right, #86EFAC, #D1FAE5)", "linear-gradient(to right, #86EFAC, #D1FAE5)", "#ffffff", "#ffffff"];
-const COMPANY_COLOR = ["#ffffff", "#065F46", "#065F46", "#6B7280", "#6B7280"];
-const COMPANY_BORDER= ["#62D1AC", "#A7F3D0", "#A7F3D0", "#E5E7EB", "#E5E7EB"];
 const TABLE_ROWS = [
   { sno: 1, tender: "Tender SITC", description: "Description", units: 12 },
   { sno: 2, tender: "Tender SITC", description: "Description", units: 12 },
@@ -33,8 +30,8 @@ const INFO_CARDS = [
   { label: "Tender Tile",      value: "Corporate Infotech Pvt. Ltd. (CIPL) project name" },
 ];
 
-const TH = ({ children, style = {} }) => (
-  <th style={{
+const TH = ({ children, style = {}, rowSpan, colSpan }) => (
+  <th rowSpan={rowSpan} colSpan={colSpan} style={{
     padding: "10px 14px", fontSize: 12, fontWeight: 600, color: "#fff",
     background: "#1F2937", textAlign: "center", whiteSpace: "nowrap",
     border: "1px solid #374151", ...style,
@@ -43,8 +40,8 @@ const TH = ({ children, style = {} }) => (
   </th>
 );
 
-const SubTH = ({ children, style = {} }) => (
-  <th style={{
+const SubTH = ({ children, style = {}, colSpan }) => (
+  <th colSpan={colSpan} style={{
     padding: "10px 14px", fontSize: 11, fontWeight: 600, color: "#374151",
     background: "#F9FAFB", textAlign: "center", whiteSpace: "nowrap",
     border: "1px solid #E5E7EB", ...style,
