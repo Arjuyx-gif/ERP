@@ -172,8 +172,7 @@ const KanbanCard = ({ card, onViewRFP, isSalesCoordinator }) => {
         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 6 }}>
           <button
             onClick={() => onViewRFP?.({ ...card, action: "View PO" })}
-            disabled={isSalesCoordinator}
-            style={{ ...btnStyle, background: "#fff", color: "#111827", border: "1px solid #E5E7EB", opacity: isSalesCoordinator ? 0.5 : 1, cursor: isSalesCoordinator ? "not-allowed" : "pointer" }}
+            style={{ ...btnStyle, background: "#fff", color: "#111827", border: "1px solid #E5E7EB" }}
           >
             <Eye size={14} /> View PO
           </button>

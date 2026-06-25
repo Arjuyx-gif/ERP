@@ -8,35 +8,35 @@ import "jspdf-autotable";
 import { FONT, COLORS } from "../../styles/theme";
 
 const FORM_ROWS = [
-  { sno: 1,  label: "Sales Person" },
-  { sno: 2,  label: "Reporting Manager" },
-  { sno: 3,  label: "Last Date & Time of Submission of EMD/SD" },
-  { sno: 4,  label: "Validity of EMD /SD( Plz mention Tenure)" },
-  { sno: 5,  label: "EMD/ SD in form of ePBG/PBG/DD/ Online payment/Fixed Deposit" },
-  { sno: 6,  label: "EMD/ BG Amount (Value in INR)" },
-  { sno: 7,  label: "Tender Fee ( If applicable)" },
-  { sno: 8,  label: "Processing Fee ( If applicable)" },
-  { sno: 9,  label: "Tender No./Bid No./ PO No." },
-  { sno: 10, label: "Tender /Bid  for Procurement of" },
-  { sno: 11, label: "*Name of the Customer/Department" },
-  { sno: 12, label: "*Name of the Contact Person" },
-  { sno: 13, label: "*Customer Email ID" },
-  { sno: 14, label: "*Customer Contact No." },
-  { sno: 15, label: "DD/FD in Favour of (mandatory for DD)" },
-  { sno: 16, label: "DD/FD payable at (mandatory for DD)" },
-  { sno: 17, label: "Beneficiary Name in BG (mandatory for BG)" },
-  { sno: 18, label: "Beneficiary Address (mandatory for BG)" },
-  { sno: 19, label: "Beneficiary PINCODE (mandatory for BG)" },
-  { sno: 20, label: "IFSC Code (mandatory for BG)" },
-  { sno: 21, label: "Name of Bank (mandatory for BG)" },
-  { sno: 22, label: "Bank- Branch Name/ Address (mandatory for BG)" },
-  { sno: 23, label: "EMD clause & details in Tender/bid (Kindly mention Page No)" },
-  { sno: 24, label: "BG Format in Tender ( Plz mention page No)" },
-  { sno: 25, label: "EMD Exemption clause in Tender" },
+  { sno: 1,  label: "Name of Sales Person" },
+  { sno: 2,  label: "Name of Reporting Manager" },
+  { sno: 3,  label: "Last Date and Time of Submission of EMD/SD" },
+  { sno: 4,  label: "Validity of EMD/SD (Specify Tenure)" },
+  { sno: 5,  label: "Mode of EMD/SD (ePBG / PBG / DD / Online Payment / Fixed Deposit)" },
+  { sno: 6,  label: "EMD/BG Amount (Value in INR)" },
+  { sno: 7,  label: "Tender Fee (If Applicable)" },
+  { sno: 8,  label: "Processing Fee (If Applicable)" },
+  { sno: 9,  label: "Tender No. / Bid No. / PO No." },
+  { sno: 10, label: "Tender/Bid for Procurement of" },
+  { sno: 11, label: "Name of the Customer/Department" },
+  { sno: 12, label: "Name of the Contact Person" },
+  { sno: 13, label: "Customer Email ID" },
+  { sno: 14, label: "Customer Contact Number" },
+  { sno: 15, label: "DD/FD in Favour of (Mandatory for DD)" },
+  { sno: 16, label: "DD/FD Payable At (Mandatory for DD)" },
+  { sno: 17, label: "Beneficiary Name in BG (Mandatory for BG)" },
+  { sno: 18, label: "Beneficiary Address (Mandatory for BG)" },
+  { sno: 19, label: "Beneficiary PIN Code (Mandatory for BG)" },
+  { sno: 20, label: "IFSC Code (Mandatory for BG)" },
+  { sno: 21, label: "Name of Bank (Mandatory for BG)" },
+  { sno: 22, label: "Bank Branch Name and Address (Mandatory for BG)" },
+  { sno: 23, label: "EMD Clause and Details in Tender/Bid (Specify Page Number)" },
+  { sno: 24, label: "BG Format in Tender (Specify Page Number)" },
+  { sno: 25, label: "EMD Exemption Clause in Tender" },
   { sno: 26, label: "Management Approval" },
-  { sno: 27, label: "Company from which EMD required" },
+  { sno: 27, label: "Company from Which EMD is Required" },
   { sno: 28, label: "Justification for Participation" },
-  { sno: 29, label: "Strategy for winning" },
+  { sno: 29, label: "Strategy for Winning" },
 ];
 
 const ActionBtn = ({ icon, label, onClick, primary = false, active = false }) => (
@@ -61,7 +61,6 @@ const ActionBtn = ({ icon, label, onClick, primary = false, active = false }) =>
 const EMDForm = () => {
   const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
-  const [labelEdit, setLabelEdit] = useState(false);
   const [savedMsg, setSavedMsg] = useState(false);
   const [rows, setRows] = useState(() => FORM_ROWS.map(r => ({ ...r, value: "" })));
 
@@ -198,8 +197,8 @@ const EMDForm = () => {
                     <td style={{ padding: "14px 20px", fontSize: 13, color: "#6B7280", textAlign: "center", verticalAlign: "middle" }}>
                       {row.sno}
                     </td>
-                    <td style={{ padding: editing && labelEdit ? "8px 14px" : "14px 20px", fontSize: 13, color: "#374151", verticalAlign: "middle", borderLeft: "1px solid #F3F4F6" }}>
-                      {editing && labelEdit ? (
+                    <td style={{ padding: editing ? "8px 14px" : "14px 20px", fontSize: 13, color: "#374151", verticalAlign: "middle", borderLeft: "1px solid #F3F4F6" }}>
+                      {editing ? (
                         <input
                           type="text"
                           value={row.label}
@@ -257,13 +256,8 @@ const EMDForm = () => {
           }}>
             <ActionBtn icon={<Download size={14} />} label="Download" onClick={handleDownload} />
             <ActionBtn icon={<Plus size={14} />} label="Add Item" onClick={addItem} />
-            <ActionBtn
-              icon={<Edit3 size={14} />} label="Edit"
-              onClick={() => setLabelEdit(v => !v)}
-              active={labelEdit}
-            />
             <ActionBtn icon={<Save size={14} />} label="Save Draft" onClick={handleSaveDraft} />
-            <ActionBtn icon={<Send size={14} />} label="Submit" primary onClick={() => { setEditing(false); setLabelEdit(false); }} />
+            <ActionBtn icon={<Send size={14} />} label="Submit" primary onClick={() => setEditing(false)} />
             {savedMsg && (
               <span style={{ fontSize: 12, color: "#16A34A", fontWeight: 500, marginLeft: 4 }}>
                 ✓ Draft saved

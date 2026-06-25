@@ -55,6 +55,7 @@ const TenderChecklist = () => {
   const navigate = useNavigate();
   const [step] = useState(1);
   const [editing, setEditing] = useState(false);
+  const [tenderId, setTenderId] = useState("");
   const [items, setItems] = useState(
     CHECKLIST_ITEMS.map((label, i) => ({ id: i, label, remarks: "", status: "" }))
   );
@@ -153,7 +154,19 @@ const TenderChecklist = () => {
                 <h1 style={{ fontSize: 22, fontWeight: 700, color: "#111", margin: "0 0 6px" }}>Pre-sales Checklist</h1>
                 <p style={{ fontSize: 13, color: "#6B7280", margin: 0 }}>
                   Documents: <span style={{ borderBottom: "1.5px solid #2563EB", color: "#2563EB", cursor: "pointer", padding: "0 8px" }}>&nbsp;</span>
-                  &nbsp;&nbsp;Tender ID:&nbsp;<strong style={{ color: "#111" }}>TND-2026-006</strong>
+                  &nbsp;&nbsp;Tender ID:&nbsp;<input
+                    type="text"
+                    value={tenderId}
+                    onChange={e => setTenderId(e.target.value)}
+                    placeholder="Fill Tender ID"
+                    style={{
+                      border: "none", borderBottom: "1.5px solid #D1D5DB", outline: "none",
+                      fontSize: 13, fontWeight: 600, color: "#111", fontFamily: "inherit",
+                      background: "transparent", width: 140, padding: "0 2px",
+                    }}
+                    onFocus={e => e.currentTarget.style.borderBottomColor = "#2563EB"}
+                    onBlur={e => e.currentTarget.style.borderBottomColor = "#D1D5DB"}
+                  />
                 </p>
               </div>
               <div style={{ display: "flex", gap: 10, flexShrink: 0 }}>

@@ -294,7 +294,22 @@ const PurchaseTaskInbox = () => {
   const [processModalOpen, setProcessModalOpen] = useState(false);
   const [workflowModalOpen, setWorkflowModalOpen] = useState(false);
   const [showSOFDetails, setShowSOFDetails] = useState(false);
+  const [showFilterDrop, setShowFilterDrop] = useState(false);
+  const [activeFilter, setActiveFilter] = useState(null);
+  const [receivedTasks, setReceivedTasks] = useState(new Set());
   const navigate = useNavigate();
+
+  const FILTER_OPTIONS = ["Draft", "Order Placed", "Partial Material Received", "Full Order Received", "Completed"];
+
+  const filterMatch = (task) => {
+    if (!activeFilter) return true;
+    if (activeFilter === "Draft") return task.progress === 0;
+    if (activeFilter === "Order Placed") return task.progress === 1;
+    if (activeFilter === "Partial Material Received") return task.stage?.includes("Partial");
+    if (activeFilter === "Full Order Received") return task.stage?.includes("Billing") || task.stage?.includes("Full");
+    if (activeFilter === "Completed") return task.status === "COMPLETED";
+    return true;
+  };
 
   return (
     <div style={{ display: "flex", height: "100vh", fontFamily: FONT, background: COLORS.bgPage }}>
@@ -323,9 +338,38 @@ const PurchaseTaskInbox = () => {
             <Search size={16} color={COLORS.textSubtle} />
             <input type="text" placeholder="Search Order/ PID No..." style={{ border: "none", outline: "none", fontSize: 13, marginLeft: 8, width: "100%", fontFamily: FONT, background: "transparent" }} />
           </div>
-          <button style={{ display: "flex", alignItems: "center", gap: 6, background: COLORS.bgWhite, border: `1px solid ${COLORS.border}`, padding: "8px 16px", borderRadius: 6, fontSize: 13, fontWeight: 500, color: COLORS.textSecondary, cursor: "pointer" }}>
-            <Filter size={14} /> Filters <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
-          </button>
+          <div style={{ position: "relative" }}>
+            <button
+              onClick={() => setShowFilterDrop(v => !v)}
+              style={{ display: "flex", alignItems: "center", gap: 6, background: activeFilter ? "#EFF6FF" : COLORS.bgWhite, border: `1px solid ${activeFilter ? "#2563EB" : COLORS.border}`, padding: "8px 16px", borderRadius: 6, fontSize: 13, fontWeight: 500, color: activeFilter ? "#2563EB" : COLORS.textSecondary, cursor: "pointer" }}
+            >
+              <Filter size={14} /> {activeFilter || "Filters"} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            {showFilterDrop && (
+              <>
+                <div onClick={() => setShowFilterDrop(false)} style={{ position: "fixed", inset: 0, zIndex: 10 }} />
+                <div style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, background: "#fff", border: `1px solid ${COLORS.border}`, borderRadius: 8, boxShadow: "0 4px 16px rgba(0,0,0,0.10)", zIndex: 11, minWidth: 220, padding: "6px 0" }}>
+                  {activeFilter && (
+                    <button
+                      onClick={() => { setActiveFilter(null); setShowFilterDrop(false); }}
+                      style={{ width: "100%", textAlign: "left", padding: "9px 16px", fontSize: 13, background: "none", border: "none", cursor: "pointer", color: "#EF4444", fontFamily: FONT, fontWeight: 500 }}
+                    >
+                      Clear filter
+                    </button>
+                  )}
+                  {FILTER_OPTIONS.map(opt => (
+                    <button
+                      key={opt}
+                      onClick={() => { setActiveFilter(opt); setShowFilterDrop(false); }}
+                      style={{ width: "100%", textAlign: "left", padding: "9px 16px", fontSize: 13, background: activeFilter === opt ? "#EFF6FF" : "none", border: "none", cursor: "pointer", color: activeFilter === opt ? "#2563EB" : "#374151", fontFamily: FONT, fontWeight: activeFilter === opt ? 600 : 400 }}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Main content */}
@@ -394,9 +438,18 @@ const PurchaseTaskInbox = () => {
                       <Clock size={14} /> Expected delivery: {task.delivery}
                     </div>
                   </div>
-                  <button style={{ background: COLORS.primary, color: COLORS.bgWhite, border: "none", padding: "10px 20px", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
-                    {task.action}
-                  </button>
+                  {receivedTasks.has(task.id) ? (
+                    <button style={{ background: "#00A63E", color: "#fff", border: "none", padding: "10px 20px", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "default", display: "flex", alignItems: "center", gap: 6 }}>
+                      <CheckCircle size={15} /> Material Received
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setReceivedTasks(prev => new Set([...prev, task.id]))}
+                      style={{ background: COLORS.primary, color: COLORS.bgWhite, border: "none", padding: "10px 20px", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+                    >
+                      {task.action}
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
@@ -451,7 +504,7 @@ const PurchaseTaskInbox = () => {
 
               {/* Task Box Grid */}
               <div style={{ padding: "24px", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 24, background: "#FAFAFA" }}>
-                {ALL_TASKS.map(task => (
+                {ALL_TASKS.filter(filterMatch).map(task => (
                   <div key={task.id} style={{ background: "#fff", border: `1px solid ${COLORS.borderLight}`, borderRadius: 8, display: "flex", flexDirection: "column" }}>
                     {/* Card Header */}
                     <div style={{ padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>

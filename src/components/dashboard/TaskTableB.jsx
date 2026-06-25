@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Eye, Upload, Edit, X, FileText } from "lucide-react";
+import { Eye, Upload, Edit } from "lucide-react";
 import { TASK_TABLE_B_ROWS } from "../../services/mockData";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
@@ -74,104 +73,8 @@ const AlertNotifyCell = ({ text, onClick }) => (
   </span>
 );
 
-// ─── Documents Modal ───────────────────────────────────────────────────────────
-const DocItem = ({ name }) => (
-  <div style={{
-    display: "flex", alignItems: "center", gap: 12,
-    padding: "10px 14px", border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff",
-  }}>
-    <div style={{ width: 34, height: 34, borderRadius: 6, background: "#F3F4F6", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-      <FileText size={16} color="#6B7280" />
-    </div>
-    <div>
-      <div style={{ fontSize: 13, fontWeight: 500, color: "#111827" }}>{name}</div>
-      <div style={{ fontSize: 12, color: "#2563EB", cursor: "pointer", marginTop: 2 }}>View Document</div>
-    </div>
-  </div>
-);
-
-const DocumentsModal = ({ row, onClose }) => (
-  <>
-    {/* Light backdrop — keeps the RFP form visible behind the modal */}
-    <div
-      onClick={onClose}
-      style={{ position: "fixed", inset: 0, zIndex: 1060, background: "rgba(0,0,0,0.15)" }}
-    />
-
-    {/* Modal */}
-    <div style={{
-      position: "fixed", top: "50%", left: "58%", transform: "translate(-50%, -50%)",
-      zIndex: 1061, background: "#fff", borderRadius: 12, width: 420,
-      maxHeight: "85vh", overflowY: "auto",
-      boxShadow: "0 8px 40px rgba(0,0,0,0.18)", fontFamily: FONT,
-    }}>
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "18px 20px", borderBottom: "1px solid #E5E7EB" }}>
-        <div>
-          <div style={{ fontSize: 16, fontWeight: 700, color: "#111827" }}>Documents</div>
-          <div style={{ fontSize: 12, color: "#6B7280", marginTop: 3 }}>Tender ID: {row.id}</div>
-        </div>
-        <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "#6B7280", padding: 4, display: "flex" }}>
-          <X size={18} />
-        </button>
-      </div>
-
-      {/* Body */}
-      <div style={{ padding: "18px 20px", display: "flex", flexDirection: "column", gap: 20 }}>
-
-        {/* Pre-Sales Checklist */}
-        <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 10 }}>Pre-Sales Checklist</div>
-          <DocItem name="Pre-Sales Checklist" />
-        </div>
-
-        {/* Alert & Notify */}
-        <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 10 }}>Alert &amp; Notify</div>
-          <div style={{
-            display: "flex", alignItems: "center", gap: 12,
-            padding: "10px 14px", border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff",
-          }}>
-            <div style={{ width: 34, height: 34, borderRadius: 6, background: "#F3F4F6", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <FileText size={16} color="#6B7280" />
-            </div>
-            <div style={{ fontSize: 13, color: "#2563EB", fontWeight: 500, cursor: "pointer" }}>View List</div>
-          </div>
-        </div>
-
-        {/* OEM Document */}
-        <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 10 }}>OEM Document</div>
-          <DocItem name="OEM Document" />
-        </div>
-
-        {/* Query & Response */}
-        <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 10 }}>Query &amp; Response</div>
-          <DocItem name="Query &amp; Response" />
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div style={{ padding: "14px 20px", borderTop: "1px solid #E5E7EB", display: "flex", justifyContent: "center" }}>
-        <button
-          onClick={onClose}
-          style={{
-            width: "100%", padding: "10px 0", border: "1px solid #E5E7EB", borderRadius: 8,
-            background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151",
-            cursor: "pointer", fontFamily: FONT,
-          }}
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </>
-);
-
 // ─── TaskTableB ────────────────────────────────────────────────────────────────
-const TaskTableB = ({ fullscreen = false, onAction, onAlertNotifyClick }) => {
-  const [docsRow, setDocsRow] = useState(null);
+const TaskTableB = ({ fullscreen = false, onAction, onShowDocs, onAlertNotifyClick }) => {
 
   return (
     <>
@@ -229,8 +132,8 @@ const TaskTableB = ({ fullscreen = false, onAction, onAlertNotifyClick }) => {
                         type={row.actionType}
                         onClick={() => {
                           if (row.actionType === "view") {
-                            onAction?.(row);   // opens RFP form in background
-                            setDocsRow(row);   // opens Documents modal on top
+                            onAction?.(row);
+                            onShowDocs?.(row);
                           } else {
                             onAction?.(row);
                           }
@@ -245,7 +148,6 @@ const TaskTableB = ({ fullscreen = false, onAction, onAlertNotifyClick }) => {
         </div>
       </div>
 
-      {docsRow && <DocumentsModal row={docsRow} onClose={() => setDocsRow(null)} />}
     </>
   );
 };

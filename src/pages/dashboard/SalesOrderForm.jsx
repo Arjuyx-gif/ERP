@@ -555,28 +555,37 @@ const SalesOrderForm = () => {
             <div style={{ marginTop: "auto", position: "sticky", bottom: 0, background: "#F9FAFB", padding: "16px 0 24px", zIndex: 10 }}>
               {currentStepId === "review" ? (
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div style={{ display: "flex", gap: 12 }}>
-                    <button onClick={() => { setIsEditingReview(false); activeStep > 1 ? setActiveStep(prev => prev - 1) : navigate("/sof-dashboard"); }} style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT }}>
-                      <ChevronLeft size={16} /> Back
-                    </button>
-                    {!isEditingReview ? (
-                      <button onClick={() => setIsEditingReview(true)} style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT }}>
-                        <Pencil size={14} /> Edit
+                  {!isEditingReview ? (
+                    /* Read-only mode: Close + Edit on left, Download on right */
+                    <>
+                      <div style={{ display: "flex", gap: 12 }}>
+                        <button onClick={() => navigate(-1)} style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT }}>
+                          <X size={14} /> Close
+                        </button>
+                        <button onClick={() => setIsEditingReview(true)} style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT }}>
+                          <Pencil size={14} /> Edit
+                        </button>
+                      </div>
+                      <button onClick={handleDownloadPDF} style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT }}>
+                        <Download size={16} /> Download
                       </button>
-                    ) : (
+                    </>
+                  ) : (
+                    /* Edit mode: Save on left, Download + Submit Order on right */
+                    <>
                       <button onClick={() => setIsEditingReview(false)} style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT }}>
-                        <Save size={14} /> Save Draft
+                        <Save size={14} /> Save
                       </button>
-                    )}
-                  </div>
-                  <div style={{ display: "flex", gap: 12 }}>
-                    <button onClick={handleDownloadPDF} style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT }}>
-                      <Download size={16} /> Download PDF
-                    </button>
-                    <button onClick={() => navigate("/sof-dashboard")} style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 20px", border: "none", borderRadius: 6, background: "#16A34A", color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: FONT }}>
-                      <Check size={16} strokeWidth={3} /> Submit Order
-                    </button>
-                  </div>
+                      <div style={{ display: "flex", gap: 12 }}>
+                        <button onClick={handleDownloadPDF} style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT }}>
+                          <Download size={16} /> Download
+                        </button>
+                        <button onClick={() => navigate("/sof-dashboard")} style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 20px", border: "none", borderRadius: 6, background: "#16A34A", color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: FONT }}>
+                          <Check size={16} strokeWidth={3} /> Submit Order
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               ) : (
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>

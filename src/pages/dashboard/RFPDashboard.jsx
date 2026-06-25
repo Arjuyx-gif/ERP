@@ -12,12 +12,13 @@ import TaskTableC from "../../components/dashboard/TaskTableC";
 import TaskTableS2 from "../../components/dashboard/TaskTableS2";
 import RFPFormPanel from "../../components/dashboard/RFPFormPanel";
 import BidSubmissionModal from "../../components/dashboard/BidSubmissionModal";
+import DocumentsModal from "../../components/dashboard/DocumentsModal";
 import NotificationPanel from "../../components/dashboard/NotificationPanel";
 import Modal from "../../components/dashboard/ReminderModal";
 import ViewAllModal from "../../components/dashboard/ViewAllModal";
 import DynamicIcon from "../../components/ui/DynamicIcon";
 import { useDashboard } from "../../hooks/useDashboard";
-import { TASK_DASHBOARD_A_KPI_CARDS } from "../../services/mockData";
+import { TASK_DASHBOARD_A_KPI_CARDS, SM_NOTIFICATIONS, PS_NOTIFICATIONS, PANEL_NOTIFICATIONS } from "../../services/mockData";
 
 // ─── RFPDashboard ─────────────────────────────────────────────────────────────
 
@@ -48,6 +49,7 @@ const RFPDashboard = () => {
   const [sofWarned, setSofWarned] = useState(false);
   const [viewAllCol, setViewAllCol] = useState(null);
   const [viewRFPCard, setViewRFPCard] = useState(null);
+  const [docsCard, setDocsCard] = useState(null);
   const [bidSubmittedCard, setBidSubmittedCard] = useState(null);
 
   const PRE_BID_MODAL = {
@@ -380,6 +382,14 @@ const RFPDashboard = () => {
     }
   };
 
+  // Opens CompleteTaskModal at root level (above fullscreen stacking context) for "view" rows
+  const handleShowDocs = (row) => {
+    setDocsCard({
+      id: row.id, tender: row.title, customer: row.customer,
+      amount: "-", fromDashboardB: true,
+    });
+  };
+
   // Handler for Task Dashboard B action buttons
   const handleTaskBAction = (row) => {
     // Map actionType to the correct panel/modal flow
@@ -405,6 +415,7 @@ const RFPDashboard = () => {
       amount: "-",
       action,
       isQuery,
+      isOEMDocs: row.actionType === "checkOEM",
       fromDashboardB: true,
       showQueryUploadZone,
     };
@@ -656,7 +667,7 @@ const RFPDashboard = () => {
         {/* Board / Table */}
         <div style={{ flex: 1, overflowX: "auto", padding: "0 28px 28px" }}>
           {activeTab === "Task Dashboard PS"
-            ? <TaskTableB onAction={handleTaskBAction} onAlertNotifyClick={handleAlertNotifyClick} />
+            ? <TaskTableB onAction={handleTaskBAction} onShowDocs={handleShowDocs} onAlertNotifyClick={handleAlertNotifyClick} />
             : activeTab === "Task Dashboard S"
               ? <TaskTableC onViewRFP={handleViewRFP} />
               : activeTab === "Task Dashboard S2"
@@ -694,7 +705,7 @@ const RFPDashboard = () => {
           </div>
           <div style={{ flex: 1, overflowX: "auto", overflowY: "auto", padding: "20px 28px 28px" }}>
             {activeTab === "Task Dashboard PS"
-              ? <TaskTableB fullscreen onAction={handleTaskBAction} onAlertNotifyClick={handleAlertNotifyClick} />
+              ? <TaskTableB fullscreen onAction={handleTaskBAction} onShowDocs={handleShowDocs} onAlertNotifyClick={handleAlertNotifyClick} />
               : activeTab === "Task Dashboard S"
                 ? <TaskTableC fullscreen onViewRFP={handleViewRFP} />
                 : activeTab === "Task Dashboard S2"
@@ -706,6 +717,9 @@ const RFPDashboard = () => {
         </div>
       )}
 
+      {/* ── Documents modal for "view" rows (rendered outside fullscreen stacking context) ── */}
+      <DocumentsModal row={docsCard} onClose={() => setDocsCard(null)} />
+
       {/* ── Notification panel ── */}
       {showNotifications && (
         <>
@@ -714,7 +728,12 @@ const RFPDashboard = () => {
             style={{ position: "fixed", inset: 0, zIndex: 899 }}
           />
           <NotificationPanel
-            notifications={notifications}
+            notifications={
+              activeTab === "Task Dashboard SM" ? SM_NOTIFICATIONS
+              : activeTab === "Task Dashboard PS" ? PS_NOTIFICATIONS
+              : activeTab === "Task Dashboard S" ? PANEL_NOTIFICATIONS
+              : notifications
+            }
             onClose={() => setShowNotifications(false)}
             onAction={() => {
               // Switch to Task Dashboard PS in fullscreen when "View & Complete Docs." is clicked

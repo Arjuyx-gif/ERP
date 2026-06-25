@@ -213,6 +213,120 @@ export const KANBAN_COLUMNS = [
 // ─── Notifications ────────────────────────────────────────────────────────────
 export const NOTIFICATIONS = [
   {
+    id: 1, type: "success", tag: "active", title: "RFP Uploaded (New)", time: "3h ago", actionText: "View RFP",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount", value: "₹500 Cr" },
+      { label: "Firm", value: "Firm Name" },
+      { label: "Deadline", value: "Apr 25, 2026" },
+    ],
+  },
+  {
+    id: 2, type: "alert", tag: "active", title: "Bid Lost", time: "3h ago", actionText: "View RFP",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount", value: "₹5 Cr" },
+      { label: "Firm", value: "Firm Name" },
+      { label: "Deadline", value: "Apr 25, 2026" },
+    ],
+  },
+  {
+    id: 3, type: "warning", tag: "pending", title: "Result Awaited", time: "3h ago", actionText: "Update",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount", value: "₹5 Cr" },
+      { label: "Firm", value: "Firm Name" },
+      { label: "Deadline", value: "Apr 25, 2026" },
+    ],
+  },
+  {
+    id: 4, type: "info", tag: "pending", title: "Reminder Pre-Bid Meeting", time: "3h ago", actionText: "View Link",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount", value: "₹500 Cr" },
+      { label: "Date", value: "Today" },
+      { label: "Time", value: "2:00PM" },
+      { label: "Customer", value: "Customer Name" },
+    ],
+  },
+  {
+    id: 5, type: "info", tag: "pending", title: "Reminder Pre-Bid Meeting", time: "3h ago", actionText: "View Link",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount", value: "₹500 Cr" },
+      { label: "Date", value: "Today" },
+      { label: "Time", value: "2:00PM" },
+      { label: "Customer", value: "Customer Name" },
+    ],
+  },
+];
+
+// ─── Task Dashboard SM Notifications ─────────────────────────────────────────
+export const SM_NOTIFICATIONS = [
+  {
+    id: 1, type: "success", tag: "active", title: "(New) RFP Uploaded", time: "3h ago", actionText: "View RFP",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Customer", value: "Customer Name" },
+      { label: "Amount", value: "₹500 Cr" },
+      { label: "Firm", value: "Firm Name" },
+      { label: "Deadline", value: "Apr 25, 2026" },
+    ],
+  },
+  {
+    id: 2, type: "alert", tag: "active", title: "Bid Lost", time: "3h ago", actionText: "View RFP",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount", value: "₹5 Cr" },
+      { label: "Firm", value: "Firm Name" },
+      { label: "Deadline", value: "Apr 25, 2026" },
+    ],
+  },
+  {
+    id: 3, type: "warning", tag: "pending", title: "Bid Submission Tomorrow", time: "3h ago",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount", value: "₹5 Cr" },
+      { label: "Firm", value: "Firm Name" },
+      { label: "Documents", value: "Completed" },
+      { label: "Deadline", value: "Apr 25, 2026" },
+    ],
+  },
+  {
+    id: 4, type: "success", tag: "completed", title: "RFP Approved by MD", time: "3h ago", actionText: "View RFP",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Customer", value: "Customer Name" },
+      { label: "Amount", value: "₹500 Cr" },
+      { label: "Firm", value: "Firm Name" },
+      { label: "Deadline", value: "Apr 25, 2026" },
+    ],
+  },
+  {
+    id: 5, type: "success", tag: "completed", title: "Bid Won", time: "3h ago", actionText: "PO Awaiting",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Customer", value: "Customer Name" },
+      { label: "Amount", value: "₹500 Cr" },
+      { label: "Firm", value: "Firm Name" },
+      { label: "Deadline", value: "Apr 25, 2026" },
+    ],
+  },
+  {
+    id: 6, type: "success", tag: "completed", title: "PO Received", time: "3h ago", actionText: "PO Received",
+    details: [
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Customer", value: "Customer Name" },
+      { label: "Amount", value: "₹500 Cr" },
+      { label: "Firm", value: "Firm Name" },
+      { label: "Deadline", value: "Apr 25, 2026" },
+    ],
+  },
+];
+
+// ─── Task Dashboard PS Notifications ─────────────────────────────────────────
+export const PS_NOTIFICATIONS = [
+  {
     id: 1, type: "success", tag: "active", title: "RFP Uploaded (New)", time: "3h ago", actionText: "View RFP & Complete Checklist",
     details: [
       { label: "Tender ID", value: "TND-2026-005" },
@@ -428,82 +542,62 @@ export const MAIN_NOTIFICATIONS = [
 // ─── Full notification panel data (Main Dashboard bell) ────────────────────────
 export const PANEL_NOTIFICATIONS = [
   {
-    id: 1, type: "alert", tag: "pending",
-    title: "Query Response Due Today",
-    details: [
-      { label: "Tender IDs", value: "TND-2026-005, TND-2026-007, TND-2026-008" },
-      { label: "Action", value: "Response submission before 5 PM" },
-      { label: "Priority", value: "High" },
-      { label: "Firm", value: "Name" },
-    ],
-  },
-  {
-    id: 2, type: "alert", tag: "delayed",
-    title: "BG Expiring in 3 Days",
-    details: [
-      { label: "Order IDs", value: "ORD-2026-005" },
-      { label: "Action", value: "Renewal or extension" },
-      { label: "Priority", value: "High" },
-      { label: "Firm", value: "Name" },
-    ],
-  },
-  {
-    id: 3, type: "success", tag: "completed",
-    title: "RFP Approved – Notification Sent",
+    id: 1, type: "success", tag: "active", title: "RFP Uploaded (New)", time: "3h ago", actionText: "View RFP",
     details: [
       { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Customer", value: "Customer Name" },
       { label: "Amount", value: "₹500 Cr" },
+      { label: "Firm", value: "Firm Name" },
       { label: "Deadline", value: "Apr 25, 2026" },
-      { label: "Firm", value: "Name" },
     ],
   },
   {
-    id: 4, type: "success", tag: "completed",
-    title: "Bid Result Declared",
+    id: 2, type: "info", tag: "pending", title: "Pre-Bid Checklist", time: "3h ago", actionText: "View Pre Sales Checklist",
     details: [
       { label: "Tender ID", value: "TND-2026-005" },
-      { label: "Status", value: "Won" },
-      { label: "Firm", value: "Name" },
+      { label: "Customer", value: "Customer Name" },
+      { label: "Amount", value: "₹500 Cr" },
+      { label: "Firm", value: "Firm Name" },
+      { label: "Submitted By", value: "Name" },
     ],
   },
   {
-    id: 5, type: "alert", tag: "pending",
-    title: "Reminder – EMD Submission",
+    id: 3, type: "alert", tag: "active", title: "Bid Lost", time: "3h ago", actionText: "View RFP",
     details: [
       { label: "Tender ID", value: "TND-2026-005" },
       { label: "Amount", value: "₹5 Cr" },
+      { label: "Firm", value: "Firm Name" },
       { label: "Deadline", value: "Apr 25, 2026" },
-      { label: "Firm", value: "Name" },
     ],
   },
   {
-    id: 6, type: "info", tag: "pending",
-    title: "Vendor Payment Pending",
+    id: 4, type: "warning", tag: "pending", title: "Bid Submission Tomorrow", time: "3h ago", actionText: "Update",
     details: [
-      { label: "Count", value: "3 payments awaiting approval" },
-      { label: "Department", value: "Accounts" },
-      { label: "Vendor", value: "Vendor Name" },
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount", value: "₹5 Cr" },
+      { label: "Firm", value: "Firm Name" },
+      { label: "Documents", value: "Completed" },
       { label: "Deadline", value: "Apr 25, 2026" },
-      { label: "Firm", value: "Name" },
     ],
   },
   {
-    id: 7, type: "info", tag: "active",
-    title: "Pre-Bid Meeting Scheduled",
+    id: 5, type: "info", tag: "pending", title: "Reminder Pre-Bid Meeting", time: "3h ago", actionText: "View Link",
     details: [
-      { label: "Tender ID", value: "TND-2026-009" },
-      { label: "Date", value: "Apr 28, 2026" },
-      { label: "Time", value: "2:00 PM" },
-      { label: "Firm", value: "Name" },
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Amount", value: "₹500 Cr" },
+      { label: "Date", value: "Today" },
+      { label: "Time", value: "2:00PM" },
+      { label: "Customer", value: "Customer Name" },
     ],
   },
   {
-    id: 8, type: "alert", tag: "in-progress",
-    title: "Material Delay",
+    id: 6, type: "success", tag: "completed", title: "Bid Won", time: "3h ago", actionText: "Upload PO & Docs.",
     details: [
-      { label: "Order IDs", value: "PO-1245, PO-1238" },
-      { label: "Action", value: "Stuck in transit — follow up required" },
-      { label: "Firm", value: "Name" },
+      { label: "Tender ID", value: "TND-2026-005" },
+      { label: "Customer", value: "Customer Name" },
+      { label: "Amount", value: "₹500 Cr" },
+      { label: "Firm", value: "Firm Name" },
+      { label: "Deadline", value: "Apr 25, 2026" },
     ],
   },
 ];
@@ -550,7 +644,7 @@ export const TASK_TABLE_B_ROWS = [
   {
     id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name",
     presalesChecklist: "Completed", alertNotify: "View Teams & Remarks",
-    oemStatus: "Completed", queryResponse: "Awaiting OEM Docs",
+    oemStatus: "Awaiting OEM Docs", queryResponse: " - ",
     deadline: "10/06/2026", updated: "Yesterday",
     actionType: "start", highlight: null,
   },

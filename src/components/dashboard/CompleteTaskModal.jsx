@@ -449,7 +449,7 @@ const OEMDocsView = ({ onBack, onSubmitDocs, onUpload, files, removeFile }) => {
 
 // ─── CompleteTaskModal ─────────────────────────────────────────────────────────
 
-const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
+const CompleteTaskModal = ({ card, onClose, onUpdate, onDismiss }) => {
   const [status, setStatus] = useState("");
   const [remarks, setRemarks] = useState("");
   const [files, setFiles] = useState([]);
@@ -508,7 +508,7 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
   };
 
   const handleUpdate = () => {
-    if (files.length === 0) {
+    if (files.length === 0 && !card.isOEMDocs) {
       setErrorMsg("Please attach files before submitting.");
       return;
     }
@@ -519,7 +519,7 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
       files,
       oemStatus,
     });
-    onClose?.();
+    (onDismiss || onClose)?.();
   };
 
   // If OEM Docs are open, render them instead
@@ -540,7 +540,7 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
     <>
       {/* Backdrop */}
       <div
-        onClick={onClose}
+        onClick={onDismiss || onClose}
         style={{
           position: "fixed",
           inset: 0,
@@ -747,7 +747,7 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
                 marginBottom: 8,
               }}
             >
-              {card.isQuery ? "Upload Response Document" : "Attach Files"}<span style={{ color: "#F04438" }}>*</span>
+              {card.isQuery ? "Upload Response Document" : "Attach Files"}{!card.isOEMDocs && <span style={{ color: "#F04438" }}>*</span>}
             </label>
             <input
               ref={fileInputRef}
@@ -942,7 +942,7 @@ const CompleteTaskModal = ({ card, onClose, onUpdate }) => {
         >
           <button
             type="button"
-            onClick={onClose}
+            onClick={onDismiss || onClose}
             style={{
               padding: "11px 32px",
               border: "1px solid #D0D5DD",

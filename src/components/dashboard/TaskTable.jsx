@@ -1,4 +1,5 @@
 import { Eye, Upload, Edit3, Send } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { TASK_TABLE_ROWS } from "../../services/mockData";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
@@ -28,7 +29,9 @@ const ACTION_ICON = {
   send:   Send,
 };
 
-const TaskTable = ({ fullscreen = false, onViewRFP }) => (
+const TaskTable = ({ fullscreen = false, onViewRFP }) => {
+  const navigate = useNavigate();
+  return (
   <div style={{
     background: "#fff",
     borderRadius: 10,
@@ -96,6 +99,7 @@ const TaskTable = ({ fullscreen = false, onViewRFP }) => (
               <td style={{ padding: "14px 14px", textAlign: "center" }}>
                 {row.actionLabel && (
                   <button
+                    disabled={row.actionLabel === "View PO"}
                     onClick={() => {
                       if (row.actionLabel === "Approve RFP") {
                         onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, status: row.status, action: "Approve RFP" });
@@ -103,15 +107,19 @@ const TaskTable = ({ fullscreen = false, onViewRFP }) => (
                         onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, status: row.status, action: "View RFP Form" });
                       } else if (row.actionLabel === "Send to MD") {
                         onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, status: row.status, action: "Approved View" });
-                      } else if (row.actionLabel === "Forwarded to MD" || row.actionLabel === "View PO") {
+                      } else if (row.actionLabel === "Forwarded to MD") {
                         onViewRFP?.({ id: row.id, tender: row.title, customer: row.salesPerson, amount: row.value, status: row.status, action: "View RFP Form" });
+                      } else if (row.actionLabel === "View SOF") {
+                        navigate("/sales-order-form", { state: { step: 10, showUploadModal: false } });
                       }
                     }}
                     style={{
                       display: "inline-flex", alignItems: "center", gap: 6,
                       padding: "6px 12px", border: "1px solid #E2E8F0", borderRadius: 6,
                       background: "#fff", fontSize: 12, fontWeight: 500, color: "#344054",
-                      cursor: "pointer", fontFamily: FONT, whiteSpace: "nowrap",
+                      cursor: row.actionLabel === "View PO" ? "not-allowed" : "pointer",
+                      opacity: row.actionLabel === "View PO" ? 1 : 1,
+                      fontFamily: FONT, whiteSpace: "nowrap",
                       transition: "background 0.15s, border-color 0.15s",
                     }}
                     onMouseEnter={e => {
@@ -134,6 +142,7 @@ const TaskTable = ({ fullscreen = false, onViewRFP }) => (
       </tbody>
     </table>
   </div>
-);
+  );
+};
 
 export default TaskTable;

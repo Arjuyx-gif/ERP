@@ -8,7 +8,7 @@ const FONT = "'Inter','Segoe UI',sans-serif";
 
 const SOF_ROWS = [
   { id: "Order/PID ID no.", firm: "Firm Name", customer: "Customer Name", value: "₹4.50Cr", status: "Completed", pendingWith: "-", inputsRequired: null, deadline: "-", highlight: "green", actionType: "view" },
-  { id: "Order/PID ID no.", firm: "Firm Name", customer: "Customer Name", value: "₹4.50Cr", status: "Waiting for Inputs", pendingWith: "Sales", inputsRequired: { label: "Specifications", type: "purple" }, deadline: "20 Apr 2026", highlight: "yellow", actionType: "view" },
+  { id: "Order/PID ID no.", firm: "Firm Name", customer: "Customer Name", value: "₹4.50Cr", status: "Waiting for Inputs", pendingWith: "Sales", inputsRequired: { label: "Specifications", type: "purple" }, deadline: "20 Apr 2026", highlight: "yellow", actionType: "continue" },
   { id: "Order/PID ID no.", firm: "Firm Name", customer: "Customer Name", value: "₹4.50Cr", status: "Pending", pendingWith: "-", inputsRequired: null, deadline: "20 Apr 2026", highlight: "yellow", actionType: "continue" },
   { id: "Order/PID ID no.", firm: "Firm Name", customer: "Customer Name", value: "₹4.50Cr", status: "Partial Material Received", pendingWith: "Purchase", inputsRequired: { label: "Vendor Material", type: "orange" }, deadline: "20 Apr 2026", highlight: "yellow", actionType: "view" },
   { id: "Order/PID ID no.", firm: "Firm Name", customer: "Customer Name", value: "₹4.50Cr", status: "Full Material Received", pendingWith: "-", inputsRequired: { label: "Vendor Price", type: "orange" }, deadline: "20 Apr 2026", highlight: "yellow", actionType: "view" },
@@ -323,6 +323,14 @@ const SOFDashboard = () => {
                           }}
                         >
                           <Play size={16} strokeWidth={2} /> View SOF
+                        </button>
+                      ) : row.actionType === "continue" ? (
+                        <button style={{
+                          display: "inline-flex", alignItems: "center", gap: 8,
+                          background: "#fff", border: "1px solid #D1D5DB", borderRadius: 8, color: "#111827",
+                          padding: "8px 12px", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: FONT
+                        }}>
+                          <Play size={16} strokeWidth={2} /> Continue SOF
                         </button>
                       ) : (
                         <button style={{
