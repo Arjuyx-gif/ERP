@@ -700,7 +700,7 @@ const RFPDashboard = () => {
         {/* Board / Table */}
         <div style={{ flex: 1, overflowX: "auto", padding: "0 28px 28px" }}>
           {activeTab === "Task Dashboard PSM"
-            ? <TaskDashboardPSM />
+            ? <TaskDashboardPSM onExpandTable={() => setKanbanFullscreen(true)} />
             : activeTab === "Task Dashboard PS"
             ? <TaskTableB onAction={handleTaskBAction} onShowDocs={handleShowDocs} onAlertNotifyClick={handleAlertNotifyClick} />
             : activeTab === "Task Dashboard S"
@@ -740,7 +740,7 @@ const RFPDashboard = () => {
           </div>
           <div style={{ flex: 1, overflowX: "auto", overflowY: "auto", padding: "20px 28px 28px" }}>
             {activeTab === "Task Dashboard PSM"
-              ? <TaskDashboardPSM fullscreen />
+              ? <TaskDashboardPSM fullscreen onExpandTable={() => {}} />
               : activeTab === "Task Dashboard PS"
               ? <TaskTableB fullscreen onAction={handleTaskBAction} onShowDocs={handleShowDocs} onAlertNotifyClick={handleAlertNotifyClick} />
               : activeTab === "Task Dashboard S"

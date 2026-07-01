@@ -1,17 +1,18 @@
 import { useState } from "react";
-import { Search, Eye, Filter, ArrowUpDown, ChevronDown, Bell, AlertTriangle } from "lucide-react";
+import { Search, Eye, Filter, ArrowUpDown, ChevronDown, Bell, AlertTriangle, RefreshCw, Trash2, UserPlus } from "lucide-react";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 
 const TABLE_ROWS = [
-  { id: "TND-2026-045", firm: "Firm Name", customer: "Customer Name", title: "Tender Title", type: "Proactive", assignedTo: "Pre Sales persons Name", highlight: null    },
-  { id: "TND-2026-045", firm: "Firm Name", customer: "Customer Name", title: "Tender Title", type: "Proactive", assignedTo: "Pre Sales persons Name", highlight: null    },
-  { id: "TND-2026-045", firm: "Firm Name", customer: "Customer Name", title: "Tender Title", type: "Reactive",  assignedTo: "Pre Sales persons Name", highlight: "green" },
-  { id: "TND-2026-045", firm: "Firm Name", customer: "Customer Name", title: "Tender Title", type: "Proactive", assignedTo: "Pre Sales persons Name", highlight: null    },
-  { id: "TND-2026-045", firm: "Firm Name", customer: "Customer Name", title: "Tender Title", type: "Reactive",  assignedTo: "Pre Sales persons Name", highlight: "yellow"},
-  { id: "TND-2026-045", firm: "Firm Name", customer: "Customer Name", title: "Tender Title", type: "Proactive", assignedTo: "Pre Sales persons Name", highlight: "red"   },
+  { id: "TND-2026-045", firm: "Firm Name", customer: "Customer Name", title: "Tender Title", type: "Proactive", assignedTo: "Pre Sales persons Name", checklist: "-",         preBid: "-",         oemStatus: "-",       reviewed: "-",  postBid: "-",               bidStatus: "-",            stage: "Assign Member",                    deadline: "Date", highlight: null    },
+  { id: "TND-2026-045", firm: "Firm Name", customer: "Customer Name", title: "Tender Title", type: "Proactive", assignedTo: "Pre Sales persons Name", checklist: "Completed", preBid: "Completed", oemStatus: "Pending", reviewed: "-",  postBid: "-",               bidStatus: "-",            stage: "OEM Docs Pending",                 deadline: "Date", highlight: null    },
+  { id: "TND-2026-045", firm: "Firm Name", customer: "Customer Name", title: "Tender Title", type: "Proactive", assignedTo: "Pre Sales persons Name", checklist: "Completed", preBid: "Completed", oemStatus: "Completed", reviewed: "Yes", postBid: "-",             bidStatus: "Won (L1)",     stage: "-",                                deadline: "Date", highlight: null    },
+  { id: "TND-2026-045", firm: "Firm Name", customer: "Customer Name", title: "Tender Title", type: "Reactive",  assignedTo: "Pre Sales persons Name", checklist: "Completed", preBid: "Completed", oemStatus: "Completed", reviewed: "Yes", postBid: "Completed\nRound 2", bidStatus: "Won (L1)", stage: "Project Transited to -\nPurchase & SITC", deadline: "Date", highlight: "green" },
+  { id: "TND-2026-045", firm: "Firm Name", customer: "Customer Name", title: "Tender Title", type: "Proactive", assignedTo: "Pre Sales persons Name", checklist: "Completed", preBid: "Completed", oemStatus: "Completed", reviewed: "No",  postBid: "-",             bidStatus: "Not Submitted", stage: "-",                               deadline: "Date", highlight: null    },
+  { id: "TND-2026-045", firm: "Firm Name", customer: "Customer Name", title: "Tender Title", type: "Reactive",  assignedTo: "Pre Sales persons Name", checklist: "Completed", preBid: "Completed", oemStatus: "Completed", reviewed: "Yes", postBid: "Completed\nRound 3", bidStatus: "Won (L1)", stage: "Awaiting Project\nTransited",      deadline: "Date", highlight: "yellow"},
+  { id: "TND-2026-045", firm: "Firm Name", customer: "Customer Name", title: "Tender Title", type: "Proactive", assignedTo: "Pre Sales persons Name", checklist: "Completed", preBid: "Completed", oemStatus: "Completed", reviewed: "Yes", postBid: "Completed",     bidStatus: "Lost",         stage: "-",                                deadline: "Date", highlight: null    },
 ];
 
 const ROW_BG    = { green: "#E8F5E9", yellow: "#FFFDE7", red: "#FFF0F0" };
@@ -58,8 +59,59 @@ const HISTORY_ROWS = [
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-const TaskDashboardPSM = ({ fullscreen = false }) => {
+const EXPANDED_COLS = ["Tender ID", "Firm Name", "Customer", "Tender Title", "Type", "Assigned To", "Pre sales Checklist", "Pre Bid Queries", "OEM Status", "Reviewed", "Post Bid Quires", "Bid Status", "Stage", "Deadline", "Actions"];
+
+const TaskDashboardPSM = ({ fullscreen = false, onExpandTable }) => {
   const [subTab, setSubTab] = useState("Task Dashboard");
+
+  if (fullscreen) {
+    return (
+      <div style={{ fontFamily: FONT }}>
+        <div style={{ background: "#fff", borderRadius: 10, border: "1px solid #E5E7EB", overflow: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: FONT, minWidth: 1400 }}>
+            <thead>
+              <tr style={{ background: "#F9FAFB", borderBottom: "1px solid #E5E7EB", position: "sticky", top: 0, zIndex: 2 }}>
+                {EXPANDED_COLS.map(col => (
+                  <th key={col} style={{ padding: "12px 14px", fontSize: 12, fontWeight: 600, color: "#6B7280", textAlign: "center", whiteSpace: "nowrap", background: "#F9FAFB", borderRight: "1px solid #F3F4F6" }}>
+                    {col}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {TABLE_ROWS.map((row, i) => {
+                const pill = TYPE_PILL[row.type] || {};
+                return (
+                  <tr key={i} style={{ background: ROW_BG[row.highlight] ?? "#fff", borderBottom: "1px solid #F3F4F6" }}>
+                    <td style={{ padding: "13px 14px", fontSize: 13, color: "#2563EB", fontWeight: 600, textAlign: "center", whiteSpace: "nowrap", borderRight: "1px solid #F3F4F6" }}>{row.id}</td>
+                    <td style={{ padding: "13px 14px", fontSize: 13, color: "#374151", textAlign: "center", borderRight: "1px solid #F3F4F6" }}>{row.firm}</td>
+                    <td style={{ padding: "13px 14px", fontSize: 13, color: "#374151", textAlign: "center", borderRight: "1px solid #F3F4F6" }}>{row.customer}</td>
+                    <td style={{ padding: "13px 14px", fontSize: 13, color: "#374151", textAlign: "center", borderRight: "1px solid #F3F4F6" }}>{row.title}</td>
+                    <td style={{ padding: "13px 14px", textAlign: "center", borderRight: "1px solid #F3F4F6" }}>
+                      <span style={{ padding: "3px 10px", borderRadius: 12, fontSize: 12, fontWeight: 600, background: pill.bg, color: pill.color }}>{row.type}</span>
+                    </td>
+                    <td style={{ padding: "13px 14px", fontSize: 13, color: "#374151", textAlign: "center", borderRight: "1px solid #F3F4F6", whiteSpace: "nowrap" }}>{row.assignedTo}</td>
+                    {[row.checklist, row.preBid, row.oemStatus, row.reviewed, row.postBid, row.bidStatus, row.stage].map((val, j) => (
+                      <td key={j} style={{ padding: "13px 14px", fontSize: 13, color: val === "-" ? "#9CA3AF" : "#374151", textAlign: "center", borderRight: "1px solid #F3F4F6", whiteSpace: "pre-line" }}>{val}</td>
+                    ))}
+                    <td style={{ padding: "13px 14px", fontSize: 13, color: "#374151", textAlign: "center", borderRight: "1px solid #F3F4F6", whiteSpace: "nowrap" }}>{row.deadline}</td>
+                    <td style={{ padding: "13px 14px", textAlign: "center" }}>
+                      <div style={{ display: "flex", gap: 10, justifyContent: "center", alignItems: "center" }}>
+                        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><Eye size={15} color="#6B7280" /></button>
+                        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><UserPlus size={15} color="#6B7280" /></button>
+                        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><RefreshCw size={15} color="#6B7280" /></button>
+                        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><Trash2 size={15} color="#EF4444" /></button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ fontFamily: FONT }}>
@@ -107,7 +159,7 @@ const TaskDashboardPSM = ({ fullscreen = false }) => {
               <span style={{ fontSize: 13, color: "#374151" }}>By Deadline</span>
             </div>
             <div style={{ flex: 1 }} />
-            <button style={{
+            <button onClick={() => onExpandTable?.()} style={{
               display: "flex", alignItems: "center", gap: 6, border: "1px solid #E5E7EB", borderRadius: 8,
               padding: "7px 14px", background: "#fff", fontSize: 13, color: "#374151", cursor: "pointer", fontFamily: FONT,
             }}>
@@ -306,6 +358,7 @@ const TaskDashboardPSM = ({ fullscreen = false }) => {
 
         </div>
       )}
+
     </div>
   );
 };
