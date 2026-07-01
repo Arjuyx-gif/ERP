@@ -8,6 +8,7 @@ import GlobalHeader from "../../components/layout/GlobalHeader";
 import KanbanBoard from "../../components/dashboard/KanbanBoard";
 import TaskTable from "../../components/dashboard/TaskTable";
 import TaskTableB from "../../components/dashboard/TaskTableB";
+import TaskDashboardPSM from "../../components/dashboard/TaskDashboardPSM";
 import TaskTableC from "../../components/dashboard/TaskTableC";
 import TaskTableS2 from "../../components/dashboard/TaskTableS2";
 import RFPFormPanel from "../../components/dashboard/RFPFormPanel";
@@ -18,7 +19,7 @@ import Modal from "../../components/dashboard/ReminderModal";
 import ViewAllModal from "../../components/dashboard/ViewAllModal";
 import DynamicIcon from "../../components/ui/DynamicIcon";
 import { useDashboard } from "../../hooks/useDashboard";
-import { TASK_DASHBOARD_A_KPI_CARDS, SM_NOTIFICATIONS, PS_NOTIFICATIONS, PANEL_NOTIFICATIONS } from "../../services/mockData";
+import { TASK_DASHBOARD_A_KPI_CARDS, PSM_KPI_CARDS, SM_NOTIFICATIONS, PS_NOTIFICATIONS, PANEL_NOTIFICATIONS } from "../../services/mockData";
 
 // ─── RFPDashboard ─────────────────────────────────────────────────────────────
 
@@ -50,6 +51,7 @@ const RFPDashboard = () => {
   const [viewAllCol, setViewAllCol] = useState(null);
   const [viewRFPCard, setViewRFPCard] = useState(null);
   const [docsCard, setDocsCard] = useState(null);
+  const [psmViewFilter, setPsmViewFilter] = useState("All");
   const [bidSubmittedCard, setBidSubmittedCard] = useState(null);
 
   const PRE_BID_MODAL = {
@@ -575,7 +577,10 @@ const RFPDashboard = () => {
 
           {/* KPI cards */}
           <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
-            {(activeTab === "Task Dashboard SM" ? TASK_DASHBOARD_A_KPI_CARDS : kpiCards).map(kpi => (
+            {(activeTab === "Task Dashboard SM" ? TASK_DASHBOARD_A_KPI_CARDS
+              : activeTab === "Task Dashboard PSM" ? PSM_KPI_CARDS
+              : kpiCards
+            ).map(kpi => (
               <div key={kpi.label} style={{
                 flex: "1 1 130px", background: "#fff", borderRadius: 10,
                 padding: "14px 16px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
@@ -591,6 +596,7 @@ const RFPDashboard = () => {
                   </div>
                 </div>
                 <span style={{ fontSize: 28, fontWeight: 700, color: kpi.color }}>{kpi.value}</span>
+                {kpi.sub && <span style={{ fontSize: 11, color: "#9CA3AF" }}>{kpi.sub}</span>}
               </div>
             ))}
           </div>
@@ -598,7 +604,7 @@ const RFPDashboard = () => {
           {/* Dashboard / Task Dashboard tabs */}
           {!isSalesCoordinator && (
             <div style={{ display: "flex", borderBottom: "2px solid #E2E8F0" }}>
-              {["Dashboard", "Task Dashboard SM", "Task Dashboard PS", "Task Dashboard S", "Task Dashboard S2"].map(tab => {
+              {["Dashboard", "Task Dashboard SM", "Task Dashboard PSM", "Task Dashboard PS", "Task Dashboard S", "Task Dashboard S2"].map(tab => {
                 const isLocked = (activeTab === "Task Dashboard S" || activeTab === "Task Dashboard S2") && tab === "Dashboard";
                 const isActive = activeTab === tab;
                 return (
@@ -628,6 +634,32 @@ const RFPDashboard = () => {
 
         {/* Filter bar */}
         <div style={{ padding: "12px 28px", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+        {activeTab === "Task Dashboard PSM" ? (
+          <>
+            <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 8, border: "1px solid #E2E8F0", borderRadius: 8, padding: "7px 14px", background: "#fff" }}>
+              <Search size={14} color="#9CA3AF" />
+              <input type="text" placeholder="Search RFP ID / Customer..." style={{ border: "none", outline: "none", fontSize: 13, color: "#374151", width: "100%", fontFamily: "inherit", background: "transparent" }} />
+            </div>
+            <button style={{ background: "none", border: "none", cursor: "pointer", padding: 6, display: "flex" }}>
+              <Bell size={18} color="#6B7280" />
+            </button>
+            <div style={{ display: "flex", background: "#F3F4F6", borderRadius: 8, padding: 3, gap: 2 }}>
+              {["All", "Needs Action", "Completed"].map(f => (
+                <button key={f} onClick={() => setPsmViewFilter(f)} style={{
+                  padding: "6px 14px", border: "none", borderRadius: 6, cursor: "pointer",
+                  fontSize: 13, fontWeight: psmViewFilter === f ? 600 : 400,
+                  background: psmViewFilter === f ? "#fff" : "transparent",
+                  color: psmViewFilter === f ? "#111827" : "#6B7280",
+                  fontFamily: "inherit",
+                  boxShadow: psmViewFilter === f ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
+                }}>
+                  {f}
+                </button>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
           <SlidersHorizontal size={16} color="#888" />
           {[
             { val: stageFilter, set: setStageFilter, opts: ["All Stages", "RFP Analysis", "Awaiting Approval", "Alert / Notify", "Approved", "Submitted", "Won", "PO Pending"] },
@@ -662,11 +694,14 @@ const RFPDashboard = () => {
           }}>
             <Eye size={14} /> View
           </button>
+        </>)}
         </div>
 
         {/* Board / Table */}
         <div style={{ flex: 1, overflowX: "auto", padding: "0 28px 28px" }}>
-          {activeTab === "Task Dashboard PS"
+          {activeTab === "Task Dashboard PSM"
+            ? <TaskDashboardPSM />
+            : activeTab === "Task Dashboard PS"
             ? <TaskTableB onAction={handleTaskBAction} onShowDocs={handleShowDocs} onAlertNotifyClick={handleAlertNotifyClick} />
             : activeTab === "Task Dashboard S"
               ? <TaskTableC onViewRFP={handleViewRFP} />
@@ -704,7 +739,9 @@ const RFPDashboard = () => {
             </button>
           </div>
           <div style={{ flex: 1, overflowX: "auto", overflowY: "auto", padding: "20px 28px 28px" }}>
-            {activeTab === "Task Dashboard PS"
+            {activeTab === "Task Dashboard PSM"
+              ? <TaskDashboardPSM fullscreen />
+              : activeTab === "Task Dashboard PS"
               ? <TaskTableB fullscreen onAction={handleTaskBAction} onShowDocs={handleShowDocs} onAlertNotifyClick={handleAlertNotifyClick} />
               : activeTab === "Task Dashboard S"
                 ? <TaskTableC fullscreen onViewRFP={handleViewRFP} />

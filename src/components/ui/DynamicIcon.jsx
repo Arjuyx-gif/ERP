@@ -1,6 +1,6 @@
 import {
   FileText, Clock, CheckCircle, Trophy, AlertTriangle, HelpCircle,
-  Search, Bell, SlidersHorizontal, Eye, X, Calendar, User,
+  Search, Bell, SlidersHorizontal, Eye, X, Calendar, User, UserPlus,
   XCircle, Upload, Download, ArrowUpRight, AlertCircle, LayoutDashboard,
   ClipboardList, Users, Inbox, TrendingUp, BarChart2, Database,
   ChevronDown, ChevronRight, ArrowRight, Globe, Check, Maximize2, Minimize2,
@@ -27,6 +27,8 @@ const ICONS = {
   x:                X,
   calendar:         Calendar,
   user:             User,
+  'user-plus':      UserPlus,
+  'help-circle':    HelpCircle,
   'x-circle':       XCircle,
   upload:           Upload,
   download:         Download,

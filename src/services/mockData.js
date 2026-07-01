@@ -36,6 +36,17 @@ export const TASK_DASHBOARD_A_KPI_CARDS = [
   { label: "Pending Approval",          value: 4,  iconName: "clock",       color: "#B45309", iconBg: "#FEF9C3" },
 ];
 
+export const PSM_KPI_CARDS = [
+  { label: "Total Tenders",        value: 5, sub: "3 assigned today",       iconName: "document",     color: "#2563EB", iconBg: "#EFF6FF" },
+  { label: "Awaiting Assignment",  value: 1, sub: "Action required",        iconName: "user-plus",    color: "#F97316", iconBg: "#FFF7ED" },
+  { label: "OEM Document Pending", value: 1, sub: "2 overdue",              iconName: "clock",        color: "#F97316", iconBg: "#FFF7ED" },
+  { label: "Pre-Bid Queries",      value: 3, sub: "1 pending upload",       iconName: "help-circle",  color: "#7C3AED", iconBg: "#F5F3FF" },
+  { label: "Post-Bid Queries",     value: 3, sub: "Due this week",          iconName: "document",     color: "#2563EB", iconBg: "#EFF6FF" },
+  { label: "Project Transition",   value: 3, sub: "Submit before deadline", iconName: "check-circle", color: "#16A34A", iconBg: "#F0FDF4" },
+  { label: "Won (L1)",             value: 3, sub: "This Month",             iconName: "trending-up",  color: "#16A34A", iconBg: "#F0FDF4" },
+  { label: "Lost Tenders",         value: 3, sub: "Review Tenders",         iconName: "x-circle",     color: "#DC2626", iconBg: "#FEF2F2" },
+];
+
 // ─── Kanban Columns ───────────────────────────────────────────────────────────
 // `count` is intentionally omitted — dashboardService derives it from cards.length
 // so the badge always reflects the true number of loaded cards.
