@@ -1,5 +1,10 @@
-import { useState } from "react";
-import { Search, Eye, Filter, ArrowUpDown, ChevronDown, Bell, AlertTriangle, RefreshCw, Trash2, UserPlus } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, Eye, Filter, ArrowUpDown, ChevronDown, Bell, AlertTriangle, RefreshCw, Trash2, UserPlus, ClipboardList } from "lucide-react";
+import AssignTenderModal from "./AssignTenderModal";
+import ReassignModal from "./ReassignModal";
+import ReviewModal from "./ReviewModal";
+import ViewTenderModal from "./ViewTenderModal";
+import DocumentsModal from "./DocumentsModal";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -61,8 +66,123 @@ const HISTORY_ROWS = [
 
 const EXPANDED_COLS = ["Tender ID", "Firm Name", "Customer", "Tender Title", "Type", "Assigned To", "Pre sales Checklist", "Pre Bid Queries", "OEM Status", "Reviewed", "Post Bid Quires", "Bid Status", "Stage", "Deadline", "Actions"];
 
-const TaskDashboardPSM = ({ fullscreen = false, onExpandTable }) => {
+const TaskDashboardPSM = ({ fullscreen = false, onExpandTable, onAssign, initialAssignData, onReassign, initialReassignData, onReview, initialReviewData, onViewTender, initialViewTenderData, onDocuments, initialDocumentsData }) => {
   const [subTab, setSubTab] = useState("Task Dashboard");
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [assignPrefill, setAssignPrefill] = useState(null);
+
+  const [showReassignModal, setShowReassignModal] = useState(false);
+  const [reassignPrefill, setReassignPrefill] = useState(null);
+
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [reviewPrefill, setReviewPrefill] = useState(null);
+
+  const [showViewTenderModal, setShowViewTenderModal] = useState(false);
+  const [viewTenderPrefill, setViewTenderPrefill] = useState(null);
+
+  const [showDocumentsModal, setShowDocumentsModal] = useState(false);
+  const [documentsPrefill, setDocumentsPrefill] = useState(null);
+
+  // Auto-open modal when parent passes initialAssignData (after exiting fullscreen)
+  useEffect(() => {
+    if (initialAssignData) {
+      // Delay so fullscreen has time to unmount smoothly
+      const timer = setTimeout(() => {
+        setAssignPrefill(initialAssignData);
+        setShowAssignModal(true);
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [initialAssignData]);
+
+  // Auto-open Reassign modal when parent passes initialReassignData (after exiting fullscreen)
+  useEffect(() => {
+    if (initialReassignData) {
+      const timer = setTimeout(() => {
+        setReassignPrefill(initialReassignData);
+        setShowReassignModal(true);
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [initialReassignData]);
+
+  // Auto-open Review modal when parent passes initialReviewData
+  useEffect(() => {
+    if (initialReviewData) {
+      const timer = setTimeout(() => {
+        setReviewPrefill(initialReviewData);
+        setShowReviewModal(true);
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [initialReviewData]);
+
+  // Auto-open View Tender modal when parent passes initialViewTenderData
+  useEffect(() => {
+    if (initialViewTenderData) {
+      const timer = setTimeout(() => {
+        setViewTenderPrefill(initialViewTenderData);
+        setShowViewTenderModal(true);
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [initialViewTenderData]);
+
+  const openAssignModal = (rowData) => {
+    if (fullscreen && onAssign) {
+      onAssign(rowData);
+      return;
+    }
+    setAssignPrefill(rowData || null);
+    setShowAssignModal(true);
+  };
+
+  const openReassignModal = (rowData) => {
+    if (fullscreen && onReassign) {
+      onReassign(rowData);
+      return;
+    }
+    setReassignPrefill(rowData || null);
+    setShowReassignModal(true);
+  };
+
+  const openReviewModal = (rowData) => {
+    if (fullscreen && onReview) {
+      onReview(rowData);
+      return;
+    }
+    setReviewPrefill(rowData || null);
+    setShowReviewModal(true);
+  };
+
+  const openViewTenderModal = (rowData) => {
+    if (fullscreen && onViewTender) {
+      onViewTender(rowData);
+      return;
+    }
+    setViewTenderPrefill(rowData || null);
+    setShowViewTenderModal(true);
+  };
+
+  const openDocumentsModal = (rowData) => {
+    if (fullscreen && onDocuments) {
+      onDocuments(rowData);
+      return;
+    }
+    setDocumentsPrefill(rowData || null);
+    setShowDocumentsModal(true);
+  };
+
+  // Auto-open Documents modal when parent passes initialDocumentsData
+  useEffect(() => {
+    if (initialDocumentsData) {
+      const timer = setTimeout(() => {
+        setDocumentsPrefill(initialDocumentsData);
+        setShowDocumentsModal(true);
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [initialDocumentsData]);
 
   if (fullscreen) {
     return (
@@ -97,10 +217,12 @@ const TaskDashboardPSM = ({ fullscreen = false, onExpandTable }) => {
                     <td style={{ padding: "13px 14px", fontSize: 13, color: "#374151", textAlign: "center", borderRight: "1px solid #F3F4F6", whiteSpace: "nowrap" }}>{row.deadline}</td>
                     <td style={{ padding: "13px 14px", textAlign: "center" }}>
                       <div style={{ display: "flex", gap: 10, justifyContent: "center", alignItems: "center" }}>
-                        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><Eye size={15} color="#6B7280" /></button>
-                        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><UserPlus size={15} color="#6B7280" /></button>
-                        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><RefreshCw size={15} color="#6B7280" /></button>
-                        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><Trash2 size={15} color="#EF4444" /></button>
+                        {i !== 0 && (
+                          <button onClick={() => row.stage === "-" ? openDocumentsModal(row) : openViewTenderModal(row)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><Eye size={15} color="#6B7280" /></button>
+                        )}
+                        <button onClick={() => openAssignModal(row)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><UserPlus size={15} color="#6B7280" /></button>
+                        <button onClick={() => openReassignModal(row)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><RefreshCw size={15} color="#6B7280" /></button>
+                        <button onClick={() => row.bidStatus === "Not Submitted" ? openReviewModal(row) : openDocumentsModal(row)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><ClipboardList size={15} color="#6B7280" /></button>
                       </div>
                     </td>
                   </tr>
@@ -251,7 +373,7 @@ const TaskDashboardPSM = ({ fullscreen = false, onExpandTable }) => {
                   </div>
                   {/* Buttons */}
                   <div style={{ display: "flex", gap: 8 }}>
-                    <button style={{ flex: 1, padding: "8px 0", border: "none", borderRadius: 8, background: "#2563EB", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: FONT }}>Assign</button>
+                    <button onClick={() => openAssignModal(null)} style={{ flex: 1, padding: "8px 0", border: "none", borderRadius: 8, background: "#2563EB", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: FONT }}>Assign</button>
                     <button style={{ flex: 1, padding: "8px 0", border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT }}>View</button>
                   </div>
                 </div>
@@ -359,8 +481,43 @@ const TaskDashboardPSM = ({ fullscreen = false, onExpandTable }) => {
         </div>
       )}
 
+      {/* Assign Tender Modal */}
+      <AssignTenderModal
+        open={showAssignModal}
+        onClose={() => { setShowAssignModal(false); setAssignPrefill(null); }}
+        prefillData={assignPrefill}
+      />
+
+      {/* Reassign Modal */}
+      <ReassignModal
+        open={showReassignModal}
+        onClose={() => { setShowReassignModal(false); setReassignPrefill(null); }}
+        prefillData={reassignPrefill}
+      />
+
+      {/* Review Modal */}
+      <ReviewModal
+        open={showReviewModal}
+        onClose={() => { setShowReviewModal(false); setReviewPrefill(null); }}
+        prefillData={reviewPrefill}
+      />
+
+      {/* View Tender Modal */}
+      <ViewTenderModal
+        open={showViewTenderModal}
+        onClose={() => { setShowViewTenderModal(false); setViewTenderPrefill(null); }}
+        prefillData={viewTenderPrefill}
+      />
+
+      {/* Documents Modal */}
+      <DocumentsModal
+        open={showDocumentsModal}
+        onClose={() => { setShowDocumentsModal(false); setDocumentsPrefill(null); }}
+        prefillData={documentsPrefill}
+      />
     </div>
   );
 };
 
 export default TaskDashboardPSM;
+

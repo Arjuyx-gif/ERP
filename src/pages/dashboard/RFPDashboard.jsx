@@ -53,6 +53,37 @@ const RFPDashboard = () => {
   const [docsCard, setDocsCard] = useState(null);
   const [psmViewFilter, setPsmViewFilter] = useState("All");
   const [bidSubmittedCard, setBidSubmittedCard] = useState(null);
+  const [psmAssignData, setPsmAssignData] = useState(null);
+  const [psmReassignData, setPsmReassignData] = useState(null);
+  const [psmReviewData, setPsmReviewData] = useState(null);
+  const [psmViewTenderData, setPsmViewTenderData] = useState(null);
+  const [psmDocumentsData, setPsmDocumentsData] = useState(null);
+
+  // Handler: fullscreen PSM assign button → exit fullscreen, open modal on regular view
+  const handlePsmAssign = (rowData) => {
+    setKanbanFullscreen(false);
+    setPsmAssignData({ ...(rowData || {}), _ts: Date.now() });
+  };
+
+  const handlePsmReassign = (rowData) => {
+    setKanbanFullscreen(false);
+    setPsmReassignData({ ...(rowData || {}), _ts: Date.now() });
+  };
+
+  const handlePsmReview = (rowData) => {
+    setKanbanFullscreen(false);
+    setPsmReviewData({ ...(rowData || {}), _ts: Date.now() });
+  };
+
+  const handlePsmViewTender = (rowData) => {
+    setKanbanFullscreen(false);
+    setPsmViewTenderData({ ...(rowData || {}), _ts: Date.now() });
+  };
+
+  const handlePsmDocuments = (rowData) => {
+    setKanbanFullscreen(false);
+    setPsmDocumentsData({ ...(rowData || {}), _ts: Date.now() });
+  };
 
   const PRE_BID_MODAL = {
     title: "Pre-Bid Meeting Reminder",
@@ -700,7 +731,7 @@ const RFPDashboard = () => {
         {/* Board / Table */}
         <div style={{ flex: 1, overflowX: "auto", padding: "0 28px 28px" }}>
           {activeTab === "Task Dashboard PSM"
-            ? <TaskDashboardPSM onExpandTable={() => setKanbanFullscreen(true)} />
+            ? <TaskDashboardPSM onExpandTable={() => setKanbanFullscreen(true)} initialAssignData={psmAssignData} initialReassignData={psmReassignData} initialReviewData={psmReviewData} initialViewTenderData={psmViewTenderData} initialDocumentsData={psmDocumentsData} />
             : activeTab === "Task Dashboard PS"
             ? <TaskTableB onAction={handleTaskBAction} onShowDocs={handleShowDocs} onAlertNotifyClick={handleAlertNotifyClick} />
             : activeTab === "Task Dashboard S"
@@ -740,7 +771,7 @@ const RFPDashboard = () => {
           </div>
           <div style={{ flex: 1, overflowX: "auto", overflowY: "auto", padding: "20px 28px 28px" }}>
             {activeTab === "Task Dashboard PSM"
-              ? <TaskDashboardPSM fullscreen onExpandTable={() => {}} />
+              ? <TaskDashboardPSM fullscreen onExpandTable={() => {}} onAssign={handlePsmAssign} onReassign={handlePsmReassign} onReview={handlePsmReview} onViewTender={handlePsmViewTender} onDocuments={handlePsmDocuments} />
               : activeTab === "Task Dashboard PS"
               ? <TaskTableB fullscreen onAction={handleTaskBAction} onShowDocs={handleShowDocs} onAlertNotifyClick={handleAlertNotifyClick} />
               : activeTab === "Task Dashboard S"
