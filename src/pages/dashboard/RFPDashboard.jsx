@@ -51,7 +51,6 @@ const RFPDashboard = () => {
   const [viewAllCol, setViewAllCol] = useState(null);
   const [viewRFPCard, setViewRFPCard] = useState(null);
   const [docsCard, setDocsCard] = useState(null);
-  const [psmViewFilter, setPsmViewFilter] = useState("All");
   const [bidSubmittedCard, setBidSubmittedCard] = useState(null);
   const [psmAssignData, setPsmAssignData] = useState(null);
   const [psmReassignData, setPsmReassignData] = useState(null);
@@ -663,70 +662,45 @@ const RFPDashboard = () => {
           )}
         </div>
 
-        {/* Filter bar */}
-        <div style={{ padding: "12px 28px", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-        {activeTab === "Task Dashboard PSM" ? (
-          <>
-            <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 8, border: "1px solid #E2E8F0", borderRadius: 8, padding: "7px 14px", background: "#fff" }}>
-              <Search size={14} color="#9CA3AF" />
-              <input type="text" placeholder="Search RFP ID / Customer..." style={{ border: "none", outline: "none", fontSize: 13, color: "#374151", width: "100%", fontFamily: "inherit", background: "transparent" }} />
+        {/* Filter bar — hidden for PSM (filters live inside the component) */}
+        {activeTab !== "Task Dashboard PSM" && (
+          <div style={{ padding: "12px 28px", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+            <SlidersHorizontal size={16} color="#888" />
+            {[
+              { val: stageFilter, set: setStageFilter, opts: ["All Stages", "RFP Analysis", "Awaiting Approval", "Alert / Notify", "Approved", "Submitted", "Won", "PO Pending"] },
+              { val: statusFilter, set: setStatusFilter, opts: ["All Status", "Completed", "Pending", "In Progress", "Under Review", "Approval Pending", "Rejected"] },
+            ].map((f, i) => (
+              <select key={i} value={f.val} onChange={e => f.set(e.target.value)} style={{
+                padding: "7px 12px", border: "1px solid #E2E8F0", borderRadius: 8,
+                fontSize: 13, color: "#333", background: "#F8FAFC", cursor: "pointer",
+                outline: "none", fontFamily: "inherit",
+              }}>
+                {f.opts.map(o => <option key={o}>{o}</option>)}
+              </select>
+            ))}
+
+            <div style={{ width: 1, height: 16, background: "#CBD5E1", margin: "0 4px" }} />
+
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <ArrowUpDown size={14} color="#888" />
+              <select value={deadlineFilter} onChange={e => setDeadlineFilter(e.target.value)} style={{
+                padding: "7px 12px", border: "1px solid #E2E8F0", borderRadius: 8,
+                fontSize: 13, color: "#333", background: "#F8FAFC", cursor: "pointer",
+                outline: "none", fontFamily: "inherit",
+              }}>
+                {["By Deadline", "Priority", "Newest First", "Oldest First", "Tender Value", "Last Updated"].map(o => <option key={o}>{o}</option>)}
+              </select>
             </div>
-            <button style={{ background: "none", border: "none", cursor: "pointer", padding: 6, display: "flex" }}>
-              <Bell size={18} color="#6B7280" />
+            <div style={{ flex: 1 }} />
+            <button onClick={() => setKanbanFullscreen(true)} style={{
+              background: "#fff", border: "1px solid #E2E8F0", borderRadius: 8,
+              padding: "7px 14px", fontSize: 13, color: "#555", cursor: "pointer",
+              display: "flex", alignItems: "center", gap: 6, fontFamily: "inherit",
+            }}>
+              <Eye size={14} /> View
             </button>
-            <div style={{ display: "flex", background: "#F3F4F6", borderRadius: 8, padding: 3, gap: 2 }}>
-              {["All", "Needs Action", "Completed"].map(f => (
-                <button key={f} onClick={() => setPsmViewFilter(f)} style={{
-                  padding: "6px 14px", border: "none", borderRadius: 6, cursor: "pointer",
-                  fontSize: 13, fontWeight: psmViewFilter === f ? 600 : 400,
-                  background: psmViewFilter === f ? "#fff" : "transparent",
-                  color: psmViewFilter === f ? "#111827" : "#6B7280",
-                  fontFamily: "inherit",
-                  boxShadow: psmViewFilter === f ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
-                }}>
-                  {f}
-                </button>
-              ))}
-            </div>
-          </>
-        ) : (
-          <>
-          <SlidersHorizontal size={16} color="#888" />
-          {[
-            { val: stageFilter, set: setStageFilter, opts: ["All Stages", "RFP Analysis", "Awaiting Approval", "Alert / Notify", "Approved", "Submitted", "Won", "PO Pending"] },
-            { val: statusFilter, set: setStatusFilter, opts: ["All Status", "Completed", "Pending", "In Progress", "Under Review", "Approval Pending", "Rejected"] },
-          ].map((f, i) => (
-            <select key={i} value={f.val} onChange={e => f.set(e.target.value)} style={{
-              padding: "7px 12px", border: "1px solid #E2E8F0", borderRadius: 8,
-              fontSize: 13, color: "#333", background: "#F8FAFC", cursor: "pointer",
-              outline: "none", fontFamily: "inherit",
-            }}>
-              {f.opts.map(o => <option key={o}>{o}</option>)}
-            </select>
-          ))}
-
-          <div style={{ width: 1, height: 16, background: "#CBD5E1", margin: "0 4px" }} />
-
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <ArrowUpDown size={14} color="#888" />
-            <select value={deadlineFilter} onChange={e => setDeadlineFilter(e.target.value)} style={{
-              padding: "7px 12px", border: "1px solid #E2E8F0", borderRadius: 8,
-              fontSize: 13, color: "#333", background: "#F8FAFC", cursor: "pointer",
-              outline: "none", fontFamily: "inherit",
-            }}>
-              {["By Deadline", "Priority", "Newest First", "Oldest First", "Tender Value", "Last Updated"].map(o => <option key={o}>{o}</option>)}
-            </select>
           </div>
-          <div style={{ flex: 1 }} />
-          <button onClick={() => setKanbanFullscreen(true)} style={{
-            background: "#fff", border: "1px solid #E2E8F0", borderRadius: 8,
-            padding: "7px 14px", fontSize: 13, color: "#555", cursor: "pointer",
-            display: "flex", alignItems: "center", gap: 6, fontFamily: "inherit",
-          }}>
-            <Eye size={14} /> View
-          </button>
-        </>)}
-        </div>
+        )}
 
         {/* Board / Table */}
         <div style={{ flex: 1, overflowX: "auto", padding: "0 28px 28px" }}>
