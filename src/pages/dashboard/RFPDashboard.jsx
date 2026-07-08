@@ -9,7 +9,7 @@ import KanbanBoard from "../../components/dashboard/KanbanBoard";
 import TaskTable from "../../components/dashboard/TaskTable";
 import TaskTableB from "../../components/dashboard/TaskTableB";
 import TaskDashboardPSM from "../../components/dashboard/TaskDashboardPSM";
-import TaskTableC from "../../components/dashboard/TaskTableC";
+import SalesActivityDashboard from "../../components/dashboard/SalesActivityDashboard";
 import TaskTableS2 from "../../components/dashboard/TaskTableS2";
 import RFPFormPanel from "../../components/dashboard/RFPFormPanel";
 import BidSubmissionModal from "../../components/dashboard/BidSubmissionModal";
@@ -20,7 +20,7 @@ import Modal from "../../components/dashboard/ReminderModal";
 import ViewAllModal from "../../components/dashboard/ViewAllModal";
 import DynamicIcon from "../../components/ui/DynamicIcon";
 import { useDashboard } from "../../hooks/useDashboard";
-import { TASK_DASHBOARD_A_KPI_CARDS, PSM_KPI_CARDS, PS_KPI_CARDS, SM_NOTIFICATIONS, PS_NOTIFICATIONS, PANEL_NOTIFICATIONS } from "../../services/mockData";
+import { TASK_DASHBOARD_A_KPI_CARDS, PSM_KPI_CARDS, PS_KPI_CARDS, S_KPI_CARDS, SM_NOTIFICATIONS, PS_NOTIFICATIONS, PANEL_NOTIFICATIONS } from "../../services/mockData";
 
 // ─── RFPDashboard ─────────────────────────────────────────────────────────────
 
@@ -640,7 +640,8 @@ const RFPDashboard = () => {
               {(activeTab === "Task Dashboard SM" ? TASK_DASHBOARD_A_KPI_CARDS
                 : activeTab === "Task Dashboard PSM" ? PSM_KPI_CARDS
                   : activeTab === "Task Dashboard PS" ? PS_KPI_CARDS
-                    : kpiCards
+                    : activeTab === "Task Dashboard S" ? S_KPI_CARDS
+                      : kpiCards
               ).map(kpi => (
                 <div key={kpi.label} style={{
                   flex: "1 1 130px", background: "#fff", borderRadius: 10,
@@ -694,6 +695,7 @@ const RFPDashboard = () => {
           </div>
 
           {/* Filter bar */}
+          {activeTab !== "Task Dashboard S" && (
           <div style={{ padding: "12px 28px", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
             {activeTab === "Task Dashboard PSM" ? (
               <>
@@ -756,6 +758,7 @@ const RFPDashboard = () => {
                 </button>
               </>)}
           </div>
+          )}
 
           {/* Board / Table */}
           <div style={{ flex: 1, overflowX: "auto", padding: "0 28px 28px" }}>
@@ -764,7 +767,7 @@ const RFPDashboard = () => {
               : activeTab === "Task Dashboard PS"
                 ? <TaskTableB onExpandTable={() => setKanbanFullscreen(true)} onViewDocs={(row) => { setViewRFPCard({ ...row, tender: row.title, action: "View" }); setPsDocsRow(row); }} onAction={handleTaskBAction} onAlertNotifyClick={handleAlertNotifyClick} />
                 : activeTab === "Task Dashboard S"
-                  ? <TaskTableC onViewRFP={handleViewRFP} />
+                  ? <SalesActivityDashboard onViewRFP={handleViewRFP} />
                   : activeTab === "Task Dashboard S2"
                     ? <TaskTableS2 onViewRFP={handleViewRFP} />
                     : activeTab.startsWith("Task Dashboard")
@@ -804,7 +807,7 @@ const RFPDashboard = () => {
               : activeTab === "Task Dashboard PS"
                 ? <TaskTableB fullscreen onViewDocs={(row) => { setKanbanFullscreen(false); setViewRFPCard({ ...row, tender: row.title, action: "View" }); setPsDocsRow(row); }} onAction={(row) => { setKanbanFullscreen(false); handleTaskBAction(row); }} onAlertNotifyClick={(row) => { setKanbanFullscreen(false); handleAlertNotifyClick(row); }} />
                 : activeTab === "Task Dashboard S"
-                  ? <TaskTableC fullscreen onViewRFP={handleViewRFP} />
+                  ? <SalesActivityDashboard fullscreen onViewRFP={handleViewRFP} />
                   : activeTab === "Task Dashboard S2"
                     ? <TaskTableS2 fullscreen onViewRFP={handleViewRFP} />
                     : activeTab.startsWith("Task Dashboard")

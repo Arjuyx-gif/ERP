@@ -47,6 +47,15 @@ export const PSM_KPI_CARDS = [
   { label: "Lost Tenders",         value: 3, sub: "Review Tenders",         iconName: "x-circle",     color: "#DC2626", iconBg: "#FEF2F2" },
 ];
 
+export const S_KPI_CARDS = [
+  { label: "Total RFPs",                 value: 8, iconName: "document", color: "#1565C0", iconBg: "#E3F0FB" },
+  { label: "Awaiting Approval by Manager", value: 1, iconName: "clock",  color: "#D97706", iconBg: "#FEF3C7" },
+  { label: "Awaiting Approval - MD",       value: 1, iconName: "clock",  color: "#D97706", iconBg: "#FEF3C7" },
+  { label: "Submitted",                  value: 1, iconName: "tick",     color: "#0891B2", iconBg: "#ECFEFF" },
+  { label: "Won (L1)",                   value: 3, iconName: "trophy",   color: "#16A34A", iconBg: "#E8F5E9" },
+  { label: "PO - Pending",               value: 1, iconName: "alert",    color: "#EA580C", iconBg: "#FFF1E7" },
+];
+
 export const PS_KPI_CARDS = [
   { label: "Active Tenders",            value: 8, iconName: "document",     color: "#1565C0", iconBg: "#E3F0FB" },
   { label: "Pre-Bid Queries\nPending",   value: 2, iconName: "help-circle", color: "#F97316", iconBg: "#FFF7ED" },
