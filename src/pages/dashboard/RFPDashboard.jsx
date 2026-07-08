@@ -53,6 +53,7 @@ const RFPDashboard = () => {
   const [viewRFPCard, setViewRFPCard] = useState(null);
   const [docsCard, setDocsCard] = useState(null);
   const [bidSubmittedCard, setBidSubmittedCard] = useState(null);
+  const [psmViewFilter, setPsmViewFilter] = useState("All");
   const [psmAssignData, setPsmAssignData] = useState(null);
   const [psmReassignData, setPsmReassignData] = useState(null);
   const [psmReviewData, setPsmReviewData] = useState(null);
