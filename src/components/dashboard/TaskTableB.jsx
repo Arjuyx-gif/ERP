@@ -93,105 +93,15 @@ const ActionButton = ({ type, onClick }) => {
 
 // ─── TaskTableB (Redesigned Task Dashboard PS) ─────────────────────────────────
 const TaskTableB = ({ fullscreen = false, onExpandTable, onAction, onShowDocs, onAlertNotifyClick, onViewDocs }) => {
-  const [statusFilter, setStatusFilter] = useState("All Status");
-  const [deadlineSort, setDeadlineSort] = useState("By Deadline");
-  const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
-
-  /* Filter rows by status */
-  const filteredRows = TASK_TABLE_B_ROWS.filter(row => {
-    if (statusFilter === "All Status") return true;
-    return row.type?.toLowerCase() === statusFilter.toLowerCase();
-  });
+  /* Use mock rows */
+  const filteredRows = TASK_TABLE_B_ROWS;
 
   const columnsToUse = fullscreen ? FULL_COLUMNS : COLUMNS;
 
   return (
     <div style={{ fontFamily: FONT }}>
 
-      {/* ── Filter Bar (Only show in standard view) ────────────────────────── */}
-      {!fullscreen && (
-        <div style={{
-          display: "flex", alignItems: "center", gap: 10, marginBottom: 16,
-          flexWrap: "wrap",
-        }}>
-          {/* Status filter dropdown */}
-          <div style={{ position: "relative" }}>
-            <button
-              onClick={() => setStatusDropdownOpen(v => !v)}
-              style={{
-                display: "flex", alignItems: "center", gap: 6,
-                padding: "8px 14px", border: "1px solid #E2E8F0", borderRadius: 8,
-                background: "#fff", fontSize: 13, color: "#374151",
-                cursor: "pointer", fontFamily: FONT, whiteSpace: "nowrap",
-              }}
-            >
-              {statusFilter}
-              <ChevronDown size={14} color="#9CA3AF" />
-            </button>
-            {statusDropdownOpen && (
-              <>
-                <div onClick={() => setStatusDropdownOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 9 }} />
-                <div style={{
-                  position: "absolute", top: "calc(100% + 4px)", left: 0, zIndex: 10,
-                  background: "#fff", border: "1px solid #E2E8F0", borderRadius: 8,
-                  boxShadow: "0 4px 16px rgba(0,0,0,0.10)", minWidth: 150, overflow: "hidden",
-                }}>
-                  {["All Status", "Pending", "In Progress", "Completed"].map(opt => (
-                    <button
-                      key={opt}
-                      onClick={() => { setStatusFilter(opt); setStatusDropdownOpen(false); }}
-                      style={{
-                        display: "block", width: "100%", padding: "9px 16px",
-                        border: "none", background: statusFilter === opt ? "#EFF6FF" : "#fff",
-                        fontSize: 13, color: statusFilter === opt ? "#2563EB" : "#374151",
-                        fontWeight: statusFilter === opt ? 600 : 400,
-                        cursor: "pointer", fontFamily: FONT, textAlign: "left",
-                      }}
-                      onMouseEnter={e => { if (statusFilter !== opt) e.currentTarget.style.background = "#F9FAFB"; }}
-                      onMouseLeave={e => { if (statusFilter !== opt) e.currentTarget.style.background = "#fff"; }}
-                    >
-                      {opt}
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
 
-          {/* Separator */}
-          <div style={{ width: 1, height: 20, background: "#E2E8F0" }} />
-
-          {/* Deadline sort */}
-          <select
-            value={deadlineSort}
-            onChange={e => setDeadlineSort(e.target.value)}
-            style={{
-              padding: "8px 14px", border: "1px solid #E2E8F0", borderRadius: 8,
-              fontSize: 13, color: "#374151", background: "#fff", cursor: "pointer",
-              outline: "none", fontFamily: FONT,
-            }}
-          >
-            {["By Deadline", "Priority", "Newest First", "Oldest First"].map(o => (
-              <option key={o}>{o}</option>
-            ))}
-          </select>
-
-          <div style={{ flex: 1 }} />
-
-          {/* View button */}
-          <button
-            onClick={() => onExpandTable?.()}
-            style={{
-              display: "flex", alignItems: "center", gap: 6,
-              padding: "8px 16px", border: "1px solid #E2E8F0", borderRadius: 8,
-              background: "#fff", fontSize: 13, color: "#6B7280",
-              cursor: "pointer", fontFamily: FONT,
-            }}
-          >
-            <Eye size={14} color="#6B7280" /> View
-          </button>
-        </div>
-      )}
 
       {/* ── Main Table ────────────────────────────────────────────────────── */}
       <div style={{

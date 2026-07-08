@@ -461,12 +461,16 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
               </div>
             )}
 
-            {/* Attach File button — for "Complete Tasks" or "View Task" action */}
-            {!card.isQuery && (card.action === "Complete Tasks" || card.action === "View Task") && (
+            {/* Attach File button */}
+            {(!card.isQuery && (card.action === "Complete Tasks" || card.action === "View Task")) || card.isPostBidQueryPending || card.isPreBidQueryPending ? (
               <div style={{ marginTop: 4, marginBottom: 14 }}>
                 <button
                   type="button"
-                  onClick={() => card.action === "View Task" ? setShowViewTaskModal(true) : setShowCompleteTask(true)}
+                  onClick={() => {
+                    if (card.isPostBidQueryPending || card.isPreBidQueryPending) setShowQueryModal(true);
+                    else if (card.action === "View Task") setShowViewTaskModal(true);
+                    else setShowCompleteTask(true);
+                  }}
                   style={{
                     width: "100%",
                     padding: "14px 0",
@@ -491,7 +495,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
                   {card.isQuery ? "Upload Response Document" : (card.action === "View Task" ? "View Task" : "Attach File")}
                 </button>
               </div>
-            )}
+            ) : null}
 
           </div>
 

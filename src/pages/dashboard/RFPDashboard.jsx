@@ -438,6 +438,27 @@ const RFPDashboard = () => {
       return;
     }
 
+    if (row.actionType === "upload" && row.postBidQueries === "Response Pending") {
+      setViewRFPCard({ 
+        ...row, 
+        tender: row.title, 
+        action: "View", 
+        isPostBidQueryPending: true
+      });
+      return;
+    }
+
+    if (row.actionType === "upload" && row.preBidQueries === "In Progress") {
+      setViewRFPCard({ 
+        ...row, 
+        tender: row.title, 
+        action: "View", 
+        isPreBidQueryPending: true,
+        showQueryUploadZone: true
+      });
+      return;
+    }
+
     if (row.actionType === "checkOEM" || row.actionType === "start") {
       action = "Complete Tasks";      // opens CompleteTaskModal on top of RFP form
     } else if (row.actionType === "upload") {
@@ -702,7 +723,6 @@ const RFPDashboard = () => {
               <>
                 <SlidersHorizontal size={16} color="#888" />
                 {[
-                  { val: stageFilter, set: setStageFilter, opts: ["All Stages", "RFP Analysis", "Awaiting Approval", "Alert / Notify", "Approved", "Submitted", "Won", "PO Pending"] },
                   { val: statusFilter, set: setStatusFilter, opts: ["All Status", "Completed", "Pending", "In Progress", "Under Review", "Approval Pending", "Rejected"] },
                 ].map((f, i) => (
                   <select key={i} value={f.val} onChange={e => f.set(e.target.value)} style={{

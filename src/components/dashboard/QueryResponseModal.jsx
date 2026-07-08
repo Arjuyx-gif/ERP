@@ -8,6 +8,7 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
   const [file, setFile] = useState(null);
   const [queryFile, setQueryFile] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
+  const [isPreBidSubmitted, setIsPreBidSubmitted] = useState(false);
   const fileInputRef = useRef(null);
   const queryFileInputRef = useRef(null);
 
@@ -33,6 +34,12 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
   };
 
   const handleSubmit = () => {
+    if (card?.isPreBidQueryPending && !isPreBidSubmitted) {
+      setIsPreBidSubmitted(true);
+      setErrorMsg("");
+      return;
+    }
+
     if (!file) {
       setErrorMsg("Please upload a response document before submitting.");
       return;
@@ -93,13 +100,15 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
         >
           <div>
             <h2 style={{ fontSize: 18, fontWeight: 700, color: "#111827", margin: "0 0 6px" }}>
-              Query & Response Management
+              {card.isPostBidQueryPending ? "Query & Response Management" : "Pre-Bid Query"}
             </h2>
             <div style={{ fontSize: 13, color: "#4B5563", display: "flex", alignItems: "center", gap: 12 }}>
               <span>
-                Tender ID: <strong style={{ color: "#111827", fontWeight: 600 }}>{card.id}</strong>
+                Tender ID: <strong style={{ color: card.isPostBidQueryPending || isPreBidSubmitted ? "#111827" : "#2563EB", fontWeight: 600 }}>{card.id}</strong>
               </span>
-              <span style={{ color: "#6B7280" }}>Post - Submission Query</span>
+              <span style={{ color: "#6B7280" }}>
+                {card.isPostBidQueryPending ? "Post - Submission Query" : "Pre-Bid Query Submission"}
+              </span>
             </div>
           </div>
           <button
@@ -127,7 +136,7 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
             <label style={{ fontSize: 14, fontWeight: 600, color: "#111827", display: "block", marginBottom: 8 }}>
               Query Document
             </label>
-            {!queryFile && card?.showQueryUploadZone ? (
+            {!queryFile && card?.showQueryUploadZone && !isPreBidSubmitted ? (
               <div
                 onClick={() => queryFileInputRef.current?.click()}
                 style={{
@@ -148,7 +157,7 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
                 <Upload size={24} color="#6B7280" />
                 <div style={{ fontSize: 14, fontWeight: 500, color: "#374151" }}>Click to Upload Query Document</div>
               </div>
-            ) : queryFile ? (
+            ) : queryFile && !isPreBidSubmitted ? (
               <div style={{
                 border: "1px solid #D1D5DB", borderRadius: 8, padding: "16px",
                 display: "flex", alignItems: "flex-start", gap: 12, background: "#F9FAFB"
@@ -304,7 +313,7 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
             type="button"
             onClick={handleSubmit}
             style={{
-              padding: "10px 36px", border: "none", borderRadius: 8,
+              padding: card.isPostBidQueryPending ? "10px 36px" : "10px 24px", border: "none", borderRadius: 8,
               background: "#2563EB", fontSize: 14, fontWeight: 600, color: "#fff",
               cursor: "pointer", fontFamily: FONT, boxShadow: "0 2px 8px rgba(37,99,235,0.25)",
               transition: "background 0.15s, box-shadow 0.15s",
@@ -318,7 +327,7 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
               e.currentTarget.style.boxShadow = "0 2px 8px rgba(37,99,235,0.25)";
             }}
           >
-            Submit
+            {card.isPostBidQueryPending || (card.isPreBidQueryPending && !isPreBidSubmitted) ? "Submit" : "Submit & Send for Review"}
           </button>
         </div>
       </div>
