@@ -5,6 +5,7 @@ import ReassignModal from "./ReassignModal";
 import ReviewModal from "./ReviewModal";
 import ViewTenderModal from "./ViewTenderModal";
 import DocumentsModal from "./DocumentsModal";
+import MemberViewModal from "./MemberViewModal";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -197,7 +198,7 @@ const HistoryTable = ({ rows }) => (
 
 // ─── Member Card (shared between inline and fullscreen) ─────────────────────
 
-const MemberCard = ({ m, onAssign }) => (
+const MemberCard = ({ m, onAssign, onView }) => (
   <div style={{
     background: "#fff", borderRadius: 14, border: "1px solid #E5E7EB",
     padding: "18px 20px", boxShadow: "0 1px 6px rgba(0,0,0,0.06)",
@@ -249,7 +250,7 @@ const MemberCard = ({ m, onAssign }) => (
         onClick={() => onAssign?.(m)}
         style={{ flex: 1, padding: "9px 0", border: "none", borderRadius: 8, background: "#2563EB", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: FONT }}
       >Assign</button>
-      <button style={{ flex: 1, padding: "9px 0", border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT }}>View</button>
+      <button style={{ flex: 1, padding: "9px 0", border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff", color: "#374151", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: FONT }} onClick={() => onView?.(m)}>View</button>
     </div>
   </div>
 );
@@ -332,6 +333,9 @@ const TaskDashboardPSM = ({ fullscreen = false, onExpandTable, onAssign, initial
 
   const [showDocumentsModal, setShowDocumentsModal] = useState(false);
   const [documentsPrefill, setDocumentsPrefill] = useState(null);
+
+  const [showMemberViewModal, setShowMemberViewModal] = useState(false);
+  const [memberViewPrefill, setMemberViewPrefill] = useState(null);
 
   const [showHistoryFullscreen, setShowHistoryFullscreen] = useState(false);
   const [showWorkloadFullscreen, setShowWorkloadFullscreen] = useState(false);
@@ -432,6 +436,11 @@ const TaskDashboardPSM = ({ fullscreen = false, onExpandTable, onAssign, initial
     setShowDocumentsModal(true);
   };
 
+  const openMemberViewModal = (memberData) => {
+    setMemberViewPrefill(memberData || null);
+    setShowMemberViewModal(true);
+  };
+
   // ── Fullscreen: show only the table ──────────────────────────────────────────
   if (fullscreen) {
     return (
@@ -508,7 +517,7 @@ const TaskDashboardPSM = ({ fullscreen = false, onExpandTable, onAssign, initial
         <div style={{ display: "flex", gap: 14, overflowX: "auto", paddingBottom: 6 }}>
           {TEAM_MEMBERS.map(m => (
             <div key={m.id} style={{ minWidth: 200, flexShrink: 0 }}>
-              <MemberCard m={m} onAssign={openAssignModal} />
+              <MemberCard m={m} onAssign={openAssignModal} onView={openMemberViewModal} />
             </div>
           ))}
         </div>
@@ -549,7 +558,7 @@ const TaskDashboardPSM = ({ fullscreen = false, onExpandTable, onAssign, initial
               gap: 18,
             }}>
               {TEAM_MEMBERS.map(m => (
-                <MemberCard key={m.id} m={m} onAssign={openAssignModal} />
+                <MemberCard key={m.id} m={m} onAssign={openAssignModal} onView={openMemberViewModal} />
               ))}
             </div>
           </div>
@@ -740,6 +749,13 @@ const TaskDashboardPSM = ({ fullscreen = false, onExpandTable, onAssign, initial
         open={showDocumentsModal}
         onClose={() => { setShowDocumentsModal(false); setDocumentsPrefill(null); }}
         prefillData={documentsPrefill}
+      />
+
+      {/* Member View Modal */}
+      <MemberViewModal
+        open={showMemberViewModal}
+        onClose={() => { setShowMemberViewModal(false); setMemberViewPrefill(null); }}
+        member={memberViewPrefill}
       />
     </div>
   );
