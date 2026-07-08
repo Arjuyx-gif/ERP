@@ -47,6 +47,14 @@ export const PSM_KPI_CARDS = [
   { label: "Lost Tenders",         value: 3, sub: "Review Tenders",         iconName: "x-circle",     color: "#DC2626", iconBg: "#FEF2F2" },
 ];
 
+export const PS_KPI_CARDS = [
+  { label: "Active Tenders",            value: 8, iconName: "document",     color: "#1565C0", iconBg: "#E3F0FB" },
+  { label: "Pre-Bid Queries\nPending",   value: 2, iconName: "help-circle", color: "#F97316", iconBg: "#FFF7ED" },
+  { label: "OEM Docs.\nPending",         value: 1, iconName: "alert",       color: "#EF4444", iconBg: "#FEF2F2" },
+  { label: "Post-Bid Queries\nPending",  value: 3, iconName: "help-circle", color: "#F97316", iconBg: "#FFF7ED" },
+  { label: "Completed",                  value: 2, iconName: "tick",        color: "#16A34A", iconBg: "#DCFCE7" },
+];
+
 // ─── Kanban Columns ───────────────────────────────────────────────────────────
 // `count` is intentionally omitted — dashboardService derives it from cards.length
 // so the badge always reflects the true number of loaded cards.
@@ -613,52 +621,57 @@ export const PANEL_NOTIFICATIONS = [
   },
 ];
 
-// ─── Task Dashboard B – Pre-sales Table ──────────────────────────────────────
-// oemStatus: string  |  queryResponse: string | null
-// actionType: "checkOEM" | "upload" | "view" | "checkQuery" | "start"
+// ─── Task Dashboard B – Pre-sales Table (Redesigned) ─────────────────────────
 export const TASK_TABLE_B_ROWS = [
-  {
-    id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name",
-    presalesChecklist: "Completed", alertNotify: "View Teams & Remarks",
-    oemStatus: "OEM Pending", queryResponse: "-",
-    deadline: "08/06/2026", updated: "2 hrs ago",
-    actionType: "checkOEM", highlight: null,
-  },
-  {
-    id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name",
-    presalesChecklist: "Completed", alertNotify: "View Teams & Remarks",
-    oemStatus: "Completed", queryResponse: "Query & Response",
-    deadline: "10/06/2026", updated: "Yesterday",
-    actionType: "upload", highlight: null,
-  },
-  {
-    id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name",
-    presalesChecklist: "Completed", alertNotify: "View Teams & Remarks",
-    oemStatus: "Completed", queryResponse: "Response Pending",
-    deadline: "10/06/2026", updated: "Yesterday",
-    actionType: "upload", highlight: null,
-  },
-  {
-    id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name",
-    presalesChecklist: "Completed", alertNotify: "View Teams & Remarks",
-    oemStatus: "Completed", queryResponse: "Completed",
-    deadline: "10/06/2026", updated: "Today",
-    actionType: "view", highlight: "green",
-  },
-  {
-    id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name",
-    presalesChecklist: "Completed", alertNotify: "View Teams & Remarks",
-    oemStatus: "Completed", queryResponse: "In Progress",
-    deadline: "10/06/2026", updated: "Today",
-    actionType: "checkQuery", highlight: null,
-  },
-  {
-    id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name",
-    presalesChecklist: "Completed", alertNotify: "View Teams & Remarks",
-    oemStatus: "Awaiting OEM Docs", queryResponse: " - ",
-    deadline: "10/06/2026", updated: "Yesterday",
-    actionType: "start", highlight: null,
-  },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", type: "Completed", presalesChecklist: "Completed", highlight: null,
+    alertNotify: "View Teams & Remarks", preBidQueries: "Completed", oemStatus: "Completed", bidStatus: "Result Awaiting", postBidQueries: "-", compSheet1: "-", compSheet2: "-", stage: "Bid Result Awaiting", deadline: "08/06/2026", approvedByManager: "Yes", actionType: "view" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", type: "Completed", presalesChecklist: "Completed", highlight: null,
+    alertNotify: "View Teams & Remarks", preBidQueries: "Completed", oemStatus: "Completed", bidStatus: "Result Awaiting", postBidQueries: "-", compSheet1: "-", compSheet2: "-", stage: "Bid Result Awaiting", deadline: "08/06/2026", approvedByManager: "Yes", actionType: "view" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", type: "Completed", presalesChecklist: "Completed", highlight: "green",
+    alertNotify: "View Teams & Remarks", preBidQueries: "Completed", oemStatus: "Completed", bidStatus: "Won", postBidQueries: "Completed", compSheet1: "NA", compSheet2: "Project Transited to - Purchase & SITC", stage: "Complete", deadline: "08/06/2026", approvedByManager: "Yes", actionType: "view" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", type: "Completed", presalesChecklist: "Completed", highlight: null,
+    alertNotify: "View Teams & Remarks", preBidQueries: "Completed", oemStatus: "Awaiting OEM Docs", bidStatus: "-", postBidQueries: "-", compSheet1: "-", compSheet2: "-", stage: "OEM Pending", deadline: "08/06/2026", approvedByManager: "-", actionType: "checkOEM" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", type: "Completed", presalesChecklist: "Completed", highlight: null,
+    alertNotify: "View Teams & Remarks", preBidQueries: "Completed", oemStatus: "Completed", bidStatus: "Lost", postBidQueries: "Completed Round 2", compSheet1: "In Progress", compSheet2: "In Progress", stage: "Comparison Sheet", deadline: "08/06/2026", approvedByManager: "Yes", actionType: "start" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", type: "Completed", presalesChecklist: "Completed", highlight: null,
+    alertNotify: "View Teams & Remarks", preBidQueries: "Completed", oemStatus: "Completed", bidStatus: "-", postBidQueries: "Response Pending", compSheet1: "-", compSheet2: "-", stage: "Post-Bid Queries Pending", deadline: "08/06/2026", approvedByManager: "Yes", actionType: "upload" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", type: "Completed", presalesChecklist: "Completed", highlight: null,
+    alertNotify: "View Teams & Remarks", preBidQueries: "In Progress", oemStatus: "-", bidStatus: "-", postBidQueries: "-", compSheet1: "-", compSheet2: "-", stage: "Pre-Bid Queries In Progress", deadline: "08/06/2026", approvedByManager: "-", actionType: "upload" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", type: "Completed", presalesChecklist: "Completed", highlight: null,
+    alertNotify: "View Teams & Remarks", preBidQueries: "Completed", oemStatus: "Completed", bidStatus: "-", postBidQueries: "-", compSheet1: "-", compSheet2: "-", stage: "Bid Not Submitted", deadline: "08/06/2026", approvedByManager: "No", actionType: "view" },
+  { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", type: "Completed", presalesChecklist: "Completed", highlight: "yellow",
+    alertNotify: "View Teams & Remarks", preBidQueries: "Completed", oemStatus: "Completed", bidStatus: "Won", postBidQueries: "Completed", compSheet1: "NA", compSheet2: "Project Transition in progress", stage: "Project Transition in progress", deadline: "08/06/2026", approvedByManager: "Yes", actionType: "upload" },
+];
+
+// ─── Task Dashboard PS – Upcoming Deadlines ──────────────────────────────────
+export const TASK_DASHBOARD_PS_DEADLINES = [
+  { label: "Pre-Bid Query Due", tenderId: "TND-2026-050", customer: "Customer Name", date: "Jun 29, 2026", dotColor: "red", alert: true },
+  { label: "OEM Response Due", tenderId: "TND-2026-048", customer: "Customer Name", date: "Jun 25, 2026", dotColor: "red", alert: true },
+  { label: "Post-Bid Query Due", tenderId: "TND-2026-050", customer: "Customer Name", date: "Jun 27, 2026", dotColor: "red", alert: true },
+  { label: "OEM Docs Due", tenderId: "TND-2026-045", customer: "Customer Name", date: "Jun 28, 2026", dotColor: "red", alert: true },
+  { label: "Pre-Bid Meeting", tenderId: "TND-2026-049", customer: "Customer Name", date: "Jul 2, 2026", dotColor: "orange", alert: false },
+  { label: "Pre-Bid Query Due", tenderId: "TND-2026-048", customer: "Customer Name", date: "Jul 4, 2026", dotColor: "orange", alert: false },
+  { label: "Bid Submission", tenderId: "TND-2026-046", customer: "Customer Name", date: "Jul 5, 2026", dotColor: "green", alert: false },
+  { label: "Post-Bid Queries", tenderId: "TND-2026-051", customer: "Customer Name", date: "Jul 5, 2026", dotColor: "green", alert: false },
+];
+
+// ─── Task Dashboard PS – Quick Actions ───────────────────────────────────────
+export const TASK_DASHBOARD_PS_QUICK_ACTIONS = [
+  { icon: "checklist", label: "Update Checklist" },
+  { icon: "upload", label: "Upload OEM Documents" },
+  { icon: "query", label: "Create Pre-Bid Query" },
+  { icon: "clarification", label: "Upload Clarification" },
+  { icon: "history", label: "View Historical Queries" },
+  { icon: "tender", label: "Open Assigned Tender" },
+];
+
+// ─── Task Dashboard PS – Activity Timeline ───────────────────────────────────
+export const TASK_DASHBOARD_PS_TIMELINE = [
+  { icon: "submit", title: "Pre-Bid Query Submitted to Sales", tenderId: "TND-2026-045", time: "Today, 11:30 AM" },
+  { icon: "upload", title: "OEM Documents Uploaded", tenderId: "TND-2026-045", time: "Today, 11:00 AM" },
+  { icon: "query", title: "Pre-Bid Query Created", tenderId: "TND-2026-045", time: "Today, 11:30 AM" },
+  { icon: "check", title: "Checklist Updated", tenderId: "TND-2026-045", time: "Today, 11:30 AM" },
+  { icon: "query", title: "Post-Bid Query & Response - Round 2", tenderId: "TND-2026-045", time: "Today, 11:30 AM" },
 ];
 
 // ─── Task Dashboard Table ─────────────────────────────────────────────────────
