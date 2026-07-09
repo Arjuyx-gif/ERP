@@ -218,9 +218,6 @@ const VisitHistoryTable = ({ rows, maxHeight }) => (
             <td style={{ padding: "13px 14px", textAlign: "center" }}>
               <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
                 <button style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "6px 12px", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", fontSize: 12, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT }}>
-                  <Eye size={13} color="#6B7280" /> View
-                </button>
-                <button style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "6px 12px", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", fontSize: 12, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT }}>
                   <Edit3 size={13} color="#6B7280" /> Edit
                 </button>
               </div>

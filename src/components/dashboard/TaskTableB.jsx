@@ -4,18 +4,8 @@ import { TASK_TABLE_B_ROWS, TASK_DASHBOARD_PS_DEADLINES, TASK_DASHBOARD_PS_QUICK
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
-/* ── Standard columns (6 cols) ──────────────────────────────────────────────── */
+/* ── Columns (17 cols, shown inline and in fullscreen) ──────────────────────── */
 const COLUMNS = [
-  { key: "id",                label: "Tender ID",            width: 140 },
-  { key: "firm",              label: "Firm Name",            width: 130 },
-  { key: "title",             label: "Tender Title",         width: 140 },
-  { key: "customer",          label: "Customer",             width: 150 },
-  { key: "type",              label: "Type",                 width: 120 },
-  { key: "presalesChecklist", label: "Pre-sales\nChecklist", width: 130 },
-];
-
-/* ── Fullscreen columns (17 cols) ───────────────────────────────────────────── */
-const FULL_COLUMNS = [
   { key: "id",                label: "Tender ID",            width: 120 },
   { key: "firm",              label: "Firm Name",            width: 110 },
   { key: "title",             label: "Tender Title",         width: 120 },
@@ -96,8 +86,6 @@ const TaskTableB = ({ fullscreen = false, onExpandTable, onAction, onShowDocs, o
   /* Use mock rows */
   const filteredRows = TASK_TABLE_B_ROWS;
 
-  const columnsToUse = fullscreen ? FULL_COLUMNS : COLUMNS;
-
   return (
     <div style={{ fontFamily: FONT }}>
 
@@ -113,7 +101,7 @@ const TaskTableB = ({ fullscreen = false, onExpandTable, onAction, onShowDocs, o
         <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: FONT }}>
           <thead>
             <tr style={{ background: "#F9FAFB", borderBottom: "1px solid #E5E7EB", position: "sticky", top: 0, zIndex: 10 }}>
-              {columnsToUse.map(col => (
+              {COLUMNS.map(col => (
                 <th key={col.key} style={{
                   padding: "12px 16px", fontSize: 12, fontWeight: 600, color: "#6B7280",
                   textAlign: "center", whiteSpace: "pre-line",
@@ -162,61 +150,57 @@ const TaskTableB = ({ fullscreen = false, onExpandTable, onAction, onShowDocs, o
                     {row.presalesChecklist}
                   </td>
 
-                  {fullscreen && (
-                    <>
-                      <td style={{ padding: "14px 16px", fontSize: 13, color: "#2563EB", textAlign: "center", textDecoration: "underline", textUnderlineOffset: 2, cursor: "pointer" }} onClick={() => onAlertNotifyClick?.(row)}>
-                        {row.alertNotify}
-                      </td>
-                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 500, textAlign: "center", ...STATUS_COLOR(row.preBidQueries) }}>
-                        {row.preBidQueries}
-                      </td>
-                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 500, textAlign: "center", ...STATUS_COLOR(row.oemStatus) }}>
-                        {row.oemStatus}
-                      </td>
-                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 500, textAlign: "center", ...STATUS_COLOR(row.bidStatus) }}>
-                        {BID_STATUS_BADGE(row.bidStatus) ? (
-                          <span style={{ 
-                            padding: "4px 10px", borderRadius: 12, fontSize: 12, fontWeight: 600,
-                            background: BID_STATUS_BADGE(row.bidStatus).bg,
-                            color: BID_STATUS_BADGE(row.bidStatus).color,
-                            border: `1px solid ${BID_STATUS_BADGE(row.bidStatus).border}` 
-                          }}>
-                            {row.bidStatus}
-                          </span>
-                        ) : row.bidStatus}
-                      </td>
-                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 500, textAlign: "center", ...STATUS_COLOR(row.postBidQueries) }}>
-                        {row.postBidQueries}
-                      </td>
-                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 500, textAlign: "center", ...STATUS_COLOR(row.compSheet1) }}>
-                        {row.compSheet1}
-                      </td>
-                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 500, textAlign: "center", ...STATUS_COLOR(row.compSheet2) }}>
-                        {row.compSheet2}
-                      </td>
-                      <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 500, textAlign: "center", ...STATUS_COLOR(row.stage) }}>
-                        {row.stage}
-                      </td>
-                      <td style={{ padding: "14px 16px", fontSize: 13, color: "#6B7280", whiteSpace: "nowrap", textAlign: "center" }}>
-                        {row.deadline}
-                      </td>
-                      <td style={{ padding: "14px 16px", fontSize: 13, color: "#374151", textAlign: "center" }}>
-                        {row.approvedByManager}
-                      </td>
-                      <td style={{ padding: "14px 16px", textAlign: "center" }}>
-                        <ActionButton
-                          type={row.actionType}
-                          onClick={() => {
-                            if (row.actionType === "view") {
-                              onViewDocs?.(row);
-                            } else {
-                              onAction?.(row);
-                            }
-                          }}
-                        />
-                      </td>
-                    </>
-                  )}
+                  <td style={{ padding: "14px 16px", fontSize: 13, color: "#2563EB", textAlign: "center", textDecoration: "underline", textUnderlineOffset: 2, cursor: "pointer" }} onClick={() => onAlertNotifyClick?.(row)}>
+                    {row.alertNotify}
+                  </td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 500, textAlign: "center", ...STATUS_COLOR(row.preBidQueries) }}>
+                    {row.preBidQueries}
+                  </td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 500, textAlign: "center", ...STATUS_COLOR(row.oemStatus) }}>
+                    {row.oemStatus}
+                  </td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 500, textAlign: "center", ...STATUS_COLOR(row.bidStatus) }}>
+                    {BID_STATUS_BADGE(row.bidStatus) ? (
+                      <span style={{
+                        padding: "4px 10px", borderRadius: 12, fontSize: 12, fontWeight: 600,
+                        background: BID_STATUS_BADGE(row.bidStatus).bg,
+                        color: BID_STATUS_BADGE(row.bidStatus).color,
+                        border: `1px solid ${BID_STATUS_BADGE(row.bidStatus).border}`
+                      }}>
+                        {row.bidStatus}
+                      </span>
+                    ) : row.bidStatus}
+                  </td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 500, textAlign: "center", ...STATUS_COLOR(row.postBidQueries) }}>
+                    {row.postBidQueries}
+                  </td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 500, textAlign: "center", ...STATUS_COLOR(row.compSheet1) }}>
+                    {row.compSheet1}
+                  </td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 500, textAlign: "center", ...STATUS_COLOR(row.compSheet2) }}>
+                    {row.compSheet2}
+                  </td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, fontWeight: 500, textAlign: "center", ...STATUS_COLOR(row.stage) }}>
+                    {row.stage}
+                  </td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, color: "#6B7280", whiteSpace: "nowrap", textAlign: "center" }}>
+                    {row.deadline}
+                  </td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, color: "#374151", textAlign: "center" }}>
+                    {row.approvedByManager}
+                  </td>
+                  <td style={{ padding: "14px 16px", textAlign: "center" }}>
+                    <ActionButton
+                      type={row.actionType}
+                      onClick={() => {
+                        if (row.actionType === "view") {
+                          onViewDocs?.(row);
+                        } else {
+                          onAction?.(row);
+                        }
+                      }}
+                    />
+                  </td>
                 </tr>
               );
             })}
