@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Calendar, Filter, Download, Eye, Plus, RefreshCw, FileText, TrendingUp,
-  Phone, Mail, CheckCircle2, Clock, Edit3, ChevronDown, ArrowUpDown, Upload, MapPin,
+  Phone, Mail, CheckCircle2, Clock, Edit3, ChevronDown, ArrowUpDown, Upload, MapPin, ChevronLeft,
 } from "lucide-react";
 import LogCustomerVisitModal from "./LogCustomerVisitModal";
 import AddOpportunityModal from "./AddOpportunityModal";
@@ -75,17 +75,20 @@ const ROW_ACTION_ICON = { eye: Eye, upload: Upload, edit: Edit3 };
 const STATUS_FILTER_OPTIONS = ["All Status", "Completed", "Pending", "In Progress", "Under Review", "Approval Pending", "Rejected"];
 const DEADLINE_FILTER_OPTIONS = ["By Deadline", "Priority", "Newest First", "Oldest First", "Tender Value", "Last Updated"];
 
+const MEETINGS_FILTER_TABS = ["All", "Today", "Tomorrow", "This Week", "High Priority", "Scheduled", "Rescheduled", "Completed", "Cancelled"];
+const FOLLOWUP_FILTER_TABS = ["All", "Pending", "In Progress", "Completed", "Overdue", "Today", "This Week", "High Priority"];
+
 const UPCOMING_MEETINGS = [
-  { subject: "Tender Discussion",   date: "28/06/2026", time: "10:00 AM", priority: "High"   },
-  { subject: "Follow-up Meeting",   date: "29/06/2026", time: "02:30 PM", priority: "High"   },
-  { subject: "Opportunity Meeting", date: "30/06/2026", time: "11:00 AM", priority: "Medium" },
-  { subject: "Cold Call",           date: "01/07/2026", time: "03:00 PM", priority: null     },
+  { meetingId: "MTG-2026-001", subject: "Tender Discussion",   date: "28/06/2026", time: "10:00 AM", priority: "High",   relatedOpportunity: "OPP-2026-012", relatedTender: "TND-2026-012" },
+  { meetingId: "MTG-2026-002", subject: "Follow-up Meeting",   date: "29/06/2026", time: "02:30 PM", priority: "High",   relatedOpportunity: "OPP-2026-012", relatedTender: "-" },
+  { meetingId: "MTG-2026-003", subject: "Opportunity Meeting", date: "30/06/2026", time: "11:00 AM", priority: "Medium", relatedOpportunity: "OPP-2026-012", relatedTender: "-" },
+  { meetingId: "MTG-2026-004", subject: "Cold Call",           date: "01/07/2026", time: "03:00 PM", priority: null,    relatedOpportunity: "OPP-2026-012", relatedTender: "-" },
 ];
 
 const FOLLOWUP_TRACKER = [
-  { date: "28/06/2026", priority: "High"   },
-  { date: "29/06/2026", priority: "High"   },
-  { date: "30/06/2026", priority: "Medium" },
+  { followupType: "Call", purpose: "Tender Discussion", date: "28/06/2026", priority: "High",   lastActivity: "Meeting\n25/06/2026", nextFollowUp: "28/06/2026", relatedOpportunity: "OPP-2026-012" },
+  { followupType: "Call", purpose: "Tender Discussion", date: "29/06/2026", priority: "High",   lastActivity: "Meeting\n25/06/2026", nextFollowUp: "28/06/2026", relatedOpportunity: "OPP-2026-012" },
+  { followupType: "Call", purpose: "Tender Discussion", date: "30/06/2026", priority: "Medium", lastActivity: "Meeting\n25/06/2026", nextFollowUp: "28/06/2026", relatedOpportunity: "OPP-2026-012" },
 ];
 
 const DAILY_ACTIVITY = [
@@ -103,7 +106,7 @@ const ACTIVITY_ICON = { visit: Calendar, followup: RefreshCw, opp: Plus, rfp: Fi
 
 const ROW_ACTION_MAP = {
   "Continue":         row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
-  "Upload":           row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "Complete Tasks", isQuery: true, showQueryUploadZone: true }),
+  "Upload":           row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "Complete Tasks", isQuery: true, showQueryUploadZone: true, isPostBidQueryPending: true }),
   "View":             row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
   "View RFP":         row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
   "Edit & Resubmit":  row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "Edit & Resubmit", rejectionRemark: "Please correct the EMD amount according to the revised guidelines." }),
@@ -308,6 +311,157 @@ const PillButton = ({ icon: Icon, label, onClick }) => (
   </button>
 );
 
+const FilterPill = ({ label, active, onClick }) => (
+  <button
+    onClick={onClick}
+    style={{
+      padding: "7px 16px", borderRadius: 8, cursor: "pointer", fontFamily: FONT,
+      fontSize: 13, fontWeight: 600, whiteSpace: "nowrap",
+      border: active ? "none" : "1px solid #E5E7EB",
+      background: active ? "#2563EB" : "#fff",
+      color: active ? "#fff" : "#374151",
+    }}
+  >
+    {label}
+  </button>
+);
+
+const FullscreenTableHeader = ({ title, onBack }) => (
+  <div style={{
+    padding: "16px 28px", background: "#fff", borderBottom: "1px solid #E2E8F0",
+    display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0,
+  }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      <button onClick={onBack} style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", cursor: "pointer", color: "#6B7280", fontSize: 13, fontFamily: FONT, padding: 4 }}>
+        <ChevronLeft size={16} /> Back to Dashboard
+      </button>
+      <div style={{ width: 1, height: 18, background: "#E2E8F0" }} />
+      <h2 style={{ fontSize: 16, fontWeight: 700, color: "#111", margin: 0 }}>{title}</h2>
+    </div>
+    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <div style={{ position: "relative" }}>
+        <input placeholder="Search meetings..." style={{ padding: "8px 12px", border: "1px solid #E2E8F0", borderRadius: 8, fontSize: 13, color: "#374151", outline: "none", fontFamily: FONT, width: 220 }} />
+      </div>
+      <PillButton icon={Download} label="Export" />
+    </div>
+  </div>
+);
+
+const AllMeetingsView = ({ rows, onBack, onView, onReschedule, onDone }) => {
+  const [filter, setFilter] = useState("All");
+  const filteredRows = filter === "High Priority" ? rows.filter(r => r.priority === "High") : rows;
+
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 950, background: "#F7F8FA", display: "flex", flexDirection: "column", fontFamily: FONT }}>
+      <FullscreenTableHeader title="All Upcoming Meetings" onBack={onBack} />
+      <div style={{ padding: "14px 28px 0", display: "flex", gap: 8, flexWrap: "wrap", flexShrink: 0 }}>
+        {MEETINGS_FILTER_TABS.map(tab => (
+          <FilterPill key={tab} label={tab} active={filter === tab} onClick={() => setFilter(tab)} />
+        ))}
+      </div>
+      <div style={{ flex: 1, overflow: "auto", padding: "16px 28px 28px" }}>
+        <div style={{ background: "#fff", borderRadius: 10, border: "1px solid #E2E8F0", overflow: "auto" }}>
+          <table style={{ width: "100%", minWidth: 1100, borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ background: "#F8FAFC", borderBottom: "2px solid #E2E8F0", position: "sticky", top: 0, zIndex: 2 }}>
+                {["Meeting ID", "Organization", "Contact Person", "Date", "Time", "Purpose", "Priority", "Related Opportunity", "Related Tender", "Actions"].map(col => (
+                  <th key={col} style={{ padding: "12px 14px", fontSize: 12, fontWeight: 600, color: "#667085", textAlign: "center", whiteSpace: "nowrap" }}>{col}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filteredRows.map((row, i) => {
+                const pill = PRIORITY_PILL[row.priority];
+                return (
+                  <tr key={i} style={{ borderBottom: i < filteredRows.length - 1 ? "1px solid #F2F4F7" : "none" }}>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: "#2563EB", fontWeight: 600, textAlign: "center", whiteSpace: "nowrap" }}>{row.meetingId}</td>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", textAlign: "center" }}>Name of Ministry / Organization</td>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", textAlign: "center" }}>Contact Person Name</td>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", whiteSpace: "nowrap", textAlign: "center" }}>{row.date}</td>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", whiteSpace: "nowrap", textAlign: "center" }}>{row.time}</td>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", textAlign: "center" }}>{row.subject}</td>
+                    <td style={{ padding: "14px 14px", textAlign: "center" }}>
+                      {pill ? <span style={{ padding: "3px 12px", borderRadius: 20, fontSize: 12, fontWeight: 700, background: pill.bg, color: pill.color }}>{row.priority}</span> : <span style={{ color: "#9CA3AF" }}>-</span>}
+                    </td>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: "#16A34A", fontWeight: 600, textAlign: "center", whiteSpace: "nowrap" }}>{row.relatedOpportunity}</td>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: row.relatedTender === "-" ? "#9CA3AF" : "#2563EB", fontWeight: 600, textAlign: "center", whiteSpace: "nowrap" }}>{row.relatedTender}</td>
+                    <td style={{ padding: "14px 14px", textAlign: "center" }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, width: 168, margin: "0 auto" }}>
+                        <button onClick={() => onView(row)} style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "6px 0", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", fontSize: 12, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT }}>View</button>
+                        <button onClick={() => onReschedule(row)} style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "6px 0", border: "1px solid #FDE68A", borderRadius: 6, background: "#FEFCE8", fontSize: 12, fontWeight: 500, color: "#B45309", cursor: "pointer", fontFamily: FONT }}>Reschedule</button>
+                        <button onClick={() => onDone(row)} style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "6px 0", border: "1px solid #BBF7D0", borderRadius: 6, background: "#F0FDF4", fontSize: 12, fontWeight: 500, color: "#16A34A", cursor: "pointer", fontFamily: FONT }}>Done</button>
+                        <button style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "6px 0", border: "1px solid #FECACA", borderRadius: 6, background: "#FEF2F2", fontSize: 12, fontWeight: 500, color: "#DC2626", cursor: "pointer", fontFamily: FONT }}>Cancel</button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const FollowUpManagementView = ({ rows, onBack, onCall, onEmail, onDone, onComplete }) => {
+  const [filter, setFilter] = useState("All");
+  const filteredRows = filter === "High Priority" ? rows.filter(r => r.priority === "High") : rows;
+
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 950, background: "#F7F8FA", display: "flex", flexDirection: "column", fontFamily: FONT }}>
+      <FullscreenTableHeader title="Follow - Up Management" onBack={onBack} />
+      <div style={{ padding: "14px 28px 0", display: "flex", gap: 8, flexWrap: "wrap", flexShrink: 0 }}>
+        {FOLLOWUP_FILTER_TABS.map(tab => (
+          <FilterPill key={tab} label={tab} active={filter === tab} onClick={() => setFilter(tab)} />
+        ))}
+      </div>
+      <div style={{ flex: 1, overflow: "auto", padding: "16px 28px 28px" }}>
+        <div style={{ background: "#fff", borderRadius: 10, border: "1px solid #E2E8F0", overflow: "auto" }}>
+          <table style={{ width: "100%", minWidth: 1200, borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ background: "#F8FAFC", borderBottom: "2px solid #E2E8F0", position: "sticky", top: 0, zIndex: 2 }}>
+                {["Follow-up Type", "Organization", "Contact Person", "Purpose", "Date", "Priority", "Last Activity", "Next Follow - up", "Related Opportunity", "Actions"].map(col => (
+                  <th key={col} style={{ padding: "12px 14px", fontSize: 12, fontWeight: 600, color: "#667085", textAlign: "center", whiteSpace: "nowrap" }}>{col}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filteredRows.map((row, i) => {
+                const pill = PRIORITY_PILL[row.priority];
+                return (
+                  <tr key={i} style={{ borderBottom: i < filteredRows.length - 1 ? "1px solid #F2F4F7" : "none" }}>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", textAlign: "center" }}>{row.followupType}</td>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", textAlign: "center" }}>Name of Ministry / Organization</td>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", textAlign: "center" }}>Contact Person Name</td>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", textAlign: "center" }}>{row.purpose}</td>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", whiteSpace: "nowrap", textAlign: "center" }}>{row.date}</td>
+                    <td style={{ padding: "14px 14px", textAlign: "center" }}>
+                      {pill ? <span style={{ padding: "3px 12px", borderRadius: 20, fontSize: 12, fontWeight: 700, background: pill.bg, color: pill.color }}>{row.priority}</span> : <span style={{ color: "#9CA3AF" }}>-</span>}
+                    </td>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", textAlign: "center", whiteSpace: "pre-line" }}>{row.lastActivity}</td>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: "#344054", whiteSpace: "nowrap", textAlign: "center" }}>{row.nextFollowUp}</td>
+                    <td style={{ padding: "14px 14px", fontSize: 13, color: "#16A34A", fontWeight: 600, textAlign: "center", whiteSpace: "nowrap" }}>{row.relatedOpportunity}</td>
+                    <td style={{ padding: "14px 14px", textAlign: "center" }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, width: 168, margin: "0 auto" }}>
+                        <button onClick={() => onCall(row)} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 4, padding: "6px 0", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", fontSize: 12, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT }}><Phone size={11} /> Call</button>
+                        <button style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 4, padding: "6px 0", border: "1px solid #BBF7D0", borderRadius: 6, background: "#F0FDF4", fontSize: 12, fontWeight: 500, color: "#16A34A", cursor: "pointer", fontFamily: FONT }}>WA</button>
+                        <button onClick={() => onEmail(row)} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 4, padding: "6px 0", border: "1px solid #BFDBFE", borderRadius: 6, background: "#EFF6FF", fontSize: 12, fontWeight: 500, color: "#2563EB", cursor: "pointer", fontFamily: FONT }}><Mail size={11} /> Email</button>
+                        <button onClick={() => onDone(row)} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "6px 0", border: "1px solid #BBF7D0", borderRadius: 6, background: "#F0FDF4", fontSize: 12, fontWeight: 500, color: "#16A34A", cursor: "pointer", fontFamily: FONT }}>Done</button>
+                        <button onClick={() => onComplete(row)} style={{ gridColumn: "1 / -1", display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "6px 0", border: "1px solid #E5E7EB", borderRadius: 6, background: "#fff", fontSize: 12, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT }}>Complete</button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const SalesActivityDashboard = ({ fullscreen = false, onViewRFP }) => {
@@ -323,6 +477,8 @@ const SalesActivityDashboard = ({ fullscreen = false, onViewRFP }) => {
   const [composeEmailTarget, setComposeEmailTarget] = useState(null);
   const [markCompleteTarget, setMarkCompleteTarget] = useState(null);
   const [meetingDetailsTarget, setMeetingDetailsTarget] = useState(null);
+  const [showAllMeetings, setShowAllMeetings] = useState(false);
+  const [showFollowUpManagement, setShowFollowUpManagement] = useState(false);
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [deadlineFilter, setDeadlineFilter] = useState("By Deadline");
 
@@ -508,7 +664,7 @@ const SalesActivityDashboard = ({ fullscreen = false, onViewRFP }) => {
       {/* Upcoming Meetings / Follow-up Tracker / Daily Activity Timeline */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}>
 
-        <Card title="Upcoming Meetings" action={<span style={{ fontSize: 13, color: "#2563EB", fontWeight: 500, cursor: "pointer" }}>View All</span>}>
+        <Card title="Upcoming Meetings" action={<span onClick={() => setShowAllMeetings(true)} style={{ fontSize: 13, color: "#2563EB", fontWeight: 500, cursor: "pointer" }}>View All</span>}>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {UPCOMING_MEETINGS.map((m, i) => {
               const pill = PRIORITY_PILL[m.priority];
@@ -537,7 +693,7 @@ const SalesActivityDashboard = ({ fullscreen = false, onViewRFP }) => {
           </div>
         </Card>
 
-        <Card title="Follow-up Tracker" action={<span style={{ fontSize: 13, color: "#2563EB", fontWeight: 500, cursor: "pointer" }}>View All</span>}>
+        <Card title="Follow-up Tracker" action={<span onClick={() => setShowFollowUpManagement(true)} style={{ fontSize: 13, color: "#2563EB", fontWeight: 500, cursor: "pointer" }}>View All</span>}>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {FOLLOWUP_TRACKER.map((f, i) => {
               const pill = PRIORITY_PILL[f.priority];
@@ -674,6 +830,27 @@ const SalesActivityDashboard = ({ fullscreen = false, onViewRFP }) => {
         onReschedule={(m) => { setMeetingDetailsTarget(null); setRescheduleTarget(m); }}
         onMeetingDone={(m) => { setMeetingDetailsTarget(null); setMeetingDoneTarget(m); }}
       />
+
+      {showAllMeetings && (
+        <AllMeetingsView
+          rows={UPCOMING_MEETINGS}
+          onBack={() => setShowAllMeetings(false)}
+          onView={setMeetingDetailsTarget}
+          onReschedule={setRescheduleTarget}
+          onDone={setMeetingDoneTarget}
+        />
+      )}
+
+      {showFollowUpManagement && (
+        <FollowUpManagementView
+          rows={FOLLOWUP_TRACKER}
+          onBack={() => setShowFollowUpManagement(false)}
+          onCall={setLogCallTarget}
+          onEmail={setComposeEmailTarget}
+          onDone={setMeetingDoneTarget}
+          onComplete={setMarkCompleteTarget}
+        />
+      )}
     </div>
   );
 };

@@ -100,14 +100,14 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
         >
           <div>
             <h2 style={{ fontSize: 18, fontWeight: 700, color: "#111827", margin: "0 0 6px" }}>
-              {card.isPostBidQueryPending ? "Query & Response Management" : "Pre-Bid Query"}
+              {card.isPostBidQueryPending ? "Post-Bid Query" : "Pre-Bid Query"}
             </h2>
             <div style={{ fontSize: 13, color: "#4B5563", display: "flex", alignItems: "center", gap: 12 }}>
               <span>
                 Tender ID: <strong style={{ color: card.isPostBidQueryPending || isPreBidSubmitted ? "#111827" : "#2563EB", fontWeight: 600 }}>{card.id}</strong>
               </span>
               <span style={{ color: "#6B7280" }}>
-                {card.isPostBidQueryPending ? "Post - Submission Query" : "Pre-Bid Query Submission"}
+                {card.isPostBidQueryPending ? "Post-Bid Query Submission" : "Pre-Bid Query Submission"}
               </span>
             </div>
           </div>
