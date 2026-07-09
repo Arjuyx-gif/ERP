@@ -119,7 +119,7 @@ export const KANBAN_COLUMNS = [
     ],
   },
   {
-    id: "approved", title: "Approved - Pre Bid Tasks",
+    id: "approved", title: "Work In Progress",
     color: "#F3E5F5", countBg: "#9C27B0",
     cards: [
       {
@@ -131,6 +131,33 @@ export const KANBAN_COLUMNS = [
           { text: "OEM Docs Pending", color: "#FF9800", bg: "#FFF4E0" },
           { text: "EMD Pending", color: "#F44336", bg: "#FBE9E7" },
         ],
+        action: "Complete Tasks",
+      },
+    ],
+  },
+  {
+    id: "pre_bid_query", title: "Pre Bid Query",
+    color: "#E3F0FB", countBg: "#2979FF",
+    cards: [
+      {
+        id: "TND-2026-009", status: "Completed", statusColor: "#4CAF50", statusBg: "#E8F5E9",
+        tender: "Tender Title", customer: null, amount: "500Cr.",
+        tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
+        details: { status: "Pre bid Query", deadline: "Apr 25, 2026" },
+        action: "View Submission",
+      },
+      {
+        id: "TND-2026-009", status: "In Progress", statusColor: "#CA8A04", statusBg: "#FEF3C7",
+        tender: "Tender Title", customer: null, amount: "500Cr.",
+        tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
+        details: { status: "Pre bid Query", deadline: "Apr 25, 2026" },
+        action: "Complete Tasks",
+      },
+      {
+        id: "TND-2026-009", status: "Approval Pending", statusColor: "#EA580C", statusBg: "#FFF1E7",
+        tender: "Tender Title", customer: null, amount: "500Cr.",
+        tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
+        details: { status: "Pre bid Query", deadline: "Apr 25, 2026" },
         action: "Complete Tasks",
       },
     ],
