@@ -111,7 +111,7 @@ const ROW_ACTION_MAP = {
   "View RFP":         row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View RFP Form" }),
   "Edit & Resubmit":  row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "Edit & Resubmit", rejectionRemark: "Please correct the EMD amount according to the revised guidelines." }),
   "Edit":             row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "Edit & Resubmit", rejectionRemark: "Sent back for rework due to incomplete documentation." }),
-  "Edit Result":      row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "Update Result", tags: [row.firm], tagColors: { [row.firm]: "#E3F0FB" } }),
+  "Edit Result":      row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "Update Result", tags: [row.firm], tagColors: { [row.firm]: "#E3F0FB" }, status: row.status }),
   "Upload PO":        row => ({ id: row.id, tender: row.title, customer: row.customer, amount: row.value, action: "View PO" }),
 };
 

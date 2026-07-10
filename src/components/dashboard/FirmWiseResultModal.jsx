@@ -5,6 +5,7 @@ import { X, ChevronDown, Paperclip } from "lucide-react";
 const FONT = "'Inter','Segoe UI',sans-serif";
 
 const RESULT_OPTIONS = ["Result Awaited", "Won", "Lost", "Canceled", "Disqualified"];
+const REVISE_OPTIONS = ["Won", "Canceled", "Disqualified"];
 
 const resultStyle = (value) => {
   switch (value) {
@@ -17,7 +18,7 @@ const resultStyle = (value) => {
 };
 
 // ── Portal dropdown menu — rendered at document.body to escape overflow:hidden ──
-const DropdownPortal = ({ triggerRef, onSelect, onClose }) => {
+const DropdownPortal = ({ triggerRef, options = RESULT_OPTIONS, onSelect, onClose }) => {
   const [rect, setRect] = useState(null);
 
   useEffect(() => {
@@ -46,7 +47,7 @@ const DropdownPortal = ({ triggerRef, onSelect, onClose }) => {
         overflow: "hidden",
         fontFamily: FONT,
       }}>
-        {RESULT_OPTIONS.map((opt, idx) => (
+        {options.map((opt, idx) => (
           <div
             key={opt}
             onClick={() => { onSelect(opt); onClose(); }}
@@ -56,7 +57,7 @@ const DropdownPortal = ({ triggerRef, onSelect, onClose }) => {
               padding: "9px 12px",
               fontSize: 13, fontWeight: 500, color: "#92400E",
               cursor: "pointer",
-              borderBottom: idx < RESULT_OPTIONS.length - 1 ? "1px solid #E9D89A" : "none",
+              borderBottom: idx < options.length - 1 ? "1px solid #E9D89A" : "none",
               transition: "background 0.12s, color 0.12s",
             }}
           >
@@ -134,13 +135,77 @@ const FirmRow = ({ firm, value, tagColor, isLast, onChange }) => {
   );
 };
 
+// ── Per-firm revise row ─────────────────────────────────────────────────────────
+const ReviseFirmRow = ({ firm, value, tagColor, isLast, onChange }) => {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef(null);
+  const { bg, color } = resultStyle(value);
+
+  return (
+    <div style={{
+      display: "grid", gridTemplateColumns: "1fr 1fr 1.5fr",
+      padding: "12px 14px", alignItems: "center",
+      borderBottom: isLast ? "none" : "1px solid #EAECF0",
+      background: "#fff",
+    }}>
+      <span style={{
+        display: "inline-block", width: "fit-content",
+        fontSize: 12, fontWeight: 600,
+        padding: "3px 10px", borderRadius: 6,
+        background: tagColor || "#E3F0FB", color: "#344054",
+      }}>
+        {firm}
+      </span>
+      <span style={{
+        display: "inline-block", width: "fit-content",
+        fontSize: 12, fontWeight: 600,
+        padding: "4px 14px", borderRadius: 8, background: "#FEE2E2", color: "#DC2626",
+      }}>
+        Lost
+      </span>
+      <div style={{ position: "relative" }}>
+        <div
+          ref={triggerRef}
+          onClick={() => setOpen(o => !o)}
+          style={{
+            display: "inline-flex", alignItems: "center", gap: 8,
+            background: bg,
+            border: "1px solid #E9D89A",
+            borderRadius: open ? "6px 6px 0 0" : 6,
+            padding: "6px 10px",
+            cursor: "pointer", userSelect: "none",
+            minWidth: 148,
+          }}
+        >
+          <span style={{ flex: 1, fontSize: 13, fontWeight: 500, color }}>
+            {value}
+          </span>
+          <ChevronDown
+            size={14} color={color}
+            style={{ flexShrink: 0, transition: "transform 0.15s", transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
+          />
+        </div>
+        {open && (
+          <DropdownPortal
+            triggerRef={triggerRef}
+            options={REVISE_OPTIONS}
+            onSelect={onChange}
+            onClose={() => setOpen(false)}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
 // ── Main modal ──────────────────────────────────────────────────────────────────
 const FirmWiseResultModal = ({ card, onClose, onSubmit }) => {
+  const isReviseMode = card.status === "Lost";
   const firms = card.tags?.filter(t => t !== "Lost") || [];
 
   const [phase, setPhase] = useState("edit");
   const [results, setResults] = useState(
-    firms.reduce((acc, firm) => ({ ...acc, [firm]: "Result Awaited" }), {})
+    firms.reduce((acc, firm) => ({ ...acc, [firm]: isReviseMode ? "Revised Result" : "Result Awaited" }), {})
   );
   const [editRemarks,    setEditRemarks]    = useState("");
   const [refundDetails,  setRefundDetails]  = useState("");
@@ -167,10 +232,10 @@ const FirmWiseResultModal = ({ card, onClose, onSubmit }) => {
         <div style={{ padding: "18px 22px 14px", display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexShrink: 0 }}>
           <div>
             <div style={{ fontSize: 15, fontWeight: 700, color: "#101828" }}>
-              Tender ID - {card.id} -
+              {isReviseMode ? "Revise Result" : `Tender ID - ${card.id} -`}
             </div>
             <div style={{ fontSize: 12, color: "#667085", marginTop: 3 }}>
-              {card.customer || "Customer Name"}
+              {isReviseMode ? `Tender ID: ${card.id}` : (card.customer || "Customer Name")}
             </div>
           </div>
           <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "#667085", padding: 4, borderRadius: 6, display: "flex", marginLeft: 12, flexShrink: 0 }}>
@@ -247,30 +312,44 @@ const FirmWiseResultModal = ({ card, onClose, onSubmit }) => {
           {/* Editable firm table — uses FirmRow with portal dropdowns */}
           <div>
             <div style={{ fontSize: 13, fontWeight: 700, color: "#101828", marginBottom: 10 }}>
-              Firm - Wise Result
+              {isReviseMode ? "Revise Result" : "Firm - Wise Result"}
             </div>
             <div style={{ border: "1px solid #EAECF0", borderRadius: 10, overflow: "visible" }}>
               {/* Header */}
               <div style={{
-                display: "grid", gridTemplateColumns: "1fr 1.5fr 1.2fr",
+                display: "grid", gridTemplateColumns: isReviseMode ? "1fr 1fr 1.5fr" : "1fr 1.5fr 1.2fr",
                 background: "#F9FAFB", padding: "9px 14px", borderBottom: "1px solid #EAECF0",
                 borderRadius: "10px 10px 0 0",
               }}>
-                {["Firm", "Result", "EMD Return"].map(h => (
+                {(isReviseMode ? ["Firm", "Result", "Revised Result"] : ["Firm", "Result", "EMD Return"]).map(h => (
                   <span key={h} style={{ fontSize: 12, fontWeight: 600, color: "#667085" }}>{h}</span>
                 ))}
               </div>
               {/* Rows — each one has its own ref for portal positioning */}
-              {firms.map((firm, i) => (
-                <FirmRow
-                  key={firm}
-                  firm={firm}
-                  value={results[firm]}
-                  tagColor={card.tagColors?.[firm]}
-                  isLast={i === firms.length - 1}
-                  onChange={val => setResults(prev => ({ ...prev, [firm]: val }))}
-                />
-              ))}
+              {firms.map((firm, i) => {
+                if (isReviseMode) {
+                  return (
+                    <ReviseFirmRow
+                      key={firm}
+                      firm={firm}
+                      value={results[firm]}
+                      tagColor={card.tagColors?.[firm]}
+                      isLast={i === firms.length - 1}
+                      onChange={val => setResults(prev => ({ ...prev, [firm]: val }))}
+                    />
+                  );
+                }
+                return (
+                  <FirmRow
+                    key={firm}
+                    firm={firm}
+                    value={results[firm]}
+                    tagColor={card.tagColors?.[firm]}
+                    isLast={i === firms.length - 1}
+                    onChange={val => setResults(prev => ({ ...prev, [firm]: val }))}
+                  />
+                );
+              })}
             </div>
           </div>
 
@@ -292,7 +371,13 @@ const FirmWiseResultModal = ({ card, onClose, onSubmit }) => {
         </div>
         <div style={{ padding: "14px 22px 20px", borderTop: "1px solid #EAECF0", flexShrink: 0 }}>
           <button
-            onClick={() => setPhase("review")}
+            onClick={() => {
+              if (isReviseMode) {
+                onSubmit({ results, remarks: editRemarks });
+              } else {
+                setPhase("review");
+              }
+            }}
             style={{
               width: "100%", padding: "13px 0", border: "none", borderRadius: 12,
               background: "#2979FF", fontSize: 14, fontWeight: 700, color: "#fff",

@@ -1,4 +1,8 @@
+import { useState } from "react";
 import { X, Paperclip, Edit2, RefreshCw, MessageSquarePlus, XCircle, CheckCircle2 } from "lucide-react";
+import EditMeetingModal from "./EditMeetingModal";
+import RescheduleMeetingModal from "./RescheduleMeetingModal";
+import AddRemarkModal from "./AddRemarkModal";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -23,6 +27,10 @@ const InfoCard = ({ rows }) => (
 );
 
 const MeetingDetailsPanel = ({ open, onClose, meeting, onReschedule, onMeetingDone }) => {
+  const [showEditMeeting, setShowEditMeeting] = useState(false);
+  const [showReschedule, setShowReschedule] = useState(false);
+  const [showAddRemark, setShowAddRemark] = useState(false);
+
   if (!open) return null;
 
   const m = meeting || {};
@@ -99,13 +107,13 @@ const MeetingDetailsPanel = ({ open, onClose, meeting, onReschedule, onMeetingDo
           </button>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 22 }}>
-            <button style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 0", border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT }}>
+            <button onClick={() => setShowEditMeeting(true)} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 0", border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT }}>
               <Edit2 size={13} /> Edit Meeting
             </button>
-            <button onClick={() => onReschedule?.(m)} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 0", border: "1px solid #FDE68A", borderRadius: 8, background: "#fff", fontSize: 13, fontWeight: 500, color: "#B45309", cursor: "pointer", fontFamily: FONT }}>
+            <button onClick={() => setShowReschedule(true)} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 0", border: "1px solid #FDE68A", borderRadius: 8, background: "#fff", fontSize: 13, fontWeight: 500, color: "#B45309", cursor: "pointer", fontFamily: FONT }}>
               <RefreshCw size={13} /> Reschedule
             </button>
-            <button style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 0", border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT }}>
+            <button onClick={() => setShowAddRemark(true)} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 0", border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: FONT }}>
               <MessageSquarePlus size={13} /> Add Remark
             </button>
             <button style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 0", border: "1px solid #FECACA", borderRadius: 8, background: "#fff", fontSize: 13, fontWeight: 500, color: "#DC2626", cursor: "pointer", fontFamily: FONT }}>
@@ -122,6 +130,23 @@ const MeetingDetailsPanel = ({ open, onClose, meeting, onReschedule, onMeetingDo
           </button>
         </div>
       </div>
+
+      {/* Modals that open ON TOP of the Tender Discussion panel */}
+      <EditMeetingModal
+        open={showEditMeeting}
+        onClose={() => setShowEditMeeting(false)}
+        meeting={m}
+      />
+      <RescheduleMeetingModal
+        open={showReschedule}
+        onClose={() => setShowReschedule(false)}
+        currentDate={m.date}
+        currentTime={m.time}
+      />
+      <AddRemarkModal
+        open={showAddRemark}
+        onClose={() => setShowAddRemark(false)}
+      />
     </>
   );
 };
