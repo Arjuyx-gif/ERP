@@ -494,7 +494,7 @@ const SalesActivityDashboard = ({ fullscreen = false, onViewRFP }) => {
 
   const handleRowAction = (label, row) => {
     if (label === "View SOF") {
-      navigate("/sales-order-form", { state: { step: 10, showUploadModal: false, fromSC: true } });
+      navigate("/sales-order-form", { state: { step: 10, showUploadModal: false, fromSC: false } });
       return;
     }
     const builder = ROW_ACTION_MAP[label];
