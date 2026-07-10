@@ -81,8 +81,10 @@ const PQ_ROWS = [
   "Service/Support Center List", "Page No & Indexing", "Other Highlights",
 ];
 
-const COMPETITION_ROWS = [
-  "Details of any joint call with OEM", "Winning Strategy", "Reason to bid the tender",
+const COMPETITOR_ROW_COUNT = 3;
+
+const COMPETITION_NOTES = [
+  "Details of any joint call with OEM", "Winning Strategy", "Reasons to bid the tender",
 ];
 
 const RFPField = ({ label, fullSpan }) => (
@@ -698,21 +700,33 @@ const ComparisonSheetDetail = () => {
                   <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
                     <thead>
                       <tr style={{ background: "#F8FAFC" }}>
-                        <th style={{ padding: "10px 14px", borderBottom: "1px solid #E5E7EB", borderRight: "1px solid #E5E7EB" }} />
-                        {["Competitor(SI)", "OEM"].map(h => (
+                        {["Competitor (SI)", "OEM"].map(h => (
                           <th key={h} style={{ padding: "10px 14px", fontSize: 12, fontWeight: 600, color: "#374151", textAlign: "center", borderBottom: "1px solid #E5E7EB", borderRight: "1px solid #E5E7EB" }}>{h}</th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
-                      {COMPETITION_ROWS.map((row, i) => (
-                        <tr key={i} style={{ borderBottom: i < COMPETITION_ROWS.length - 1 ? "1px solid #E5E7EB" : "none" }}>
-                          <td style={{ padding: "10px 14px", fontSize: 12, color: "#374151", borderRight: "1px solid #E5E7EB" }}>{row}</td>
+                      {Array.from({ length: COMPETITOR_ROW_COUNT }).map((_, i) => (
+                        <tr key={i} style={{ borderBottom: i < COMPETITOR_ROW_COUNT - 1 ? "1px solid #E5E7EB" : "none" }}>
                           {["Competitor", "OEM"].map(col => (
                             <td key={col} style={{ padding: "8px 10px", borderRight: "1px solid #E5E7EB", background: "#F9FAFB" }}>
                               <input readOnly style={{ width: "100%", border: "none", outline: "none", fontSize: 12, fontFamily: FONT, background: "transparent" }} />
                             </td>
                           ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div style={{ border: "1px solid #E5E7EB", borderRadius: 8, overflow: "hidden", marginTop: 16 }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+                    <tbody>
+                      {COMPETITION_NOTES.map((row, i) => (
+                        <tr key={row} style={{ borderBottom: i < COMPETITION_NOTES.length - 1 ? "1px solid #E5E7EB" : "none" }}>
+                          <td style={{ padding: "10px 14px", fontSize: 12, fontWeight: 700, color: "#111", borderRight: "1px solid #E5E7EB", width: "34%" }}>{row}</td>
+                          <td style={{ padding: "8px 10px", background: "#F9FAFB" }}>
+                            <input readOnly style={{ width: "100%", border: "none", outline: "none", fontSize: 12, fontFamily: FONT, background: "transparent" }} />
+                          </td>
                         </tr>
                       ))}
                     </tbody>

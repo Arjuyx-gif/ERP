@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Save, Upload, Eye, Check, Calendar, Download } from "lucide-react";
+import { ChevronLeft, ChevronRight, Save, Upload, Eye, Check, Calendar, Download, Send } from "lucide-react";
 import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
 
@@ -31,12 +31,18 @@ const PQ_ROWS = [
   "Any Other Undertaking",
   "Bid Authorization Certificate",
   "MAF",
+  "OEM Undertaking (Eg: Support, Spare, Warranty etc.)",
   "Service/Support Center List",
   "Page No & Indexing",
   "Other Highlights",
-  "Details of any joint call with OEM",
-  "Winning Strategy",
-  "Reason to bid the tender",
+];
+
+const COMPETITOR_ROW_COUNT = 3;
+
+const COMPETITION_NOTES = [
+  { key: "compJointCall",        label: "Details of any joint call with OEM" },
+  { key: "compWinningStrategy",  label: "Winning Strategy" },
+  { key: "compReasonToBid",      label: "Reasons to bid the tender" },
 ];
 
 // ── Reusable field components ──────────────────────────────────────────────────
@@ -82,8 +88,8 @@ const Field = ({ label, multiline = false, type = "text", value, onChange, fullS
   </div>
 );
 
-const SelectField = ({ label, value, onChange, options = [] }) => (
-  <div>
+const SelectField = ({ label, value, onChange, options = [], fullSpan = false }) => (
+  <div style={{ gridColumn: fullSpan ? "1 / -1" : undefined }}>
     <label style={{ display: "block", fontSize: 13, color: "#374151", marginBottom: 6, fontFamily: FONT }}>
       {label}
     </label>
@@ -113,6 +119,130 @@ const SectionBanner = ({ text }) => (
   </div>
 );
 
+// ── PQ / Competition tables (shared between Step4 editable and Step6 read-only) ─
+
+const PQTable = ({ data, set, readOnly = false }) => (
+  <div style={{ border: "1px solid #E5E7EB", borderRadius: 8, overflow: "hidden" }}>
+    <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+      <thead>
+        <tr style={{ background: "#F8FAFC" }}>
+          {["Particulars", "Bidder", "OEM", "Evidence Required"].map(h => (
+            <th key={h} style={{
+              padding: "12px 16px", fontSize: 13, fontWeight: 600, color: "#374151",
+              textAlign: "center", borderBottom: "1px solid #E5E7EB",
+              borderRight: "1px solid #E5E7EB",
+            }}>{h}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {PQ_ROWS.map((row, i) => (
+          <tr key={row} style={{ borderBottom: i < PQ_ROWS.length - 1 ? "1px solid #E5E7EB" : "none" }}>
+            <td style={{
+              padding: "14px 16px", fontSize: 13,
+              color: "#374151", fontWeight: 400,
+              borderRight: "1px solid #E5E7EB", verticalAlign: "middle",
+            }}>
+              {row}
+            </td>
+            {["bidder", "oem", "evidence"].map(col => (
+              <td key={col} style={{ padding: readOnly ? "8px 10px" : "8px 12px", borderRight: "1px solid #E5E7EB", verticalAlign: "middle", background: readOnly ? "#F9FAFB" : undefined }}>
+                <input
+                  type="text"
+                  readOnly={readOnly}
+                  value={data[`pq_${i}_${col}`] ?? ""}
+                  onChange={readOnly ? undefined : e => set(`pq_${i}_${col}`)(e.target.value)}
+                  style={{
+                    width: "100%", border: "none", outline: "none",
+                    fontSize: 13, fontFamily: FONT, background: "transparent", color: "#111",
+                  }}
+                />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+const CompetitionTable = ({ data, set, readOnly = false }) => (
+  <div style={{ border: "1px solid #E5E7EB", borderRadius: 8, overflow: "hidden" }}>
+    <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+      <thead>
+        <tr>
+          <th colSpan={2} style={{
+            padding: "12px 16px", fontSize: 14, fontWeight: 700, color: "#1F2937",
+            textAlign: "center", background: "#EEF2F6", borderBottom: "1px solid #E5E7EB",
+          }}>
+            Competition Details
+          </th>
+        </tr>
+        <tr style={{ background: "#F8FAFC" }}>
+          {["Competitor (SI)", "OEM"].map(h => (
+            <th key={h} style={{
+              padding: "12px 16px", fontSize: 13, fontWeight: 600, color: "#374151",
+              textAlign: "center", borderBottom: "1px solid #E5E7EB",
+              borderRight: "1px solid #E5E7EB",
+            }}>{h}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {Array.from({ length: COMPETITOR_ROW_COUNT }).map((_, i) => (
+          <tr key={i} style={{ borderBottom: i < COMPETITOR_ROW_COUNT - 1 ? "1px solid #E5E7EB" : "none" }}>
+            {["competitor", "oem"].map(col => (
+              <td key={col} style={{ padding: readOnly ? "8px 10px" : "8px 12px", borderRight: "1px solid #E5E7EB", verticalAlign: "middle", background: readOnly ? "#F9FAFB" : undefined }}>
+                <input
+                  type="text"
+                  readOnly={readOnly}
+                  value={data[`comp_${i}_${col}`] ?? ""}
+                  onChange={readOnly ? undefined : e => set(`comp_${i}_${col}`)(e.target.value)}
+                  style={{
+                    width: "100%", border: "none", outline: "none",
+                    fontSize: 13, fontFamily: FONT, background: "transparent", color: "#111",
+                  }}
+                />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+const CompetitionNotesTable = ({ data, set, readOnly = false }) => (
+  <div style={{ border: "1px solid #E5E7EB", borderRadius: 8, overflow: "hidden" }}>
+    <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+      <tbody>
+        {COMPETITION_NOTES.map((n, i) => (
+          <tr key={n.key} style={{ borderBottom: i < COMPETITION_NOTES.length - 1 ? "1px solid #E5E7EB" : "none" }}>
+            <td style={{
+              padding: "14px 16px", fontSize: 13, fontWeight: 700,
+              color: "#111", borderRight: "1px solid #E5E7EB", verticalAlign: "middle", width: "34%",
+            }}>
+              {n.label}
+            </td>
+            <td style={{ padding: readOnly ? "8px 10px" : "8px 12px", verticalAlign: "middle", background: readOnly ? "#F9FAFB" : undefined }}>
+              <input
+                type="text"
+                readOnly={readOnly}
+                value={data[n.key] ?? ""}
+                onChange={readOnly ? undefined : e => set(n.key)(e.target.value)}
+                style={{
+                  width: "100%", border: "none", outline: "none",
+                  fontSize: 13, fontFamily: FONT, background: "transparent", color: "#111",
+                }}
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
 // ── Step content ───────────────────────────────────────────────────────────────
 
 const Step1 = ({ data, set }) => (
@@ -120,10 +250,12 @@ const Step1 = ({ data, set }) => (
     <h2 style={{ fontSize: 17, fontWeight: 600, color: "#1F2937", margin: "0 0 24px" }}>Details</h2>
     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px 40px" }}>
       <Field label="Name of Sales Rep"  value={data.salesRep}         onChange={set("salesRep")} />
-      <Field label="Funnel Ref No"       value={data.funnelRef}        onChange={set("funnelRef")} />
+      <SelectField label="Type"          value={data.type}             onChange={set("type")}
+        options={["Proactive", "Reactive"]} />
       <Field label="Name of Department" value={data.department}       onChange={set("department")} />
-      <Field label="Existing Customer"  value={data.existingCustomer} onChange={set("existingCustomer")} />
+      <Field label="Funnel Ref No"       value={data.funnelRef}        onChange={set("funnelRef")} />
       <Field label="Address"             value={data.address}          onChange={set("address")} multiline />
+      <Field label="Existing Customer"  value={data.existingCustomer} onChange={set("existingCustomer")} />
     </div>
   </div>
 );
@@ -147,42 +279,65 @@ const Step3 = ({ data, set }) => (
       <Field label="Tender Title"                value={data.tenderTitle}          onChange={set("tenderTitle")} />
       <Field label="RFP No."                     value={data.rfpNo}                onChange={set("rfpNo")} />
       <Field label="Tender ID"                   value={data.tenderId}             onChange={set("tenderId")} fullSpan />
-      <Field label="No. of Bids"                 value={data.noOfBids}             onChange={set("noOfBids")} />
+      <SelectField label="No. of Bids"           value={data.noOfBids}             onChange={set("noOfBids")}
+        options={["1", "2", "3", "4"]} />
       <SelectField label="Firm Names"            value={data.firmNames}            onChange={set("firmNames")}
         options={["CIPL", "NIPL", "UVT", "BMG", "E Square"]} />
-      <Field label="Reverse Auction"             value={data.reverseAuction}       onChange={set("reverseAuction")} />
+      <SelectField label="Reverse Auction"       value={data.reverseAuction}       onChange={set("reverseAuction")}
+        options={["Yes", "No"]} />
       <Field label="Estimated Bid Value"         value={data.estimatedBidValue}    onChange={set("estimatedBidValue")} />
       <Field label="RFP Issue Date"              value={data.rfpIssueDate}         onChange={set("rfpIssueDate")} type="date" />
       <Field label="Submission Portal Address"   value={data.submissionPortal}     onChange={set("submissionPortal")} />
-      <Field label="Tender Type"                 value={data.tenderType}           onChange={set("tenderType")} />
+      <SelectField label="Tender Type"           value={data.tenderType}           onChange={set("tenderType")}
+        options={["Open", "Limited"]} />
       <Field label="Bid/Tender Validity"         value={data.bidValidity}          onChange={set("bidValidity")} />
       <Field label="Query Submission Date"       value={data.querySubmissionDate}  onChange={set("querySubmissionDate")} type="date" />
       <Field label="Mode of Submission - Query"  value={data.modeQuery}            onChange={set("modeQuery")} />
+      <Field label="Pre-Bid Meeting Date"        value={data.preBidMeetingDate}    onChange={set("preBidMeetingDate")} type="date" />
+      <Field label="Pre-Bid Meeting Venue/ Portal" value={data.preBidVenue}        onChange={set("preBidVenue")} />
       <Field label="Pre-Bid Meeting Time"        value={data.preBidTime}           onChange={set("preBidTime")} fullSpan />
       <Field label="Bid Submission Date"         value={data.bidSubmissionDate}    onChange={set("bidSubmissionDate")} type="date" />
       <Field label="Bid Opening Date"            value={data.bidOpeningDate}       onChange={set("bidOpeningDate")} type="date" />
-      <Field label="Mode of Submission - Tender" value={data.modeTender}           onChange={set("modeTender")} />
+      <SelectField label="Mode of Submission - Tender" value={data.modeTender}     onChange={set("modeTender")}
+        options={["Online", "Offline", "Both"]} />
       <Field label="Price Validity"              value={data.priceValidity}        onChange={set("priceValidity")} />
       <Field label="Tender Fee Amount"           value={data.tenderFeeAmount}      onChange={set("tenderFeeAmount")} />
       <Field label="Mode of Tender Fee Payment"  value={data.tenderFeeMode}        onChange={set("tenderFeeMode")} />
-      <Field label="EMD Required"                value={data.emdRequired}          onChange={set("emdRequired")} fullSpan />
+      <SelectField label="EMD Required"          value={data.emdRequired}          onChange={set("emdRequired")}
+        options={["Yes", "No"]} />
+      <SelectField label="EMD In Form Of"        value={data.emdFormOf}            onChange={set("emdFormOf")}
+        options={["BG", "e-BG", "DD", "Surety Bond", "NEFT", "Vendor Assessment", "MSME", "Startup", "Other"]} />
       <Field label="EMD Amount"                  value={data.emdAmount}            onChange={set("emdAmount")} />
       <Field label="Date of Submission - EMD"    value={data.emdDate}              onChange={set("emdDate")} type="date" />
       <SectionBanner text="In case EMD is required in the form of BG" />
+      <Field label="Name of the Beneficiary"     value={data.beneficiaryName}      onChange={set("beneficiaryName")} />
+      <Field label="IFSC CODE"                   value={data.ifscCode}             onChange={set("ifscCode")} />
+      <Field label="Name of the Bank"            value={data.bankName}             onChange={set("bankName")} />
+      <Field label="Branch Address"              value={data.branchAddress}        onChange={set("branchAddress")} />
       <Field label="Reason for Exemption of EMD/Tender Fee" value={data.emdExemptionReason} onChange={set("emdExemptionReason")} fullSpan />
+      <Field label="No of Delivery Locations"    value={data.deliveryLocations}    onChange={set("deliveryLocations")} />
+      <Field label="Delivery Schedule"           value={data.deliverySchedule}     onChange={set("deliverySchedule")} />
+      <Field label="No of Installation Locations" value={data.installationLocations} onChange={set("installationLocations")} />
+      <Field label="Installation Schedule"       value={data.installationSchedule} onChange={set("installationSchedule")} />
+      <Field label="Training T&C"                value={data.trainingTnc}          onChange={set("trainingTnc")} />
+      <Field label="Training Schedule"           value={data.trainingSchedule}     onChange={set("trainingSchedule")} />
       <Field label="Payment T&C"                 value={data.paymentTnc}           onChange={set("paymentTnc")} />
       <Field label="Payment Schedule"            value={data.paymentSchedule}      onChange={set("paymentSchedule")} />
-      <Field label="PBG%"                        value={data.pbgPct}               onChange={set("pbgPct")} />
+      <Field label="PBG %"                       value={data.pbgPct}               onChange={set("pbgPct")} />
       <Field label="PBG Validity"                value={data.pbgValidity}          onChange={set("pbgValidity")} />
       <Field label="AMC Reqd"                    value={data.amcReqd}              onChange={set("amcReqd")} />
       <Field label="Duration of AMC"             value={data.amcDuration}          onChange={set("amcDuration")} />
       <SectionBanner text="Manpower Details" />
-      <Field label="Manpower Reqd for Support"   value={data.manpower1}            onChange={set("manpower1")} />
-      <Field label="Manpower Reqd for Support"   value={data.manpower2}            onChange={set("manpower2")} />
+      <Field label="Manpower Reqd for Support"   value={data.manpowerReqd}         onChange={set("manpowerReqd")} />
+      <Field label="Duration"                    value={data.manpowerDuration}     onChange={set("manpowerDuration")} />
       <Field label="Qualification"               value={data.qualification}        onChange={set("qualification")} />
       <Field label="Certification"               value={data.certification}        onChange={set("certification")} />
       <Field label="Quantity"                    value={data.quantity}             onChange={set("quantity")} />
       <Field label="Experience"                  value={data.experience}           onChange={set("experience")} />
+      <Field label="LD Clause"                   value={data.ldClause}             onChange={set("ldClause")} />
+      <Field label="Inspection Clause"           value={data.inspectionClause}     onChange={set("inspectionClause")} />
+      <Field label="Insurance Required"          value={data.insuranceRequired}    onChange={set("insuranceRequired")} />
+      <Field label="Insurance Period"            value={data.insurancePeriod}      onChange={set("insurancePeriod")} />
     </div>
   </div>
 );
@@ -190,46 +345,12 @@ const Step3 = ({ data, set }) => (
 const Step4 = ({ data, set }) => (
   <div>
     <h2 style={{ fontSize: 17, fontWeight: 600, color: "#1F2937", margin: "0 0 20px" }}>PQ Criteria</h2>
-    <div style={{ border: "1px solid #E5E7EB", borderRadius: 8, overflow: "hidden" }}>
-      <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
-        <thead>
-          <tr style={{ background: "#F8FAFC" }}>
-            {["Particulars", "Bidder", "OEM", "Evidence Required"].map(h => (
-              <th key={h} style={{
-                padding: "12px 16px", fontSize: 13, fontWeight: 600, color: "#374151",
-                textAlign: "center", borderBottom: "1px solid #E5E7EB",
-                borderRight: "1px solid #E5E7EB",
-              }}>{h}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {PQ_ROWS.map((row, i) => (
-            <tr key={row} style={{ borderBottom: i < PQ_ROWS.length - 1 ? "1px solid #E5E7EB" : "none" }}>
-              <td style={{
-                padding: "14px 16px", fontSize: 13,
-                color: "#374151", fontWeight: 400,
-                borderRight: "1px solid #E5E7EB", verticalAlign: "middle",
-              }}>
-                {row}
-              </td>
-              {["bidder", "oem", "evidence"].map(col => (
-                <td key={col} style={{ padding: "8px 12px", borderRight: "1px solid #E5E7EB", verticalAlign: "middle" }}>
-                  <input
-                    type="text"
-                    value={data[`pq_${i}_${col}`] ?? ""}
-                    onChange={e => set(`pq_${i}_${col}`)(e.target.value)}
-                    style={{
-                      width: "100%", border: "none", outline: "none",
-                      fontSize: 13, fontFamily: FONT, background: "transparent", color: "#111",
-                    }}
-                  />
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <PQTable data={data} set={set} />
+    <div style={{ marginTop: 24 }}>
+      <CompetitionTable data={data} set={set} />
+    </div>
+    <div style={{ marginTop: 20 }}>
+      <CompetitionNotesTable data={data} set={set} />
     </div>
   </div>
 );
@@ -287,10 +408,11 @@ const Step6 = ({ data, set }) => (
     <ReviewSection title="Details" />
     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px 40px" }}>
       <ReadField label="Name of Sales Rep"  value={data.salesRep} />
-      <ReadField label="Funnel Ref No"       value={data.funnelRef} />
+      <ReadField label="Type"                value={data.type} />
       <ReadField label="Name of Department" value={data.department} />
-      <ReadField label="Existing Customer"  value={data.existingCustomer} />
+      <ReadField label="Funnel Ref No"       value={data.funnelRef} />
       <ReadArea  label="Address"             value={data.address} />
+      <ReadField label="Existing Customer"  value={data.existingCustomer} />
     </div>
 
     {/* Contact */}
@@ -318,6 +440,8 @@ const Step6 = ({ data, set }) => (
       <ReadField label="Bid/Tender Validity"         value={data.bidValidity} />
       <ReadField label="Query Submission Date"       value={data.querySubmissionDate} />
       <ReadField label="Mode of Submission - Query"  value={data.modeQuery} />
+      <ReadField label="Pre-Bid Meeting Date"        value={data.preBidMeetingDate} />
+      <ReadField label="Pre-Bid Meeting Venue/ Portal" value={data.preBidVenue} />
       <div style={{ gridColumn: "1 / -1" }}><ReadField label="Pre-Bid Meeting Time" value={data.preBidTime} /></div>
       <ReadField label="Bid Submission Date"         value={data.bidSubmissionDate} />
       <ReadField label="Bid Opening Date"            value={data.bidOpeningDate} />
@@ -325,7 +449,8 @@ const Step6 = ({ data, set }) => (
       <ReadField label="Price Validity"              value={data.priceValidity} />
       <ReadField label="Tender Fee Amount"           value={data.tenderFeeAmount} />
       <ReadField label="Mode of Tender Fee Payment"  value={data.tenderFeeMode} />
-      <div style={{ gridColumn: "1 / -1" }}><ReadField label="EMD Required" value={data.emdRequired} /></div>
+      <ReadField label="EMD Required"                value={data.emdRequired} />
+      <ReadField label="EMD In Form Of"              value={data.emdFormOf} />
       <ReadField label="EMD Amount"                  value={data.emdAmount} />
       <ReadField label="Date of Submission - EMD"    value={data.emdDate} />
       <div style={{ gridColumn: "1 / -1" }}>
@@ -333,10 +458,20 @@ const Step6 = ({ data, set }) => (
           In case EMD is required in the form of BG
         </div>
       </div>
+      <ReadField label="Name of the Beneficiary"     value={data.beneficiaryName} />
+      <ReadField label="IFSC CODE"                   value={data.ifscCode} />
+      <ReadField label="Name of the Bank"            value={data.bankName} />
+      <ReadField label="Branch Address"              value={data.branchAddress} />
       <div style={{ gridColumn: "1 / -1" }}><ReadField label="Reason for Exemption of EMD/Tender Fee" value={data.emdExemptionReason} /></div>
+      <ReadField label="No of Delivery Locations"    value={data.deliveryLocations} />
+      <ReadField label="Delivery Schedule"           value={data.deliverySchedule} />
+      <ReadField label="No of Installation Locations" value={data.installationLocations} />
+      <ReadField label="Installation Schedule"       value={data.installationSchedule} />
+      <ReadField label="Training T&C"                value={data.trainingTnc} />
+      <ReadField label="Training Schedule"           value={data.trainingSchedule} />
       <ReadField label="Payment T&C"       value={data.paymentTnc} />
       <ReadField label="Payment Schedule"  value={data.paymentSchedule} />
-      <ReadField label="PBG%"              value={data.pbgPct} />
+      <ReadField label="PBG %"             value={data.pbgPct} />
       <ReadField label="PBG Validity"      value={data.pbgValidity} />
       <ReadField label="AMC Reqd"          value={data.amcReqd} />
       <ReadField label="Duration of AMC"   value={data.amcDuration} />
@@ -345,38 +480,28 @@ const Step6 = ({ data, set }) => (
           Manpower Details
         </div>
       </div>
-      <ReadField label="Manpower Reqd for Support" value={data.manpower1} />
-      <ReadField label="Manpower Reqd for Support" value={data.manpower2} />
+      <ReadField label="Manpower Reqd for Support" value={data.manpowerReqd} />
+      <ReadField label="Duration"                  value={data.manpowerDuration} />
       <ReadField label="Qualification"             value={data.qualification} />
       <ReadField label="Certification"             value={data.certification} />
       <ReadField label="Quantity"                  value={data.quantity} />
       <ReadField label="Experience"                value={data.experience} />
+      <ReadField label="LD Clause"                 value={data.ldClause} />
+      <ReadField label="Inspection Clause"         value={data.inspectionClause} />
+      <ReadField label="Insurance Required"        value={data.insuranceRequired} />
+      <ReadField label="Insurance Period"          value={data.insurancePeriod} />
     </div>
 
     {/* PQ Criteria */}
     <ReviewSection title="PQ Criteria" />
-    <div style={{ border: "1px solid #E5E7EB", borderRadius: 8, overflow: "hidden" }}>
-      <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
-        <thead>
-          <tr style={{ background: "#F8FAFC" }}>
-            {["Particulars", "Bidder", "OEM", "Evidence Required"].map(h => (
-              <th key={h} style={{ padding: "10px 14px", fontSize: 13, fontWeight: 600, color: "#374151", textAlign: "center", borderBottom: "1px solid #E5E7EB", borderRight: "1px solid #E5E7EB" }}>{h}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {PQ_ROWS.map((row, i) => (
-            <tr key={row} style={{ borderBottom: i < PQ_ROWS.length - 1 ? "1px solid #E5E7EB" : "none" }}>
-              <td style={{ padding: "11px 14px", fontSize: 13, color: "#374151", borderRight: "1px solid #E5E7EB" }}>{row}</td>
-              {["bidder", "oem", "evidence"].map(col => (
-                <td key={col} style={{ padding: "8px 12px", fontSize: 13, color: "#374151", borderRight: "1px solid #E5E7EB", background: "#F9FAFB" }}>
-                  {data[`pq_${i}_${col}`] ?? ""}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <PQTable data={data} set={set} readOnly />
+
+    {/* Competition Details */}
+    <div style={{ marginTop: 20 }}>
+      <CompetitionTable data={data} set={set} readOnly />
+    </div>
+    <div style={{ marginTop: 20 }}>
+      <CompetitionNotesTable data={data} set={set} readOnly />
     </div>
 
     {/* Approval */}
@@ -470,7 +595,7 @@ const DocSubForm = ({ docType, data, set, filename }) => (
     <h2 style={{ fontSize: 17, fontWeight: 600, color: "#1F2937", margin: "0 0 28px" }}>
       {docType === "atc" ? "ATC" : "GeM"} Doc. -&nbsp;
       <span style={{ fontWeight: 400, borderBottom: "1.5px solid #374151", paddingBottom: 1 }}>
-        {filename || "          "}
+        {filename || "          "}
       </span>
     </h2>
     {DOC_FORM_FIELDS.map(f => (
@@ -500,7 +625,7 @@ const DocumentsPage = ({ data, set, uploadedFiles, handleFileChange, setDocView 
         <span style={{ fontSize: 14, color: "#374151", minWidth: 220 }}>Tender Documents (RFP) -</span>
         <label style={{ cursor: "pointer" }}>
           <span style={{ ...BLUE_LINK, display: "inline-block" }}>
-            {uploadedFiles["Tender(RFP) Documents"] || " "}
+            {uploadedFiles["Tender(RFP) Documents"] || " "}
           </span>
           <input type="file" style={{ display: "none" }} onChange={e => handleFileChange("Tender(RFP) Documents", e)} />
         </label>
@@ -508,13 +633,13 @@ const DocumentsPage = ({ data, set, uploadedFiles, handleFileChange, setDocView 
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <span style={{ fontSize: 14, color: "#374151", minWidth: 220 }}>ATC -</span>
         <button onClick={() => setDocView("atc")} style={BLUE_LINK}>
-          {uploadedFiles["ATC Documents"] || " "}
+          {uploadedFiles["ATC Documents"] || " "}
         </button>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <span style={{ fontSize: 14, color: "#374151", minWidth: 220 }}>GeM -</span>
         <button onClick={() => setDocView("gem")} style={BLUE_LINK}>
-          {uploadedFiles["GeM Documents"] || " "}
+          {uploadedFiles["GeM Documents"] || " "}
         </button>
       </div>
       <div>
@@ -543,28 +668,33 @@ const RFPAnalysisForm = () => {
   const [showUpload, setShowUpload] = useState(true);
   const [showValidation, setShowValidation] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState({});
-  const [docView, setDocView] = useState(null); // null | "atc" | "gem"
+  const [docView, setDocView] = useState(null); // null | "docs" | "atc" | "gem"
   const [formData, setFormData] = useState({
     // Step 1
-    salesRep: "", funnelRef: "", department: "", existingCustomer: "", address: "",
+    salesRep: "", type: "", funnelRef: "", department: "", existingCustomer: "", address: "",
     // Step 2
     category: "", customerName: "", mailId: "", mobileNumber: "",
     // Step 3
     tenderTitle: "", rfpNo: "", tenderId: "", noOfBids: "", firmNames: "",
     reverseAuction: "", estimatedBidValue: "", rfpIssueDate: "", submissionPortal: "",
     tenderType: "", bidValidity: "", querySubmissionDate: "", modeQuery: "",
-    preBidTime: "", bidSubmissionDate: "", bidOpeningDate: "", modeTender: "",
-    priceValidity: "", tenderFeeAmount: "", tenderFeeMode: "", emdRequired: "",
-    emdAmount: "", emdDate: "", emdExemptionReason: "", paymentTnc: "",
-    paymentSchedule: "", pbgPct: "", pbgValidity: "", amcReqd: "", amcDuration: "",
-    manpower1: "", manpower2: "", qualification: "", certification: "", quantity: "", experience: "",
-    // Step 4: PQ table cells stored dynamically as pq_{rowIndex}_{col}
+    preBidMeetingDate: "", preBidVenue: "", preBidTime: "",
+    bidSubmissionDate: "", bidOpeningDate: "", modeTender: "",
+    priceValidity: "", tenderFeeAmount: "", tenderFeeMode: "", emdRequired: "", emdFormOf: "",
+    emdAmount: "", emdDate: "",
+    beneficiaryName: "", ifscCode: "", bankName: "", branchAddress: "", emdExemptionReason: "",
+    deliveryLocations: "", deliverySchedule: "", installationLocations: "", installationSchedule: "",
+    trainingTnc: "", trainingSchedule: "", paymentTnc: "", paymentSchedule: "",
+    pbgPct: "", pbgValidity: "", amcReqd: "", amcDuration: "",
+    manpowerReqd: "", manpowerDuration: "", qualification: "", certification: "", quantity: "", experience: "",
+    ldClause: "", inspectionClause: "", insuranceRequired: "", insurancePeriod: "",
+    // Step 4: PQ table cells / competitor rows stored dynamically as pq_{i}_{col} / comp_{i}_{col}
+    compJointCall: "", compWinningStrategy: "", compReasonToBid: "",
     // Step 5
     preparedBy: "", approvedBy: "", presalesRep: "", approvalDate: "",
   });
 
   const set = key => val => setFormData(f => ({ ...f, [key]: val }));
-
 
   const handleFileChange = (item, e) => {
     const file = e.target.files[0];
@@ -615,7 +745,7 @@ const RFPAnalysisForm = () => {
                       fontSize: 14, color: "#2563EB", minWidth: 140, display: "inline-block",
                       textAlign: "left", lineHeight: "1",
                     }}
-                  >{"\u00A0"}</button>
+                  >{" "}</button>
                   &nbsp;&nbsp;Tender ID:&nbsp;<strong style={{ color: "#111" }}>{displayTenderId}</strong>
                 </p>
               </div>
@@ -773,7 +903,7 @@ const RFPAnalysisForm = () => {
                     fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: FONT,
                   }}
                 >
-                  <Check size={15} strokeWidth={3} /> Submit Form
+                  <Send size={15} /> Submit Form
                 </button>
               </div>
             ) : (
