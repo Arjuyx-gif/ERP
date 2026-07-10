@@ -64,6 +64,17 @@ export const PS_KPI_CARDS = [
   { label: "Completed",                  value: 2, iconName: "tick",        color: "#16A34A", iconBg: "#DCFCE7" },
 ];
 
+export const PORTAL_KPI_CARDS = [
+  { label: "Total Tenders",                 value: 24, sub: "On Portal",                iconName: "document",  color: "#3B82F6", iconBg: "#EFF6FF" },
+  { label: "Post-Bid Queries\n& Responses", value: 3,  sub: "Awaiting Response",        iconName: "help-circle", color: "#F59E0B", iconBg: "#FEF3C7" },
+  { label: "Awaiting Results",              value: 7,  sub: "Awaiting Bid Results",     iconName: "trending-up", color: "#8B5CF6", iconBg: "#F3E8FF" },
+  { label: "PO Pending",                    value: 4,  sub: "Customer PO Awaited",      iconName: "upload",    color: "#6366F1", iconBg: "#EEF2FF" },
+  { label: "GeM Charges\nPending",          value: 3,  sub: "Payment Due",              iconName: "rupee",     color: "#F97316", iconBg: "#FFEDD5" },
+  { label: "L2 Match Case",                 value: 3,  sub: "Price Match Opportunity",  iconName: "award",     color: "#EAB308", iconBg: "#FEF9C3" },
+  { label: "Won (L1)",                      value: 3,  sub: "This Month",               iconName: "tick",      color: "#10B981", iconBg: "#D1FAE5" },
+  { label: "Lost Tenders",                  value: 3,  sub: "Review Tenders",           iconName: "x-circle",  color: "#EF4444", iconBg: "#FEE2E2" },
+];
+
 // ─── Kanban Columns ───────────────────────────────────────────────────────────
 // `count` is intentionally omitted — dashboardService derives it from cards.length
 // so the badge always reflects the true number of loaded cards.

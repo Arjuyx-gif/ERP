@@ -18,9 +18,12 @@ import PSDocumentsModal from "../../components/dashboard/PSDocumentsModal";
 import NotificationPanel from "../../components/dashboard/NotificationPanel";
 import Modal from "../../components/dashboard/ReminderModal";
 import ViewAllModal from "../../components/dashboard/ViewAllModal";
+import PortalDashboard from "../../components/dashboard/PortalDashboard";
+import UpdateTenderModal from "../../components/dashboard/UpdateTenderModal";
+import UpdateBidResultModal from "../../components/dashboard/UpdateBidResultModal";
 import DynamicIcon from "../../components/ui/DynamicIcon";
 import { useDashboard } from "../../hooks/useDashboard";
-import { TASK_DASHBOARD_A_KPI_CARDS, PSM_KPI_CARDS, PS_KPI_CARDS, S_KPI_CARDS, SM_NOTIFICATIONS, PS_NOTIFICATIONS, PANEL_NOTIFICATIONS } from "../../services/mockData";
+import { TASK_DASHBOARD_A_KPI_CARDS, PSM_KPI_CARDS, PS_KPI_CARDS, S_KPI_CARDS, PORTAL_KPI_CARDS, SM_NOTIFICATIONS, PS_NOTIFICATIONS, PANEL_NOTIFICATIONS } from "../../services/mockData";
 
 // ─── RFPDashboard ─────────────────────────────────────────────────────────────
 
@@ -60,6 +63,16 @@ const RFPDashboard = () => {
   const [psmViewTenderData, setPsmViewTenderData] = useState(null);
   const [psmDocumentsData, setPsmDocumentsData] = useState(null);
   const [psDocsRow, setPsDocsRow] = useState(null);
+  const [updateTenderCard, setUpdateTenderCard] = useState(null);
+  const [updateBidResultCard, setUpdateBidResultCard] = useState(null);
+
+  // Handler for PortalDashboard update action
+  const handlePortalUpdate = (row) => {
+    if (row.stage === "Bid Submitted") {
+      setViewRFPCard(row);
+      setUpdateTenderCard(row);
+    }
+  };
 
   // Handler: fullscreen PSM assign button → exit fullscreen, open modal on regular view
   const handlePsmAssign = (rowData) => {
@@ -519,7 +532,7 @@ const RFPDashboard = () => {
 
   const board = <KanbanBoard columns={visibleColumns} onViewAll={setViewAllCol} onViewRFP={handleViewRFP} isSalesCoordinator={isSalesCoordinator} />;
 
-  const isScrollableTab = ["Task Dashboard PSM", "Task Dashboard PS", "Task Dashboard S"].includes(activeTab);
+  const isScrollableTab = ["Task Dashboard PSM", "Task Dashboard PS", "Task Dashboard S", "Portal"].includes(activeTab);
 
   return (
     <div style={{
@@ -540,7 +553,9 @@ const RFPDashboard = () => {
             <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 2 }}>
               <div>
                 <h1 style={{ fontSize: 20, fontWeight: 700, color: "#111", margin: "0 0 2px" }}>
-                  RFP Analysis Board{activeTab === "Task Dashboard PS" && <span style={{ fontWeight: 400, color: "#6B7280", fontSize: 15 }}> (Pre Sales)</span>}
+                  RFP Analysis Board
+                  {activeTab === "Task Dashboard PS" && <span style={{ fontWeight: 400, color: "#6B7280", fontSize: 15 }}> (Pre Sales)</span>}
+                  {activeTab === "Portal" && <span style={{ fontWeight: 400, color: "#6B7280", fontSize: 15 }}> (Portal)</span>}
                 </h1>
                 <p style={{ fontSize: 12, color: "#888", margin: "0 0 16px" }}>Last updated: 2 hours ago</p>
               </div>
@@ -640,7 +655,8 @@ const RFPDashboard = () => {
                 : activeTab === "Task Dashboard PSM" ? PSM_KPI_CARDS
                   : activeTab === "Task Dashboard PS" ? PS_KPI_CARDS
                     : activeTab === "Task Dashboard S" ? S_KPI_CARDS
-                      : kpiCards
+                      : activeTab === "Portal" ? PORTAL_KPI_CARDS
+                        : kpiCards
               ).map(kpi => (
                 <div key={kpi.label} style={{
                   flex: "1 1 130px", background: "#fff", borderRadius: 10,
@@ -665,8 +681,8 @@ const RFPDashboard = () => {
             {/* Dashboard / Task Dashboard tabs */}
             {!isSalesCoordinator && (
               <div style={{ display: "flex", borderBottom: "2px solid #E2E8F0" }}>
-                {["Dashboard", "Task Dashboard SM", "Task Dashboard PSM", "Task Dashboard PS", "Task Dashboard S", "Task Dashboard S2"].map(tab => {
-                  const isLocked = (activeTab === "Task Dashboard S" || activeTab === "Task Dashboard S2") && tab === "Dashboard";
+                {["Dashboard", "Task Dashboard SM", "Task Dashboard PSM", "Task Dashboard PS", "Task Dashboard S", "Task Dashboard S2", "Portal"].map(tab => {
+                  const isLocked = (activeTab === "Task Dashboard S" || activeTab === "Task Dashboard S2" || activeTab === "Portal") && tab === "Dashboard";
                   const isActive = activeTab === tab;
                   return (
                     <button
@@ -744,9 +760,11 @@ const RFPDashboard = () => {
                   ? <SalesActivityDashboard onViewRFP={handleViewRFP} />
                   : activeTab === "Task Dashboard S2"
                     ? <TaskTableS2 onViewRFP={handleViewRFP} />
-                    : activeTab.startsWith("Task Dashboard")
-                      ? <TaskTable onViewRFP={handleViewRFP} />
-                      : board}
+                    : activeTab === "Portal"
+                      ? <PortalDashboard onUpdate={handlePortalUpdate} />
+                      : activeTab.startsWith("Task Dashboard")
+                        ? <TaskTable onViewRFP={handleViewRFP} />
+                        : board}
           </div>
         </div>
       </div>
@@ -785,9 +803,11 @@ const RFPDashboard = () => {
                   ? <SalesActivityDashboard fullscreen onViewRFP={handleViewRFP} />
                   : activeTab === "Task Dashboard S2"
                     ? <TaskTableS2 fullscreen onViewRFP={handleViewRFP} />
-                    : activeTab.startsWith("Task Dashboard")
-                      ? <TaskTable fullscreen />
-                      : board}
+                    : activeTab === "Portal"
+                      ? <PortalDashboard fullscreen onUpdate={handlePortalUpdate} />
+                      : activeTab.startsWith("Task Dashboard")
+                        ? <TaskTable fullscreen />
+                        : board}
           </div>
         </div>
       )}
@@ -876,6 +896,22 @@ const RFPDashboard = () => {
           </div>
         </div>
       )}
+
+      {/* ── Update Tender modal (Portal Dashboard) ── */}
+      <UpdateTenderModal 
+        card={updateTenderCard} 
+        onClose={() => setUpdateTenderCard(null)} 
+        onContinueResult={(card) => {
+          setUpdateTenderCard(null);
+          setUpdateBidResultCard(card);
+        }}
+      />
+
+      {/* ── Update Bid Result modal (Portal Dashboard) ── */}
+      <UpdateBidResultModal 
+        card={updateBidResultCard} 
+        onClose={() => setUpdateBidResultCard(null)} 
+      />
     </div>
   );
 };
