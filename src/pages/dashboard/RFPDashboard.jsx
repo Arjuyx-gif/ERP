@@ -44,6 +44,14 @@ const RFPDashboard = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
   const [activeTab, setActiveTab] = useState(location.state?.tab ?? "Dashboard");
+
+  // Keep the current tab in this history entry's state so that browser Back
+  // (after navigating away, e.g. View SOF / Create RFP) restores the tab the
+  // user was actually on instead of resetting to the default Kanban Dashboard.
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    navigate(location.pathname, { replace: true, state: { ...location.state, tab } });
+  };
   const [search, setSearch] = useState("");
   const [stageFilter, setStageFilter] = useState("All Stages");
   const [statusFilter, setStatusFilter] = useState("All Status");
@@ -687,7 +695,7 @@ const RFPDashboard = () => {
                   return (
                     <button
                       key={tab}
-                      onClick={() => { if (!isLocked) setActiveTab(tab); }}
+                      onClick={() => { if (!isLocked) handleTabChange(tab); }}
                       disabled={isLocked}
                       style={{
                         padding: "10px 20px", background: "none", border: "none",
@@ -835,7 +843,7 @@ const RFPDashboard = () => {
             onClose={() => setShowNotifications(false)}
             onAction={() => {
               // Switch to Task Dashboard PS in fullscreen when "View & Complete Docs." is clicked
-              setActiveTab("Task Dashboard PS");
+              handleTabChange("Task Dashboard PS");
               setKanbanFullscreen(true);
             }}
           />
