@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   Calendar, Clock, User, CheckCircle, XCircle, Upload, Download,
-  ArrowUpRight, Eye, AlertCircle, Star
+  ArrowUpRight, Eye, AlertCircle, Star, FileText
 } from "lucide-react";
 import Badge from "../ui/Badge";
 import Tag from "../ui/Tag";
@@ -228,7 +228,8 @@ const KanbanCard = ({ card, onViewRFP, isSalesCoordinator }) => {
               fontFamily: "inherit",
             }}
           >
-            <Eye size={13} /> {card.action === "Bid Submitted" ? "View Submission" : card.action}
+            {card.action === "Complete Tasks" ? <FileText size={13} /> : <Eye size={13} />}
+            {card.action === "Bid Submitted" ? "View Submission" : card.action}
           </button>
         );
       })()}

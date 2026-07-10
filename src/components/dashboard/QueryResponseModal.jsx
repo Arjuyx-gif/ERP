@@ -52,6 +52,11 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
     });
   };
 
+    // Query modal — either from Kanban or from Task Dashboard B (upload action)
+    // Query modal is open, but we need to check if it's view mode or approval mode
+  const isViewMode = card?.action === "View Submission";
+  const isApprovalMode = !!(card?.isApprovalPending);
+
   if (!card) return null;
 
   return (
@@ -136,7 +141,7 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
             <label style={{ fontSize: 14, fontWeight: 600, color: "#111827", display: "block", marginBottom: 8 }}>
               Query Document
             </label>
-            {!queryFile && card?.showQueryUploadZone && !isPreBidSubmitted ? (
+            {!queryFile && card?.showQueryUploadZone && !isPreBidSubmitted && !isViewMode && !isApprovalMode ? (
               <div
                 onClick={() => queryFileInputRef.current?.click()}
                 style={{
@@ -157,7 +162,7 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
                 <Upload size={24} color="#6B7280" />
                 <div style={{ fontSize: 14, fontWeight: 500, color: "#374151" }}>Click to Upload Query Document</div>
               </div>
-            ) : queryFile && !isPreBidSubmitted ? (
+            ) : queryFile && !isPreBidSubmitted && !isViewMode && !isApprovalMode ? (
               <div style={{
                 border: "1px solid #D1D5DB", borderRadius: 8, padding: "16px",
                 display: "flex", alignItems: "flex-start", gap: 12, background: "#F9FAFB"
@@ -200,71 +205,13 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
               style={{ display: "none" }}
             />
           </div>
-
-          {/* Remarks */}
-          <div>
-            <label style={{ fontSize: 14, fontWeight: 600, color: "#111827", display: "block", marginBottom: 8 }}>
-              Remarks
-            </label>
-            <textarea
-              rows={4}
-              value={remarks}
-              onChange={e => setRemarks(e.target.value)}
-              placeholder="Add your remarks here..."
-              style={{
-                width: "100%", border: "1px solid #D1D5DB", borderRadius: 8, padding: "12px 14px",
-                fontSize: 14, color: "#111827", fontFamily: FONT, boxSizing: "border-box",
-                outline: "none", resize: "vertical", background: "#F9FAFB",
-                transition: "border-color 0.15s, box-shadow 0.15s",
-              }}
-              onFocus={e => {
-                e.target.style.borderColor = "#2563EB";
-                e.target.style.boxShadow = "0 0 0 3px rgba(37,99,235,0.1)";
-                e.target.style.background = "#fff";
-              }}
-              onBlur={e => {
-                e.target.style.borderColor = "#D1D5DB";
-                e.target.style.boxShadow = "none";
-                e.target.style.background = "#F9FAFB";
-              }}
-            />
-          </div>
-
-          {/* Upload Response Document */}
-          <div>
-            <label style={{ fontSize: 14, fontWeight: 600, color: "#111827", display: "block", marginBottom: 8 }}>
-              Upload Response Document (PDF/Word)
-            </label>
-            {errorMsg && (
-              <div style={{ marginBottom: 12, fontSize: 13, color: "#D92D20", display: "flex", alignItems: "center", gap: 6 }}>
-                {errorMsg}
-              </div>
-            )}
-            {!file ? (
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                style={{
-                  border: "1px dashed #D1D5DB", borderRadius: 8, padding: "24px 16px",
-                  background: "#fff", cursor: "pointer", display: "flex", flexDirection: "column",
-                  alignItems: "center", justifyContent: "center", gap: 10, textAlign: "center",
-                  transition: "border-color 0.15s, background 0.15s",
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.borderColor = "#2563EB";
-                  e.currentTarget.style.background = "#F8FAFC";
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.borderColor = "#D1D5DB";
-                  e.currentTarget.style.background = "#fff";
-                }}
-              >
-                <Upload size={24} color="#6B7280" />
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 500, color: "#374151", marginBottom: 4 }}>Click to upload response document</div>
-                  <div style={{ fontSize: 12, color: "#6B7280" }}>PDF or Word files accepted</div>
-                </div>
-              </div>
-            ) : (
+          
+          {/* Response Document (Only shown in view mode or approval mode) */}
+          {(isViewMode || isApprovalMode) && (
+            <div>
+              <label style={{ fontSize: 14, fontWeight: 600, color: "#111827", display: "block", marginBottom: 8 }}>
+                Response Document
+              </label>
               <div style={{
                 border: "1px solid #D1D5DB", borderRadius: 8, padding: "16px",
                 display: "flex", alignItems: "flex-start", gap: 12, background: "#F9FAFB"
@@ -272,16 +219,109 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
                 <div style={{ width: 32, height: 32, borderRadius: 6, background: "#EFF6FF", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <FileText size={18} color="#2563EB" />
                 </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: "#111827", marginBottom: 4, wordBreak: "break-all" }}>{file.name}</div>
-                  <button onClick={() => setFile(null)} style={{ background: "none", border: "none", padding: 0, color: "#DC2626", fontSize: 12, cursor: "pointer", fontWeight: 500, fontFamily: FONT }}>
-                    Remove Document
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: "#111827", marginBottom: 4 }}>Query_Document_RFP_2026_006.pdf</div>
+                  <button style={{ background: "none", border: "none", padding: 0, color: "#4B5563", fontSize: 12, cursor: "pointer", fontWeight: 500, fontFamily: FONT }}>
+                    Download Document
                   </button>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Remarks */}
+          <div>
+            <label style={{ fontSize: 14, fontWeight: 600, color: "#111827", display: "block", marginBottom: 8 }}>
+              Remarks
+            </label>
+            {isViewMode ? (
+              <div style={{
+                width: "100%", border: "1px solid #E5E7EB", borderRadius: 8, padding: "12px 14px",
+                fontSize: 14, color: "#6B7280", fontFamily: FONT, boxSizing: "border-box",
+                background: "#F9FAFB", minHeight: 80,
+              }}>
+                Remarks by team or manager...
+              </div>
+            ) : (
+              <textarea
+                rows={4}
+                value={remarks}
+                onChange={e => setRemarks(e.target.value)}
+                placeholder="Add your remarks here..."
+                style={{
+                  width: "100%", border: "1px solid #D1D5DB", borderRadius: 8, padding: "12px 14px",
+                  fontSize: 14, color: "#111827", fontFamily: FONT, boxSizing: "border-box",
+                  outline: "none", resize: "vertical", background: "#F9FAFB",
+                  transition: "border-color 0.15s, box-shadow 0.15s",
+                }}
+                onFocus={e => {
+                  e.target.style.borderColor = "#2563EB";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(37,99,235,0.1)";
+                  e.target.style.background = "#fff";
+                }}
+                onBlur={e => {
+                  e.target.style.borderColor = "#D1D5DB";
+                  e.target.style.boxShadow = "none";
+                  e.target.style.background = "#F9FAFB";
+                }}
+              />
             )}
-            <input onChange={handleFileChange} ref={fileInputRef} type="file" accept=".pdf,.doc,.docx" style={{ display: "none" }} />
           </div>
+
+          {/* Upload Response Document (Not in view mode or approval mode) */}
+          {!isViewMode && !isApprovalMode && (
+            <div>
+              <label style={{ fontSize: 14, fontWeight: 600, color: "#111827", display: "block", marginBottom: 8 }}>
+                Upload Response Document (PDF/Word)
+              </label>
+              {errorMsg && (
+                <div style={{ marginBottom: 12, fontSize: 13, color: "#D92D20", display: "flex", alignItems: "center", gap: 6 }}>
+                  {errorMsg}
+                </div>
+              )}
+              {!file ? (
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  style={{
+                    border: "1px dashed #D1D5DB", borderRadius: 8, padding: "24px 16px",
+                    background: "#fff", cursor: "pointer", display: "flex", flexDirection: "column",
+                    alignItems: "center", justifyContent: "center", gap: 10, textAlign: "center",
+                    transition: "border-color 0.15s, background 0.15s",
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.borderColor = "#2563EB";
+                    e.currentTarget.style.background = "#F8FAFC";
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.borderColor = "#D1D5DB";
+                    e.currentTarget.style.background = "#fff";
+                  }}
+                >
+                  <Upload size={24} color="#6B7280" />
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 500, color: "#374151", marginBottom: 4 }}>Click to upload response document</div>
+                    <div style={{ fontSize: 12, color: "#6B7280" }}>PDF or Word files accepted</div>
+                  </div>
+                </div>
+              ) : (
+                <div style={{
+                  border: "1px solid #D1D5DB", borderRadius: 8, padding: "16px",
+                  display: "flex", alignItems: "flex-start", gap: 12, background: "#F9FAFB"
+                }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 6, background: "#EFF6FF", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <FileText size={18} color="#2563EB" />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 13, fontWeight: 500, color: "#111827", marginBottom: 4, wordBreak: "break-all" }}>{file.name}</div>
+                    <button onClick={() => setFile(null)} style={{ background: "none", border: "none", padding: 0, color: "#DC2626", fontSize: 12, cursor: "pointer", fontWeight: 500, fontFamily: FONT }}>
+                      Remove Document
+                    </button>
+                  </div>
+                </div>
+              )}
+              <input onChange={handleFileChange} ref={fileInputRef} type="file" accept=".pdf,.doc,.docx" style={{ display: "none" }} />
+            </div>
+          )}
 
         </div>
 
@@ -292,43 +332,90 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
             display: "flex",
             alignItems: "center",
             gap: 14,
-            justifyContent: "flex-end",
+            justifyContent: isViewMode ? "center" : "flex-end",
             flexShrink: 0,
           }}
         >
-          <button
-            type="button"
-            onClick={onClose}
-            style={{
-              padding: "10px 28px", border: "1px solid #D1D5DB", borderRadius: 8,
-              background: "#fff", fontSize: 14, fontWeight: 600, color: "#374151",
-              cursor: "pointer", fontFamily: FONT, transition: "background 0.15s",
-            }}
-            onMouseEnter={e => e.currentTarget.style.background = "#F9FAFB"}
-            onMouseLeave={e => e.currentTarget.style.background = "#fff"}
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={handleSubmit}
-            style={{
-              padding: card.isPostBidQueryPending ? "10px 36px" : "10px 24px", border: "none", borderRadius: 8,
-              background: "#2563EB", fontSize: 14, fontWeight: 600, color: "#fff",
-              cursor: "pointer", fontFamily: FONT, boxShadow: "0 2px 8px rgba(37,99,235,0.25)",
-              transition: "background 0.15s, box-shadow 0.15s",
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = "#1D4ED8";
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)";
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = "#2563EB";
-              e.currentTarget.style.boxShadow = "0 2px 8px rgba(37,99,235,0.25)";
-            }}
-          >
-            {card.isPostBidQueryPending || (card.isPreBidQueryPending && !isPreBidSubmitted) ? "Submit" : "Submit & Send for Review"}
-          </button>
+         {isViewMode ? (
+            <button
+              type="button"
+              onClick={onClose}
+              style={{
+                width: "100%", padding: "10px 0", border: "1px solid #E5E7EB", borderRadius: 8,
+                background: "#fff", fontSize: 14, fontWeight: 600, color: "#111827",
+                cursor: "pointer", fontFamily: FONT,
+              }}
+            >
+              Approved
+            </button>
+          ) : isApprovalMode ? (
+            <>
+              <button
+                type="button"
+                onClick={onClose}
+                style={{
+                  flex: 1, padding: "10px 0", border: "none", borderRadius: 8,
+                  background: "#DC2626", fontSize: 14, fontWeight: 600, color: "#fff",
+                  cursor: "pointer", fontFamily: FONT,
+                  transition: "background 0.15s",
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = "#B91C1C"}
+                onMouseLeave={e => e.currentTarget.style.background = "#DC2626"}
+              >
+                Reject
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                style={{
+                  flex: 1, padding: "10px 0", border: "none", borderRadius: 8,
+                  background: "#16A34A", fontSize: 14, fontWeight: 600, color: "#fff",
+                  cursor: "pointer", fontFamily: FONT,
+                  transition: "background 0.15s",
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = "#15803D"}
+                onMouseLeave={e => e.currentTarget.style.background = "#16A34A"}
+              >
+                Approve
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={onClose}
+                style={{
+                  padding: "10px 28px", border: "1px solid #D1D5DB", borderRadius: 8,
+                  background: "#fff", fontSize: 14, fontWeight: 600, color: "#374151",
+                  cursor: "pointer", fontFamily: FONT, transition: "background 0.15s",
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = "#F9FAFB"}
+                onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                style={{
+                  padding: card.isPostBidQueryPending ? "10px 36px" : "10px 24px", border: "none", borderRadius: 8,
+                  background: "#2563EB", fontSize: 14, fontWeight: 600, color: "#fff",
+                  cursor: "pointer", fontFamily: FONT, boxShadow: "0 2px 8px rgba(37,99,235,0.25)",
+                  transition: "background 0.15s, box-shadow 0.15s",
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = "#1D4ED8";
+                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)";
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = "#2563EB";
+                  e.currentTarget.style.boxShadow = "0 2px 8px rgba(37,99,235,0.25)";
+                }}
+              >
+                {card.isPostBidQueryPending || (card.isPreBidQueryPending && !isPreBidSubmitted) ? "Submit" : "Submit & Send for Review"}
+              </button>
+            </>
+          )}
         </div>
       </div>
 

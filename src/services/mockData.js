@@ -144,21 +144,21 @@ export const KANBAN_COLUMNS = [
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
         details: { status: "Pre bid Query", deadline: "Apr 25, 2026" },
-        action: "View Submission",
+        action: "View Submission", isQuery: true,
       },
       {
         id: "TND-2026-009", status: "In Progress", statusColor: "#CA8A04", statusBg: "#FEF3C7",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
         details: { status: "Pre bid Query", deadline: "Apr 25, 2026" },
-        action: "Complete Tasks",
+        action: "Complete Tasks", isQuery: true,
       },
       {
         id: "TND-2026-009", status: "Approval Pending", statusColor: "#EA580C", statusBg: "#FFF1E7",
         tender: "Tender Title", customer: null, amount: "500Cr.",
         tags: ["CIPL"], tagColors: { CIPL: "#E3F0FB" },
         details: { status: "Pre bid Query", deadline: "Apr 25, 2026" },
-        action: "Complete Tasks",
+        action: "Complete Tasks", isQuery: true, isApprovalPending: true,
       },
     ],
   },
@@ -524,6 +524,11 @@ export const VIEW_ALL_ROWS = {
   lost: [
     r({ status: "Pending", action1: "Notify for EMD Return", action1Icon: "arrow-up-right", action2: "Complete Comparison Sheet", action2Icon: "file" }),
     r({ status: "EMD Return Received", action1: "View Docs", action1Icon: "eye", action2: "View Comparison Sheet", action2Icon: "eye" }),
+  ],
+  pre_bid_query: [
+    r({ status: "In Progress", action1: "Complete Tasks", action1Icon: "file-text" }),
+    r({ status: "Approval Pending", action1: "Complete Tasks", action1Icon: "file-text" }),
+    r({ status: "Completed", action1: "View Submission", action1Icon: "eye", variant: "success" }),
   ],
 };
 

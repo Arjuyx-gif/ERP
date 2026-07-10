@@ -53,7 +53,7 @@ const RFPDashboard = () => {
   const [viewRFPCard, setViewRFPCard] = useState(null);
   const [docsCard, setDocsCard] = useState(null);
   const [bidSubmittedCard, setBidSubmittedCard] = useState(null);
-  const [psmViewFilter, setPsmViewFilter] = useState("All");
+
   const [psmAssignData, setPsmAssignData] = useState(null);
   const [psmReassignData, setPsmReassignData] = useState(null);
   const [psmReviewData, setPsmReviewData] = useState(null);
@@ -524,17 +524,21 @@ const RFPDashboard = () => {
 
   const board = <KanbanBoard columns={visibleColumns} onViewAll={setViewAllCol} onViewRFP={handleViewRFP} isSalesCoordinator={isSalesCoordinator} />;
 
+  const isScrollableTab = ["Task Dashboard PSM", "Task Dashboard PS", "Task Dashboard S"].includes(activeTab);
+
   return (
     <div style={{
-      display: "flex", height: "100vh",
+      display: "flex", 
+      height: isScrollableTab ? "auto" : "100vh", 
+      minHeight: "100vh",
       fontFamily: "'Inter','Segoe UI',sans-serif", background: "#F7F8FA",
     }}>
       <Sidebar />
-      <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
+      <div style={{ display: "flex", flexDirection: "column", flex: isScrollableTab ? "1 1 auto" : 1, overflowX: "hidden", overflowY: isScrollableTab ? "visible" : "hidden" }}>
         <GlobalHeader />
 
         {/* ── Main area ── */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden", overflowY: "auto" }}>
+        <div style={{ flex: isScrollableTab ? "1 1 auto" : 1, display: "flex", flexDirection: "column", minWidth: 0, overflowX: "hidden", overflowY: isScrollableTab ? "visible" : "auto" }}>
 
           {/* Header */}
           <div style={{ padding: "20px 28px 0", background: "#F7F8FA" }}>
@@ -695,33 +699,8 @@ const RFPDashboard = () => {
           </div>
 
           {/* Filter bar */}
-          {activeTab !== "Task Dashboard S" && (
+          {activeTab !== "Task Dashboard S" && activeTab !== "Task Dashboard PSM" && (
           <div style={{ padding: "12px 28px", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-            {activeTab === "Task Dashboard PSM" ? (
-              <>
-                <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 8, border: "1px solid #E2E8F0", borderRadius: 8, padding: "7px 14px", background: "#fff" }}>
-                  <Search size={14} color="#9CA3AF" />
-                  <input type="text" placeholder="Search RFP ID / Customer..." style={{ border: "none", outline: "none", fontSize: 13, color: "#374151", width: "100%", fontFamily: "inherit", background: "transparent" }} />
-                </div>
-                <button style={{ background: "none", border: "none", cursor: "pointer", padding: 6, display: "flex" }}>
-                  <Bell size={18} color="#6B7280" />
-                </button>
-                <div style={{ display: "flex", background: "#F3F4F6", borderRadius: 8, padding: 3, gap: 2 }}>
-                  {["All", "Needs Action", "Completed"].map(f => (
-                    <button key={f} onClick={() => setPsmViewFilter(f)} style={{
-                      padding: "6px 14px", border: "none", borderRadius: 6, cursor: "pointer",
-                      fontSize: 13, fontWeight: psmViewFilter === f ? 600 : 400,
-                      background: psmViewFilter === f ? "#fff" : "transparent",
-                      color: psmViewFilter === f ? "#111827" : "#6B7280",
-                      fontFamily: "inherit",
-                      boxShadow: psmViewFilter === f ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
-                    }}>
-                      {f}
-                    </button>
-                  ))}
-                </div>
-              </>
-            ) : (
               <>
                 <SlidersHorizontal size={16} color="#888" />
                 {[
@@ -756,12 +735,12 @@ const RFPDashboard = () => {
                 }}>
                   <Eye size={14} /> View
                 </button>
-              </>)}
+              </>
           </div>
           )}
 
           {/* Board / Table */}
-          <div style={{ flex: 1, overflowX: "auto", padding: "0 28px 28px" }}>
+          <div style={{ flex: isScrollableTab ? "none" : 1, overflowX: "auto", padding: "0 28px 28px" }}>
             {activeTab === "Task Dashboard PSM"
               ? <TaskDashboardPSM onExpandTable={() => setKanbanFullscreen(true)} initialAssignData={psmAssignData} initialReassignData={psmReassignData} initialReviewData={psmReviewData} initialViewTenderData={psmViewTenderData} initialDocumentsData={psmDocumentsData} />
               : activeTab === "Task Dashboard PS"
@@ -849,7 +828,7 @@ const RFPDashboard = () => {
 
       {/* ── Modals ── */}
       <Modal modal={activeModal} onClose={handleAcknowledge} />
-      <ViewAllModal col={viewAllCol} onClose={() => setViewAllCol(null)} />
+      <ViewAllModal col={viewAllCol} onClose={() => setViewAllCol(null)} onViewRFP={handleViewRFP} />
 
       {/* ── RFP Form panel ── */}
       <RFPFormPanel card={viewRFPCard} onClose={() => setViewRFPCard(null)} onReject={handleReject} onSendNotification={handleSendNotification} onCompleteTask={handleCompleteTask} onUpdateResult={handleUpdateResult} onApprove={handleApprove} />

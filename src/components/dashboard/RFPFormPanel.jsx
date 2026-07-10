@@ -253,7 +253,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
     setShowViewTaskModal(card?.action === "View Task");
 
     // Query modal — either from Kanban or from Task Dashboard B (upload action)
-    if (card?.action === "Complete Tasks" && card?.isQuery) {
+    if ((card?.action === "Complete Tasks" || card?.action === "View Submission") && card?.isQuery) {
       setShowQueryModal(true);
     } else {
       setShowQueryModal(false);

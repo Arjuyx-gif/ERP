@@ -105,8 +105,8 @@ const LinkText = ({ href = "#", children }) => (
   </a>
 );
 
-const ActionBtn = ({ icon = "eye", label, color = "#2979FF" }) => (
-  <button style={{
+const ActionBtn = ({ icon = "eye", label, color = "#2979FF", onClick }) => (
+  <button onClick={onClick} style={{
     background: "none", border: "none", color,
     fontSize: 12, fontWeight: 600, cursor: "pointer",
     padding: "4px 6px", fontFamily: "inherit", borderRadius: 5,
@@ -373,6 +373,49 @@ const LostTable = ({ rows }) => (
   />
 );
 
+const PreBidQueryTable = ({ rows, onViewRFP, onClose }) => (
+  <StyledTable
+    headers={["Tender ID","Tender Title","Customer","Value","Deadline","Firm Name","Status","Actions"]}
+    rows={rows}
+    renderRow={(r, i) => {
+      const bg = rowBg(r.variant, i);
+      const actionColor = r.variant === "success" ? "#15803D" : "#2979FF";
+      return (
+        <tr key={i}>
+          <TDId     bg={bg}>{r.id}</TDId>
+          <TDText   bg={bg}>{r.title}</TDText>
+          <TDText   bg={bg}>{r.customer}</TDText>
+          <TDMeta   bg={bg}>{r.value}</TDMeta>
+          <TDMeta   bg={bg}>{r.deadline}</TDMeta>
+          <TDText   bg={bg}>{r.firm}</TDText>
+          <TDAction bg={bg}><StatusPill text={r.status} /></TDAction>
+          <TDAction bg={bg}>
+            <ActionBtn
+              icon={r.action1Icon}
+              label={r.action1}
+              color={actionColor}
+              onClick={() => {
+                if (onViewRFP) {
+                  onViewRFP({
+                    id: r.id,
+                    tender: r.title,
+                    customer: r.customer,
+                    amount: r.value,
+                    action: r.action1,
+                    isQuery: true,
+                    isApprovalPending: r.status === "Approval Pending",
+                  });
+                  if (onClose) onClose();
+                }
+              }}
+            />
+          </TDAction>
+        </tr>
+      );
+    }}
+  />
+);
+
 // ─── Column → renderer map ─────────────────────────────────────────────────────
 const TABLE_MAP = {
   rfp_analysis:      RfpAnalysisTable,
@@ -385,10 +428,11 @@ const TABLE_MAP = {
   won:               WonTable,
   po_received:       PoReceivedTable,
   lost:              LostTable,
+  pre_bid_query:     PreBidQueryTable,
 };
 
 // ─── Modal shell ───────────────────────────────────────────────────────────────
-const ViewAllModal = ({ col, onClose }) => {
+const ViewAllModal = ({ col, onClose, onViewRFP }) => {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
@@ -445,7 +489,7 @@ const ViewAllModal = ({ col, onClose }) => {
           boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
         }}>
           {Content
-            ? <Content rows={rows} />
+            ? <Content rows={rows} onViewRFP={onViewRFP} onClose={onClose} />
             : <p style={{ padding: 24, color: "#9CA3AF", fontSize: 13 }}>No table defined for this column.</p>}
         </div>
       </div>

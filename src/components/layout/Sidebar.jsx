@@ -29,7 +29,8 @@ const Sidebar = () => {
   return (
     <div style={{
       width: 200, flexShrink: 0, background: "#04060A",
-      display: "flex", flexDirection: "column", height: "100%", fontFamily: "inherit",
+      display: "flex", flexDirection: "column", height: "100vh", fontFamily: "inherit",
+      position: "sticky", top: 0,
     }}>
       {/* Logo */}
       <div style={{

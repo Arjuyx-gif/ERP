@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Search, Eye, Filter, ArrowUpDown, ChevronDown, Bell, AlertTriangle, RefreshCw, Trash2, UserPlus, ClipboardList, Download, Minimize2, X } from "lucide-react";
 import AssignTenderModal from "./AssignTenderModal";
 import ReassignModal from "./ReassignModal";
@@ -80,7 +80,7 @@ const RESULT_PILL = {
 
 const CustomDropdown = ({ label, options, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const ref = import("react").then(m => m.useRef).catch(() => ({ current: null })); 
+  const ref = React.useRef(null); 
   // We already imported useState, useEffect. We need useRef. Let's assume we can just use React.useRef if not imported.
   // Actually, I can just use a simple state to close on mouse leave.
   return (
