@@ -79,6 +79,9 @@ const PQ_ROWS = [
   "Blacklisting/Debarred/Banned - Undertaking", "Any Other Undertaking",
   "Bid Authorization Certificate", "MAF", "OEM Undertaking (Eg: Support, Spare, Warranty etc.)",
   "Service/Support Center List", "Page No & Indexing", "Other Highlights",
+];
+
+const COMPETITION_ROWS = [
   "Details of any joint call with OEM", "Winning Strategy", "Reason to bid the tender",
 ];
 
@@ -89,8 +92,8 @@ const RFPField = ({ label, fullSpan }) => (
   </div>
 );
 
-const RFPArea = ({ label }) => (
-  <div style={{ gridColumn: "1 / -1" }}>
+const RFPArea = ({ label, fullSpan = true }) => (
+  <div style={{ gridColumn: fullSpan ? "1 / -1" : undefined }}>
     <label style={{ display: "block", fontSize: 13, color: "#374151", marginBottom: 5, fontFamily: FONT }}>{label}</label>
     <textarea readOnly rows={3} style={{ width: "100%", border: "1px solid #D1D5DB", borderRadius: 6, outline: "none", fontSize: 13, fontFamily: FONT, background: "#fff", padding: "8px 12px", boxSizing: "border-box", resize: "none" }} />
   </div>
@@ -579,10 +582,11 @@ const ComparisonSheetDetail = () => {
                 <h2 style={{ fontSize: 14, fontWeight: 600, color: "#111827", borderLeft: "4px solid #2563EB", paddingLeft: 10, margin: "0 0 18px", lineHeight: 1.4 }}>Details</h2>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px 32px" }}>
                   <RFPField label="Name of Sales Rep" />
-                  <RFPField label="Funnel Ref No." />
+                  <RFPField label="Type" />
                   <RFPField label="Name of Department" />
+                  <RFPField label="Funnel Ref No." />
+                  <RFPArea label="Address" fullSpan={false} />
                   <RFPField label="Existing Customer" />
-                  <RFPArea label="Address" />
                 </div>
               </div>
 
@@ -604,27 +608,41 @@ const ComparisonSheetDetail = () => {
                   <RFPField label="Tender Title" />
                   <RFPField label="RFP No." />
                   <RFPField label="Tender ID" fullSpan />
-                  <RFPField label="Estimated Bid Value" fullSpan />
-                  <RFPField label="Reverse Auction" fullSpan />
+                  <RFPField label="No. of Bids" />
+                  <RFPField label="Firm Names" />
+                  <RFPField label="Reverse Auction" />
+                  <RFPField label="Estimated Bid Value" />
                   <RFPField label="RFP Issue Date" />
                   <RFPField label="Submission Portal Address" />
                   <RFPField label="Tender Type" />
                   <RFPField label="Bid/Tender Validity" />
                   <RFPField label="Query Submission Date" />
                   <RFPField label="Mode of Submission - Query" />
-                  <RFPField label="Pre-Bid Meeting Date & Time" />
-                  <RFPField label="Pre-Bid Meeting Venue" />
+                  <RFPField label="Pre-Bid Meeting Date" />
+                  <RFPField label="Pre-Bid Meeting Venue/ Portal" />
+                  <RFPField label="Pre-Bid Meeting Time" fullSpan />
                   <RFPField label="Bid Submission Date" />
                   <RFPField label="Bid Opening Date" />
                   <RFPField label="Mode of Submission - Tender" />
                   <RFPField label="Price Validity" />
                   <RFPField label="Tender Fee Amount" />
                   <RFPField label="Mode of Tender Fee Payment" />
-                  <RFPField label="EMD Required" fullSpan />
+                  <RFPField label="EMD Required" />
+                  <RFPField label="EMD In Form Of" />
                   <RFPField label="EMD Amount" />
                   <RFPField label="Date of Submission - EMD" />
                   <RFPBanner text="In case EMD is required in the form of BG" />
+                  <RFPField label="Name of the Beneficiary" />
+                  <RFPField label="IFSC CODE" />
+                  <RFPField label="Name of the Bank" />
+                  <RFPField label="Branch Address" />
                   <RFPField label="Reason for Exemption of EMD/Tender Fee" fullSpan />
+                  <RFPField label="No of Delivery Locations" />
+                  <RFPField label="Delivery Schedule" />
+                  <RFPField label="No of Installation Locations" />
+                  <RFPField label="Installation Schedule" />
+                  <RFPField label="Training T&C" />
+                  <RFPField label="Training Schedule" />
                   <RFPField label="Payment T&C" />
                   <RFPField label="Payment Schedule" />
                   <RFPField label="PBG%" />
@@ -638,6 +656,10 @@ const ComparisonSheetDetail = () => {
                   <RFPField label="Certification" />
                   <RFPField label="Quantity" />
                   <RFPField label="Experience" />
+                  <RFPField label="LD Clause" />
+                  <RFPField label="Inspection Clause" />
+                  <RFPField label="Insurance Required" />
+                  <RFPField label="Insurance Period" />
                 </div>
               </div>
 
@@ -658,6 +680,35 @@ const ComparisonSheetDetail = () => {
                         <tr key={i} style={{ borderBottom: i < PQ_ROWS.length - 1 ? "1px solid #E5E7EB" : "none" }}>
                           <td style={{ padding: "10px 14px", fontSize: 12, color: "#374151", borderRight: "1px solid #E5E7EB" }}>{row}</td>
                           {["Bidder", "OEM", "Evidence"].map(col => (
+                            <td key={col} style={{ padding: "8px 10px", borderRight: "1px solid #E5E7EB", background: "#F9FAFB" }}>
+                              <input readOnly style={{ width: "100%", border: "none", outline: "none", fontSize: 12, fontFamily: FONT, background: "transparent" }} />
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Competition Details */}
+              <div style={{ background: "#fff", borderRadius: 10, padding: "20px 24px", border: "1px solid #E5E7EB" }}>
+                <h2 style={{ fontSize: 14, fontWeight: 600, color: "#111827", borderLeft: "4px solid #EC4899", paddingLeft: 10, margin: "0 0 18px", lineHeight: 1.4 }}>Competition Details</h2>
+                <div style={{ border: "1px solid #E5E7EB", borderRadius: 8, overflow: "hidden" }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+                    <thead>
+                      <tr style={{ background: "#F8FAFC" }}>
+                        <th style={{ padding: "10px 14px", borderBottom: "1px solid #E5E7EB", borderRight: "1px solid #E5E7EB" }} />
+                        {["Competitor(SI)", "OEM"].map(h => (
+                          <th key={h} style={{ padding: "10px 14px", fontSize: 12, fontWeight: 600, color: "#374151", textAlign: "center", borderBottom: "1px solid #E5E7EB", borderRight: "1px solid #E5E7EB" }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {COMPETITION_ROWS.map((row, i) => (
+                        <tr key={i} style={{ borderBottom: i < COMPETITION_ROWS.length - 1 ? "1px solid #E5E7EB" : "none" }}>
+                          <td style={{ padding: "10px 14px", fontSize: 12, color: "#374151", borderRight: "1px solid #E5E7EB" }}>{row}</td>
+                          {["Competitor", "OEM"].map(col => (
                             <td key={col} style={{ padding: "8px 10px", borderRight: "1px solid #E5E7EB", background: "#F9FAFB" }}>
                               <input readOnly style={{ width: "100%", border: "none", outline: "none", fontSize: 12, fontFamily: FONT, background: "transparent" }} />
                             </td>

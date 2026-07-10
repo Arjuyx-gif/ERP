@@ -24,6 +24,9 @@ const PQ_ROWS = [
   "Service/Support Center List",
   "Page No & Indexing",
   "Other Highlights",
+];
+
+const COMPETITION_ROWS = [
   "Details of any joint call with OEM",
   "Winning Strategy",
   "Reason to bid the tender",
@@ -116,6 +119,53 @@ const PQTable = () => (
               {row}
             </td>
             {[0, 1, 2].map(j => (
+              <td key={j} style={{ padding: "5px 8px" }}>
+                <input
+                  type="text"
+                  readOnly
+                  style={{
+                    width: "100%", border: "1px solid #E5E7EB", borderRadius: 5,
+                    padding: "5px 8px", fontSize: 12, outline: "none",
+                    fontFamily: FONT, boxSizing: "border-box", background: "#F9FAFB",
+                    cursor: "default",
+                  }}
+                />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+// ─── Competition Details table ──────────────────────────────────────────────────
+const CompetitionTable = () => (
+  <div style={{
+    border: "1px solid #EAECF0", borderRadius: 8, overflow: "hidden",
+    boxShadow: "0 1px 3px rgba(16,24,40,0.05)",
+  }}>
+    <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <thead>
+        <tr style={{ background: "#F9FAFB" }}>
+          <th style={{ padding: "10px 14px", borderBottom: "1px solid #EAECF0", width: "34%" }} />
+          {["Competitor(SI)", "OEM"].map(h => (
+            <th key={h} style={{
+              padding: "10px 14px", fontSize: 12, fontWeight: 600, color: "#667085",
+              textAlign: "left", borderBottom: "1px solid #EAECF0", whiteSpace: "nowrap",
+            }}>
+              {h}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {COMPETITION_ROWS.map((row, i) => (
+          <tr key={i} style={{ borderBottom: i < COMPETITION_ROWS.length - 1 ? "1px solid #F2F4F7" : "none" }}>
+            <td style={{ padding: "9px 14px", fontSize: 12, color: "#344054", width: "34%" }}>
+              {row}
+            </td>
+            {[0, 1].map(j => (
               <td key={j} style={{ padding: "5px 8px" }}>
                 <input
                   type="text"
@@ -345,10 +395,11 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
             <Section title="Details">
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px 20px" }}>
                 <Field label="Name of Sales Rep" />
-                <Field label="Funnel Ref No." />
+                <Field label="Type" />
                 <Field label="Name of Department" />
+                <Field label="Funnel Ref No." />
+                <Field label="Address" textarea />
                 <Field label="Existing Customer" />
-                <Field label="Address" fullWidth textarea />
               </div>
             </Section>
 
@@ -368,27 +419,41 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
                 <Field label="Tender Title" />
                 <Field label="RFP No." />
                 <Field label="Tender ID" fullWidth />
-                <Field label="Estimated Bid Value" fullWidth />
-                <Field label="Reverse Auction" fullWidth />
+                <Field label="No. of Bids" />
+                <Field label="Firm Names" />
+                <Field label="Reverse Auction" />
+                <Field label="Estimated Bid Value" />
                 <Field label="RFP Issue Date" />
                 <Field label="Submission Portal Address" />
                 <Field label="Tender Type" />
                 <Field label="Bid/Tender Validity" />
                 <Field label="Query Submission Date" />
                 <Field label="Mode of Submission – Query" />
-                <Field label="Pre-Bid Meeting Date & Time" />
-                <Field label="Pre-Bid Meeting Venue" />
+                <Field label="Pre-Bid Meeting Date" />
+                <Field label="Pre-Bid Meeting Venue/ Portal" />
+                <Field label="Pre-Bid Meeting Time" fullWidth />
                 <Field label="Bid Submission Date" />
                 <Field label="Bid Opening Date" />
                 <Field label="Mode of Submission – Tender" />
                 <Field label="Price Validity" />
                 <Field label="Tender Fee Amount" />
                 <Field label="Mode of Tender Fee Payment" />
-                <Field label="EMD Required" fullWidth />
+                <Field label="EMD Required" />
+                <Field label="EMD In Form Of" />
                 <Field label="EMD Amount" />
                 <Field label="Date of Submission – EMD" />
                 <Banner color="#EF4444">In case EMD is required in the form of BG</Banner>
+                <Field label="Name of the Beneficiary" />
+                <Field label="IFSC CODE" />
+                <Field label="Name of the Bank" />
+                <Field label="Branch Address" />
                 <Field label="Reason for Exemption of EMD/Tender Fee" fullWidth />
+                <Field label="No of Delivery Locations" />
+                <Field label="Delivery Schedule" />
+                <Field label="No of Installation Locations" />
+                <Field label="Installation Schedule" />
+                <Field label="Training T&C" />
+                <Field label="Training Schedule" />
                 <Field label="Payment T&C" />
                 <Field label="Payment Schedule" />
                 <Field label="PBG%" />
@@ -402,12 +467,21 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
                 <Field label="Certification" />
                 <Field label="Quantity" />
                 <Field label="Experience" />
+                <Field label="LD Clause" />
+                <Field label="Inspection Clause" />
+                <Field label="Insurance Required" />
+                <Field label="Insurance Period" />
               </div>
             </Section>
 
             {/* PQ Criteria */}
             <Section title="PQ Criteria" accent="#8B5CF6">
               <PQTable />
+            </Section>
+
+            {/* Competition Details */}
+            <Section title="Competition Details" accent="#EC4899">
+              <CompetitionTable />
             </Section>
 
             {/* Approval */}
