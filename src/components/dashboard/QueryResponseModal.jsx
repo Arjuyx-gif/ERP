@@ -73,26 +73,26 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
       />
 
       {/* Modal Container */}
-      <div
-        style={{
-          position: "fixed",
-          top: "50%",
-          left: "60%",
-          transform: "translate(-50%, -50%)",
-          zIndex: 971,
-          width: 540,
-          maxWidth: "92vw",
-          maxHeight: "90vh",
-          background: "#fff",
-          borderRadius: 14,
-          boxShadow: "0 20px 60px rgba(0,0,0,0.18), 0 4px 20px rgba(0,0,0,0.08)",
-          fontFamily: FONT,
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-          animation: "qrmFadeIn 0.2s ease-out",
-        }}
-      >
+        <div style={{
+          position: "fixed", top: 0, right: 0, bottom: 0, width: "68%",
+          zIndex: 971, display: "flex", alignItems: "center", justifyContent: "center"
+        }}>
+          <div
+            style={{
+              position: "relative",
+              width: 540,
+              maxWidth: "92vw",
+              maxHeight: "90vh",
+              background: "#fff",
+              borderRadius: 14,
+              boxShadow: "0 20px 60px rgba(0,0,0,0.18), 0 4px 20px rgba(0,0,0,0.08)",
+              fontFamily: FONT,
+              display: "flex",
+              flexDirection: "column",
+              overflow: "hidden",
+              animation: "qrmFadeIn 0.2s ease-out",
+            }}
+          >
         {/* ── Header ── */}
         <div
           style={{
@@ -417,12 +417,13 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
             </>
           )}
         </div>
+        </div>
       </div>
 
       <style>{`
         @keyframes qrmFadeIn {
-          from { opacity: 0; transform: translate(-50%, -48%); }
-          to   { opacity: 1; transform: translate(-50%, -50%); }
+          from { opacity: 0; transform: translateY(12px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </>

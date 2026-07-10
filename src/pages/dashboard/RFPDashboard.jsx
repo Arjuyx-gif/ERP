@@ -63,27 +63,22 @@ const RFPDashboard = () => {
 
   // Handler: fullscreen PSM assign button → exit fullscreen, open modal on regular view
   const handlePsmAssign = (rowData) => {
-    setKanbanFullscreen(false);
     setPsmAssignData({ ...(rowData || {}), _ts: Date.now() });
   };
 
   const handlePsmReassign = (rowData) => {
-    setKanbanFullscreen(false);
     setPsmReassignData({ ...(rowData || {}), _ts: Date.now() });
   };
 
   const handlePsmReview = (rowData) => {
-    setKanbanFullscreen(false);
     setPsmReviewData({ ...(rowData || {}), _ts: Date.now() });
   };
 
   const handlePsmViewTender = (rowData) => {
-    setKanbanFullscreen(false);
     setPsmViewTenderData({ ...(rowData || {}), _ts: Date.now() });
   };
 
   const handlePsmDocuments = (rowData) => {
-    setKanbanFullscreen(false);
     setPsmDocumentsData({ ...(rowData || {}), _ts: Date.now() });
   };
 
@@ -759,7 +754,8 @@ const RFPDashboard = () => {
       {/* ── Fullscreen overlay (Kanban or Task Dashboard) ── */}
       {kanbanFullscreen && (
         <div style={{
-          position: "fixed", inset: 0, zIndex: 950, background: "#F7F8FA",
+          position: "fixed", inset: 0, zIndex: 950,
+          background: "#F8F9FC",
           display: "flex", flexDirection: "column", fontFamily: "'Inter','Segoe UI',sans-serif",
         }}>
           <div style={{
@@ -784,7 +780,7 @@ const RFPDashboard = () => {
             {activeTab === "Task Dashboard PSM"
               ? <TaskDashboardPSM fullscreen onExpandTable={() => { }} onAssign={handlePsmAssign} onReassign={handlePsmReassign} onReview={handlePsmReview} onViewTender={handlePsmViewTender} onDocuments={handlePsmDocuments} />
               : activeTab === "Task Dashboard PS"
-                ? <TaskTableB fullscreen onViewDocs={(row) => { setKanbanFullscreen(false); setViewRFPCard({ ...row, tender: row.title, action: "View" }); setPsDocsRow(row); }} onAction={(row) => { setKanbanFullscreen(false); handleTaskBAction(row); }} onAlertNotifyClick={(row) => { setKanbanFullscreen(false); handleAlertNotifyClick(row); }} />
+                ? <TaskTableB fullscreen onViewDocs={(row) => { setViewRFPCard({ ...row, tender: row.title, action: "View" }); setPsDocsRow(row); }} onAction={(row) => { handleTaskBAction(row); }} onAlertNotifyClick={(row) => { handleAlertNotifyClick(row); }} />
                 : activeTab === "Task Dashboard S"
                   ? <SalesActivityDashboard fullscreen onViewRFP={handleViewRFP} />
                   : activeTab === "Task Dashboard S2"

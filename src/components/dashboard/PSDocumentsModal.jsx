@@ -61,34 +61,38 @@ const PSDocumentsModal = ({ row, onClose }) => {
           to   { opacity: 1; }
         }
         @keyframes psDocsModalIn {
-          from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
-          to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+          from { opacity: 0; transform: translateY(12px) scale(0.98); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
         }
       `}</style>
 
-      {/* Backdrop */}
-      <div
-        onClick={() => onClose?.()}
-        style={{
-          position: "fixed", inset: 0, zIndex: 1100,
-          background: "rgba(0,0,0,0.35)",
-          backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)",
-          animation: "psDocsBackdropIn 0.25s ease-out both",
-        }}
-      />
-
-      {/* Modal */}
+      {/* Wrapper to center over the right 68% panel */}
       <div style={{
-        position: "fixed", top: "50%", left: "50%",
-        transform: "translate(-50%, -50%)", zIndex: 1101,
-        background: "#fff", borderRadius: 14, width: 520,
-        maxHeight: "85vh", display: "flex", flexDirection: "column",
-        boxShadow: "0 20px 60px rgba(0,0,0,0.2), 0 4px 20px rgba(0,0,0,0.1)",
-        fontFamily: FONT, overflow: "hidden",
-        animation: "psDocsModalIn 0.3s cubic-bezier(0.16,1,0.3,1) both",
+        position: "fixed", top: 0, right: 0, bottom: 0, width: "68%",
+        zIndex: 1100,
+        display: "flex", alignItems: "center", justifyContent: "center",
       }}>
+        {/* Backdrop (covers the entire wrapper, or could cover entire screen via another element) */}
+        <div
+          onClick={() => onClose?.()}
+          style={{
+            position: "fixed", inset: 0, zIndex: 1099,
+            background: "rgba(0,0,0,0.30)",
+            animation: "psDocsBackdropIn 0.25s ease-out both",
+          }}
+        />
 
-        {/* ── Header ── */}
+        {/* Modal */}
+        <div style={{
+          position: "relative", zIndex: 1101,
+          background: "#fff", borderRadius: 14, width: 520,
+          maxHeight: "85vh", display: "flex", flexDirection: "column",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.2), 0 4px 20px rgba(0,0,0,0.1)",
+          fontFamily: FONT, overflow: "hidden",
+          animation: "psDocsModalIn 0.3s cubic-bezier(0.16,1,0.3,1) both",
+        }}>
+
+          {/* ── Header ── */}
         <div style={{
           padding: "22px 24px 14px",
           display: "flex", alignItems: "flex-start", justifyContent: "space-between",
@@ -413,6 +417,7 @@ const PSDocumentsModal = ({ row, onClose }) => {
           )}
         </div>
 
+      </div>
       </div>
     </>
   );

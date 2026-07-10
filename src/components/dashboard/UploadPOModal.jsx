@@ -5,7 +5,7 @@ const FONT = "'Inter','Segoe UI',sans-serif";
 const UploadPOModal = ({ card, onClose }) => {
   return (
     <div style={{
-      position: "fixed", top: 0, left: 60, bottom: 0, width: "100%",
+      position: "fixed", top: 0, right: 0, bottom: 0, width: "68%",
       zIndex: 975,
       display: "flex", alignItems: "center", justifyContent: "center",
       background: "rgba(0,0,0,0.30)",
