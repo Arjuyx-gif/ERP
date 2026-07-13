@@ -378,8 +378,9 @@ const PreBidQueryTable = ({ rows, onViewRFP, onClose }) => (
     headers={["Tender ID","Tender Title","Customer","Value","Deadline","Firm Name","Status","Actions"]}
     rows={rows}
     renderRow={(r, i) => {
-      const bg = rowBg(r.variant, i);
-      const actionColor = r.variant === "success" ? "#15803D" : "#2979FF";
+      const isSuccess = r.variant === "success";
+      const bg = isSuccess ? "#E6FDF0" : rowBg(r.variant, i);
+      const actionColor = "#374151"; // Match the dark gray/black from screenshot
       return (
         <tr key={i}>
           <TDId     bg={bg}>{r.id}</TDId>
@@ -403,6 +404,7 @@ const PreBidQueryTable = ({ rows, onViewRFP, onClose }) => (
                     amount: r.value,
                     action: r.action1,
                     isQuery: true,
+                    isPreBidQueryPending: true,
                     isApprovalPending: r.status === "Approval Pending",
                   });
                   if (onClose) onClose();

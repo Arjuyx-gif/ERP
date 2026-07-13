@@ -566,7 +566,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
             )}
 
             {/* Attach File button */}
-            {(!card.isQuery && (card.action === "Complete Tasks" || card.action === "View Task")) || card.isPostBidQueryPending || card.isPreBidQueryPending ? (
+            {((!card.isQuery && (card.action === "Complete Tasks" || card.action === "View Task")) || card.isPostBidQueryPending) ? (
               <div style={{ marginTop: 4, marginBottom: 14 }}>
                 <button
                   type="button"

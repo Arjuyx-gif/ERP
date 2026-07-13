@@ -449,7 +449,7 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
                     onMouseEnter={e => { e.currentTarget.style.background = "#1D4ED8"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)"; }}
                     onMouseLeave={e => { e.currentTarget.style.background = "#2563EB"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(37,99,235,0.25)"; }}
                   >
-                    Submit & Notify Stakeholders
+                    {card.isPreBidQueryPending ? "Submit & Send for Review" : "Submit & Notify Stakeholders"}
                   </button>
                 </>
               )}
@@ -520,7 +520,7 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
             </h2>
             <div style={{ fontSize: 13, color: "#4B5563", display: "flex", alignItems: "center", gap: 12 }}>
               <span>
-                Tender ID: <strong style={{ color: isPreBidSubmitted ? "#111827" : "#2563EB", fontWeight: 600 }}>{card.id}</strong>
+                Tender ID: <strong style={{ color: "#111827", fontWeight: 600 }}>{card.id}</strong>
               </span>
               <span style={{ color: "#6B7280" }}>
                 {card.isPreBidQueryPending ? "Pre-Bid Query Submission" : "Post - Submission Query"}
@@ -763,7 +763,13 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
             <>
               <button
                 type="button"
-                onClick={onClose}
+                onClick={() => {
+                  onUpdate?.({
+                    cardId: card.id,
+                    status: "Rejected",
+                    remarks,
+                  });
+                }}
                 style={{
                   flex: 1, padding: "10px 0", border: "none", borderRadius: 8,
                   background: "#DC2626", fontSize: 14, fontWeight: 600, color: "#fff",
@@ -777,7 +783,13 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
               </button>
               <button
                 type="button"
-                onClick={onClose}
+                onClick={() => {
+                  onUpdate?.({
+                    cardId: card.id,
+                    status: "Approved",
+                    remarks,
+                  });
+                }}
                 style={{
                   flex: 1, padding: "10px 0", border: "none", borderRadius: 8,
                   background: "#16A34A", fontSize: 14, fontWeight: 600, color: "#fff",
@@ -823,7 +835,7 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
                   e.currentTarget.style.boxShadow = "0 2px 8px rgba(37,99,235,0.25)";
                 }}
               >
-                {card.isPreBidQueryPending && !isPreBidSubmitted ? "Submit & Notify Stakeholders" : "Submit & Send for Review"}
+                {card.isPreBidQueryPending ? "Submit & Send for Review" : "Submit & Notify Stakeholders"}
               </button>
             </>
           )}

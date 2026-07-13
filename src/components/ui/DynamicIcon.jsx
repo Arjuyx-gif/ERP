@@ -4,12 +4,13 @@ import {
   XCircle, Upload, Download, ArrowUpRight, AlertCircle, LayoutDashboard,
   ClipboardList, Users, Inbox, TrendingUp, BarChart2, Database,
   ChevronDown, ChevronRight, ArrowRight, Globe, Check, Maximize2, Minimize2,
-  Settings, Send, Briefcase, RefreshCcw,
+  Settings, Send, Briefcase, RefreshCcw, FileCheck,
 } from 'lucide-react';
 
 const ICONS = {
   document:         FileText,
   file:             FileText,
+  'file-check':     FileCheck,
   timer:            Clock,
   clock:            Clock,
   tick:             CheckCircle,

@@ -266,6 +266,24 @@ const RFPDashboard = () => {
           if (c.action !== "Complete Tasks" && c.action !== "View Task") return c;
           updated = true;
 
+          // Handle Approved / Rejected from pre-bid query approval modal
+          if (data.status === "Approved") {
+            return {
+              ...c,
+              status: "Approved",
+              statusColor: "#15803D",
+              statusBg: "#DCFCE7",
+            };
+          }
+          if (data.status === "Rejected") {
+            return {
+              ...c,
+              status: "Rejected",
+              statusColor: "#DC2626",
+              statusBg: "#FEF2F2",
+            };
+          }
+
           const updatedBadges = c.badges ? c.badges.map(b => {
             if (b.text.toLowerCase().includes("pending") && data.files && data.files.length > 0) {
               return { ...b, text: b.text.replace(/Pending/i, "Submitted"), color: "#15803D", bg: "#DCFCE7" };
