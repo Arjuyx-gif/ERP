@@ -22,6 +22,7 @@ import PurchaseOrderForm from "./pages/dashboard/PurchaseOrderForm";
 import EMDForm         from "./pages/dashboard/EMDForm";
 import OrderTracker    from "./pages/dashboard/OrderTracker";
 import OrderEditForm   from "./pages/dashboard/OrderEditForm";
+import EMDBGTracker    from "./pages/dashboard/EMDBGTracker";
 import PlaceholderPage from "./pages/PlaceholderPage";
 
 const ph = title => <PlaceholderPage title={title} />;
@@ -62,7 +63,7 @@ const App = () => (
       <Route path="/tender-tracker"   element={ph("Tender Tracker")} />
       <Route path="/order-tracker"    element={<OrderTracker />} />
       <Route path="/order-edit-form"  element={<OrderEditForm />} />
-      <Route path="/emd-bg-tracker"   element={ph("EMD-BG Tracker")} />
+      <Route path="/emd-bg-tracker"   element={<EMDBGTracker />} />
       <Route path="/reports"          element={ph("Reports")} />
       <Route path="/master-data"      element={ph("Master Data")} />
       <Route path="/settings"         element={ph("Settings")} />
