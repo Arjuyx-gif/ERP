@@ -33,7 +33,7 @@ const PostBidIcon = () => (
   </svg>
 );
 
-const UpdateTenderModal = ({ card, onClose, onContinueResult }) => {
+const UpdateTenderModal = ({ card, onClose, onContinueResult, onContinueQuery }) => {
   if (!card) return null;
 
   return (
@@ -101,12 +101,14 @@ const UpdateTenderModal = ({ card, onClose, onContinueResult }) => {
               <PostBidIcon />
             </div>
             <div style={{ flex: 1 }}>
-              <h4 style={{ margin: "0 0 4px", fontSize: 15, fontWeight: 600, color: "#111827" }}>Update Post-Bid Query</h4>
+              <h4 style={{ margin: "0 0 4px", fontSize: 15, fontWeight: 600, color: "#111827" }}>
+                Update Post-Bid Query{card.isAwaitingResponse ? " Round 2" : ""}
+              </h4>
               <p style={{ margin: "0 0 16px", fontSize: 13, color: "#6B7280", lineHeight: 1.4 }}>
                 Upload customer clarification documents, manage multiple query rounds, upload response files, and notify stakeholders.
               </p>
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <button style={{
+                <button onClick={() => onContinueQuery && onContinueQuery(card)} style={{
                   background: "#2563EB", color: "#fff", border: "none", borderRadius: 6,
                   padding: "8px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer",
                 }}>

@@ -79,6 +79,9 @@ const RFPDashboard = () => {
     if (row.stage === "Bid Submitted") {
       setViewRFPCard(row);
       setUpdateTenderCard(row);
+    } else if (row.stage === "Awaiting Response") {
+      setViewRFPCard(row);
+      setUpdateTenderCard({ ...row, isAwaitingResponse: true });
     }
   };
 
@@ -912,6 +915,17 @@ const RFPDashboard = () => {
         onContinueResult={(card) => {
           setUpdateTenderCard(null);
           setUpdateBidResultCard(card);
+        }}
+        onContinueQuery={(card) => {
+          setUpdateTenderCard(null);
+          setViewRFPCard({
+            ...card,
+            action: "Complete Tasks",
+            isQuery: true,
+            isPostBidQueryPending: true,
+            showQueryUploadZone: true,
+            isRound2: !!card.isAwaitingResponse,
+          });
         }}
       />
 
