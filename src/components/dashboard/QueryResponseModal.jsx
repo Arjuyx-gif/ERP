@@ -77,8 +77,14 @@ const TeamsNotified = ({ teams, checked, onChange, showAdd }) => (
 const QueryResponseModal = ({ card, onClose, onUpdate }) => {
   const [remarks, setRemarks] = useState("");
   const [file, setFile] = useState(null);
+  // Only prefill the Query Document for the original (non-post-bid) flow.
+  // In the post-bid Round 2 flow, Round 1's document is shown separately
+  // (read-only, in Round1Section below) and Round 2 should start empty so
+  // the user can actually upload the new round's query document.
   const [queryFile, setQueryFile] = useState(
-    card?.isAwaitingResponse ? { name: "Query_Document_RFP_2026_006.pdf", _prefilled: true } : null
+    card?.isAwaitingResponse && !card?.isPostBidQueryPending
+      ? { name: "Query_Document_RFP_2026_006.pdf", _prefilled: true }
+      : null
   );
   const [errorMsg, setErrorMsg] = useState("");
   const [isPreBidSubmitted, setIsPreBidSubmitted] = useState(false);
