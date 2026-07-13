@@ -462,7 +462,14 @@ export const SIDEBAR_NAV = [
       { label: "HR Team", path: "/hr-team-inbox" },
     ],
   },
-  { iconName: "trending-up", label: "Tracker", expandable: true, path: "/tracker" },
+  {
+    iconName: "trending-up", label: "Tracker", expandable: true,
+    children: [
+      { label: "Tender Tracker", path: "/tender-tracker" },
+      { label: "Order Tracker", path: "/order-tracker" },
+      { label: "EMD-BG Tracker", path: "/emd-bg-tracker" },
+    ],
+  },
   { iconName: "bar-chart", label: "Reports", path: "/reports" },
   { iconName: "database", label: "Master Data", path: "/master-data" },
   { iconName: "settings", label: "Settings", path: "/settings" },
@@ -748,6 +755,21 @@ export const TASK_DASHBOARD_C_TABLE_ROWS = [
   { id: "ORD-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Order Placed",                  statusColor: "#374151", updated: "Today",      completion: 80,  actionLabel: "View SOF",         actionIcon: "eye",    highlight: null    },
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Rework",                        statusColor: "#DC2626", updated: "Today",      completion: 80,  actionLabel: "Edit & Resubmit",  actionIcon: "edit",   highlight: "red"   },
   { id: "TND-2026-045", firm: "Firm Name", title: "Tender Title", customer: "Customer Name", value: "₹2 Cr.", deadline: "25/04/2026", status: "Rejected",                      statusColor: "#DC2626", updated: "Yesterday",  completion: 0,   actionLabel: "Edit",             actionIcon: "edit",   highlight: null    },
+];
+
+// ─── Order Tracker ────────────────────────────────────────────────────────────
+export const ORDER_TRACKER_KPI_CARDS = [
+  { label: "Total Orders",    value: 3, iconName: "briefcase",   color: "#2563EB", iconBg: "#EFF6FF" },
+  { label: "In Progress",     value: 1, iconName: "clock",       color: "#F97316", iconBg: "#FFF7ED" },
+  { label: "Delivered",       value: 1, iconName: "check-circle", color: "#16A34A", iconBg: "#F0FDF4" },
+  { label: "Payment Pending", value: 3, iconName: "alert",       color: "#CA8A04", iconBg: "#FEF9C3" },
+  { label: "Delayed Orders",  value: 0, iconName: "x-circle",    color: "#DC2626", iconBg: "#FEF2F2" },
+];
+
+export const ORDER_TRACKER_ROWS = [
+  { pid: "PID-2026-045", tenderId: "Tender ID", tenderTitle: "Tender title", customer: "Customer Name", firm: "Firm Name", salesPerson: "Sales Person", value: "₹2 Cr.", status: "In Progress", statusColor: "#F97316", stage: "Delivery",  dueDate: "Date", highlight: null },
+  { pid: "PID-2026-045", tenderId: "Tender ID", tenderTitle: "Tender title", customer: "Customer Name", firm: "Firm Name", salesPerson: "Sales Person", value: "₹2 Cr.", status: "Delayed",     statusColor: "#DC2626", stage: "Execution", dueDate: "Date", highlight: "red" },
+  { pid: "PID-2026-045", tenderId: "Tender ID", tenderTitle: "Tender title", customer: "Customer Name", firm: "Firm Name", salesPerson: "Sales Person", value: "₹2 Cr.", status: "Submitted",   statusColor: "#16A34A", stage: "Completed", dueDate: "Date", highlight: "green" },
 ];
 
 export const QUICK_ACCESS = [

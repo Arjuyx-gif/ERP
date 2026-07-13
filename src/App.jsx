@@ -20,6 +20,7 @@ import TaskInbox       from "./pages/dashboard/TaskInbox";
 import PurchaseTaskInbox from "./pages/dashboard/PurchaseTaskInbox";
 import PurchaseOrderForm from "./pages/dashboard/PurchaseOrderForm";
 import EMDForm         from "./pages/dashboard/EMDForm";
+import OrderTracker    from "./pages/dashboard/OrderTracker";
 import PlaceholderPage from "./pages/PlaceholderPage";
 
 const ph = title => <PlaceholderPage title={title} />;
@@ -57,6 +58,9 @@ const App = () => (
       <Route path="/hr-team-inbox"       element={ph("Task Inbox - HR Team")} />
       <Route path="/emd-form"         element={<EMDForm />} />
       <Route path="/tracker"          element={ph("Tracker")} />
+      <Route path="/tender-tracker"   element={ph("Tender Tracker")} />
+      <Route path="/order-tracker"    element={<OrderTracker />} />
+      <Route path="/emd-bg-tracker"   element={ph("EMD-BG Tracker")} />
       <Route path="/reports"          element={ph("Reports")} />
       <Route path="/master-data"      element={ph("Master Data")} />
       <Route path="/settings"         element={ph("Settings")} />
