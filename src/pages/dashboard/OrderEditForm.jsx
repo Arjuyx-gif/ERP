@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Search, Filter, ChevronDown, ChevronUp, Download, Send } from "lucide-react";
 import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
+import OrderExportTable from "../../components/dashboard/OrderExportTable";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -75,6 +76,7 @@ const OrderEditForm = () => {
   });
 
   const set = key => val => setData(d => ({ ...d, [key]: val }));
+  const [showExport, setShowExport] = useState(false);
 
   return (
     <div style={{ display: "flex", height: "100vh", fontFamily: FONT, background: "#F7F8FA" }}>
@@ -91,7 +93,7 @@ const OrderEditForm = () => {
                 <p style={{ fontSize: 12, color: "#888", margin: "0 0 16px" }}>Last updated: 2 hours ago</p>
               </div>
               <div style={{ display: "flex", gap: 10 }}>
-                <button style={{
+                <button onClick={() => setShowExport(true)} style={{
                   display: "flex", alignItems: "center", gap: 6,
                   padding: "9px 18px", border: "1px solid #E2E8F0", borderRadius: 8,
                   background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151",
@@ -275,7 +277,7 @@ const OrderEditForm = () => {
               </Grid>
             </Section>
 
-            <button style={{
+            <button onClick={() => setShowExport(true)} style={{
               width: "100%", marginTop: 8, padding: "12px 0",
               border: "1px solid #E2E8F0", borderRadius: 8,
               background: "#fff", fontSize: 14, fontWeight: 600, color: "#111827",
@@ -286,6 +288,12 @@ const OrderEditForm = () => {
           </div>
         </div>
       </div>
+
+      <OrderExportTable
+        open={showExport}
+        rows={[data]}
+        onClose={() => setShowExport(false)}
+      />
     </div>
   );
 };

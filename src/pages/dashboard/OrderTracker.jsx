@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, Filter, ChevronDown, Download } from "lucide-react";
 import Sidebar from "../../components/layout/Sidebar";
 import GlobalHeader from "../../components/layout/GlobalHeader";
 import DynamicIcon from "../../components/ui/DynamicIcon";
 import OrderDetailsPanel from "../../components/dashboard/OrderDetailsPanel";
+import OrderExportTable, { buildExportRow } from "../../components/dashboard/OrderExportTable";
 import { ORDER_TRACKER_KPI_CARDS, ORDER_TRACKER_ROWS } from "../../services/mockData";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
@@ -88,10 +90,12 @@ const OrdersTable = ({ rows, onSelectOrder }) => (
 );
 
 const OrderTracker = () => {
+  const navigate = useNavigate();
   const [firmFilter, setFirmFilter] = useState("");
   const [deliveryFilter, setDeliveryFilter] = useState("");
   const [paymentFilter, setPaymentFilter] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showExport, setShowExport] = useState(false);
 
   return (
     <div style={{ display: "flex", height: "100vh", fontFamily: FONT, background: "#F7F8FA" }}>
@@ -155,6 +159,7 @@ const OrderTracker = () => {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
               <h2 style={{ fontSize: 15, fontWeight: 700, color: "#111827", margin: 0 }}>Orders ({ORDER_TRACKER_ROWS.length})</h2>
               <button
+                onClick={() => setShowExport(true)}
                 style={{
                   display: "flex", alignItems: "center", gap: 6,
                   padding: "8px 14px", border: "1px solid #E2E8F0", borderRadius: 8,
@@ -174,6 +179,13 @@ const OrderTracker = () => {
         open={!!selectedOrder}
         order={selectedOrder}
         onClose={() => setSelectedOrder(null)}
+      />
+
+      <OrderExportTable
+        open={showExport}
+        rows={ORDER_TRACKER_ROWS.map(buildExportRow)}
+        onClose={() => setShowExport(false)}
+        onEdit={row => navigate("/order-edit-form", { state: { order: row } })}
       />
     </div>
   );
