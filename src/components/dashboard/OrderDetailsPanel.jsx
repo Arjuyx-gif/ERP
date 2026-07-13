@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
@@ -24,6 +25,7 @@ const InfoCard = ({ rows }) => (
 );
 
 const OrderDetailsPanel = ({ open, onClose, order }) => {
+  const navigate = useNavigate();
   const [tab, setTab] = useState("Status");
 
   if (!open) return null;
@@ -187,11 +189,13 @@ const OrderDetailsPanel = ({ open, onClose, order }) => {
 
         {/* Footer */}
         <div style={{ display: "flex", gap: 10, padding: "14px 24px", borderTop: "1px solid #EAECF0", flexShrink: 0 }}>
-          <button style={{
-            flex: 1, padding: "11px 0", border: "none", borderRadius: 8,
-            background: "#111827", color: "#fff", fontSize: 13, fontWeight: 600,
-            cursor: "pointer", fontFamily: FONT,
-          }}>
+          <button
+            onClick={() => navigate("/order-edit-form", { state: { order: o } })}
+            style={{
+              flex: 1, padding: "11px 0", border: "none", borderRadius: 8,
+              background: "#111827", color: "#fff", fontSize: 13, fontWeight: 600,
+              cursor: "pointer", fontFamily: FONT,
+            }}>
             Edit Order
           </button>
           <button style={{
