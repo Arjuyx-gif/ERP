@@ -13,7 +13,7 @@ const MOCK_TENDERS = [
 
 const STAGES = ["Assigned", "Pre-Sales - Checklist", "Pre-Bid", "OEM", "Bid", "Post-Bid", "Result"];
 
-const MemberViewModal = ({ open, onClose, member }) => {
+const MemberViewModal = ({ open, onClose, member, onAssignNew }) => {
   const [activeTab, setActiveTab] = useState("All");
 
   if (!open || !member) return null;
@@ -241,6 +241,10 @@ const MemberViewModal = ({ open, onClose, member }) => {
           </div>
           <div style={{ display: "flex", gap: 12 }}>
             <button
+              onClick={() => {
+                onClose();
+                onAssignNew?.();
+              }}
               style={{
                 padding: "9px 16px", border: "none", borderRadius: 8,
                 background: "#2563EB", fontSize: 13, fontWeight: 600, color: "#fff",

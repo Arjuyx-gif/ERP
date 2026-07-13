@@ -62,12 +62,12 @@ const HISTORY_ROWS = [
   {
     id: "TND-2026-045", firm: "Firm Name", customer: "Customer Name", category: "Tender Title", year: "2026",
     assignedTo: "Pre Sales\npersons Name", result: "Won",
-    documents: ["Checklist", "OEM Docs."],
+    documents: ["Pre-bid Query", "Checklist", "OEM Docs."],
   },
   {
     id: "TND-2026-045", firm: "Firm Name", customer: "Customer Name", category: "Tender Title", year: "2026",
     assignedTo: "Pre Sales\npersons Name", result: "Lost",
-    documents: ["Checklist", "OEM Docs.", "Comparison Sheet"],
+    documents: ["Checklist", "Pre-bid Query", "OEM Docs.", "Comparison Sheet"],
   },
 ];
 
@@ -756,6 +756,7 @@ const TaskDashboardPSM = ({ fullscreen = false, onExpandTable, onAssign, initial
         open={showMemberViewModal}
         onClose={() => { setShowMemberViewModal(false); setMemberViewPrefill(null); }}
         member={memberViewPrefill}
+        onAssignNew={() => openAssignModal()}
       />
     </div>
   );

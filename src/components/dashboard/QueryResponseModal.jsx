@@ -747,18 +747,16 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
             flexShrink: 0,
           }}
         >
-         {isViewMode ? (
-            <button
-              type="button"
-              onClick={onClose}
+          {isViewMode ? (
+            <div
               style={{
                 width: "100%", padding: "10px 0", border: "1px solid #E5E7EB", borderRadius: 8,
                 background: "#fff", fontSize: 14, fontWeight: 600, color: "#111827",
-                cursor: "pointer", fontFamily: FONT,
+                fontFamily: FONT, display: "flex", justifyContent: "center", alignItems: "center"
               }}
             >
               Approved
-            </button>
+            </div>
           ) : isApprovalMode ? (
             <>
               <button

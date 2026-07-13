@@ -13,6 +13,7 @@ import RescheduleMeetingModal from "./RescheduleMeetingModal";
 import ComposeEmailModal from "./ComposeEmailModal";
 import LogCallModal from "./LogCallModal";
 import MeetingDetailsPanel from "./MeetingDetailsPanel";
+import AddFollowUpModal from "./AddFollowUpModal";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -479,6 +480,7 @@ const SalesActivityDashboard = ({ fullscreen = false, onViewRFP }) => {
   const [meetingDetailsTarget, setMeetingDetailsTarget] = useState(null);
   const [showAllMeetings, setShowAllMeetings] = useState(false);
   const [showFollowUpManagement, setShowFollowUpManagement] = useState(false);
+  const [showAddFollowUp, setShowAddFollowUp] = useState(false);
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [deadlineFilter, setDeadlineFilter] = useState("By Deadline");
 
@@ -656,6 +658,7 @@ const SalesActivityDashboard = ({ fullscreen = false, onViewRFP }) => {
               else if (b.label === "Log Customer Visit") setShowLogVisit(true);
               else if (b.label === "Add Opportunity") setShowAddOpportunity(true);
               else if (b.label === "Schedule Meeting") setShowScheduleMeeting(true);
+              else if (b.label === "Add Follow-up") setShowAddFollowUp(true);
             }}
           />
         ))}
@@ -810,6 +813,7 @@ const SalesActivityDashboard = ({ fullscreen = false, onViewRFP }) => {
       <LogCustomerVisitModal open={showLogVisit} onClose={() => setShowLogVisit(false)} />
       <AddOpportunityModal open={showAddOpportunity} onClose={() => setShowAddOpportunity(false)} />
       <ScheduleMeetingModal open={showScheduleMeeting} onClose={() => setShowScheduleMeeting(false)} />
+      <AddFollowUpModal open={showAddFollowUp} onClose={() => setShowAddFollowUp(false)} />
       <RescheduleMeetingModal
         open={!!rescheduleTarget}
         onClose={() => setRescheduleTarget(null)}
