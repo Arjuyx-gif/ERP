@@ -9,6 +9,7 @@ import KanbanBoard from "../../components/dashboard/KanbanBoard";
 import TaskTable from "../../components/dashboard/TaskTable";
 import TaskTableB from "../../components/dashboard/TaskTableB";
 import TaskDashboardPSM from "../../components/dashboard/TaskDashboardPSM";
+import TaskDashboardSM from "../../components/dashboard/TaskDashboardSM";
 import SalesActivityDashboard from "../../components/dashboard/SalesActivityDashboard";
 import TaskTableS2 from "../../components/dashboard/TaskTableS2";
 import RFPFormPanel from "../../components/dashboard/RFPFormPanel";
@@ -121,10 +122,11 @@ const RFPDashboard = () => {
 
   // Auto-show Pre-Bid reminder on mount (chains to Pending Query Response)
   useEffect(() => {
-    if (!isSalesCoordinator) {
+    if (!isSalesCoordinator && activeTab !== "Task Dashboard SM") {
       const t = setTimeout(() => setActiveModal(PRE_BID_MODAL), 800);
       return () => clearTimeout(t);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSalesCoordinator]);
 
   // Show Pre-Bid reminder whenever user switches to Task Dashboard S (chains to Pending Query)
@@ -543,21 +545,19 @@ const RFPDashboard = () => {
 
   const board = <KanbanBoard columns={visibleColumns} onViewAll={setViewAllCol} onViewRFP={handleViewRFP} isSalesCoordinator={isSalesCoordinator} />;
 
-  const isScrollableTab = ["Task Dashboard PSM", "Task Dashboard PS", "Task Dashboard S", "Portal"].includes(activeTab);
-
   return (
     <div style={{
       display: "flex", 
-      height: isScrollableTab ? "auto" : "100vh", 
+      height: "auto", 
       minHeight: "100vh",
       fontFamily: "'Inter','Segoe UI',sans-serif", background: "#F7F8FA",
     }}>
       <Sidebar />
-      <div style={{ display: "flex", flexDirection: "column", flex: isScrollableTab ? "1 1 auto" : 1, overflowX: "hidden", overflowY: isScrollableTab ? "visible" : "hidden" }}>
+      <div style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", overflowX: "hidden", overflowY: "visible" }}>
         <GlobalHeader />
 
         {/* ── Main area ── */}
-        <div style={{ flex: isScrollableTab ? "1 1 auto" : 1, display: "flex", flexDirection: "column", minWidth: 0, overflowX: "hidden", overflowY: isScrollableTab ? "visible" : "auto" }}>
+        <div style={{ flex: "1 1 auto", display: "flex", flexDirection: "column", minWidth: 0, overflowX: "hidden", overflowY: "visible" }}>
 
           {/* Header */}
           <div style={{ padding: "20px 28px 0", background: "#F7F8FA" }}>
@@ -721,12 +721,12 @@ const RFPDashboard = () => {
           </div>
 
           {/* Filter bar */}
-          {activeTab !== "Task Dashboard S" && activeTab !== "Task Dashboard PSM" && (
+          {activeTab !== "Task Dashboard SM" && activeTab !== "Task Dashboard S" && activeTab !== "Task Dashboard PSM" && (
           <div style={{ padding: "12px 28px", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
               <>
                 <SlidersHorizontal size={16} color="#888" />
                 {[
-                  { val: statusFilter, set: setStatusFilter, opts: ["All Status", "Completed", "Pending", "In Progress", "Under Review", "Approval Pending", "Rejected"] },
+                  { val: statusFilter, set: setStatusFilter, opts: ["All Status", "Approved", "Approval Pending", "Rejected", "Forwarded to MD Sir", "Approved by MD Sir", "Won", "Lost", "PO Received"] },
                 ].map((f, i) => (
                   <select key={i} value={f.val} onChange={e => f.set(e.target.value)} style={{
                     padding: "7px 12px", border: "1px solid #E2E8F0", borderRadius: 8,
@@ -762,8 +762,10 @@ const RFPDashboard = () => {
           )}
 
           {/* Board / Table */}
-          <div style={{ flex: isScrollableTab ? "none" : 1, overflowX: "auto", padding: "0 28px 28px" }}>
-            {activeTab === "Task Dashboard PSM"
+          <div style={{ flex: "none", overflowX: "auto", padding: "0 28px 28px" }}>
+            {activeTab === "Task Dashboard SM"
+              ? <TaskDashboardSM onViewRFP={handleViewRFP} />
+              : activeTab === "Task Dashboard PSM"
               ? <TaskDashboardPSM onExpandTable={() => setKanbanFullscreen(true)} initialAssignData={psmAssignData} initialReassignData={psmReassignData} initialReviewData={psmReviewData} initialViewTenderData={psmViewTenderData} initialDocumentsData={psmDocumentsData} />
               : activeTab === "Task Dashboard PS"
                 ? <TaskTableB onExpandTable={() => setKanbanFullscreen(true)} onViewDocs={(row) => { setViewRFPCard({ ...row, tender: row.title, action: "View" }); setPsDocsRow(row); }} onAction={handleTaskBAction} onAlertNotifyClick={handleAlertNotifyClick} />

@@ -1,12 +1,12 @@
-import { Bell, Check, X, CheckCircle, AlertCircle, FileText, ArrowRight } from "lucide-react";
+import { Bell, CheckCheck, X, CheckCircle, AlertCircle, FileText, ArrowRight } from "lucide-react";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
 const TYPE_STYLE = {
-  success: { Icon: CheckCircle,  iconColor: "#16A34A", iconBg: "#DCFCE7" },
-  alert:   { Icon: AlertCircle,  iconColor: "#EF4444", iconBg: "#FEE2E2" },
-  warning: { Icon: AlertCircle,  iconColor: "#F59E0B", iconBg: "#FEF3C7" },
-  info:    { Icon: FileText,     iconColor: "#2563EB", iconBg: "#DBEAFE" },
+  success: { Icon: CheckCircle,  iconColor: "#16A34A" },
+  alert:   { Icon: AlertCircle,  iconColor: "#EF4444" },
+  warning: { Icon: AlertCircle,  iconColor: "#F59E0B" },
+  info:    { Icon: FileText,     iconColor: "#2563EB" },
 };
 
 const NotificationPanel = ({ notifications = [], onClose, onAction }) => (
@@ -43,7 +43,7 @@ const NotificationPanel = ({ notifications = [], onClose, onAction }) => (
               cursor: "pointer", fontWeight: 500, fontFamily: FONT,
               display: "flex", alignItems: "center", gap: 4, padding: 0,
             }}>
-              <Check size={12} strokeWidth={2.5} /> Mark all as read
+              <CheckCheck size={14} /> Mark all as read
             </button>
             <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "#667085", display: "flex", alignItems: "center", padding: 0 }}>
               <X size={18} />
@@ -62,26 +62,23 @@ const NotificationPanel = ({ notifications = [], onClose, onAction }) => (
             <p style={{ fontSize: 13, color: "#98A2B3" }}>No notifications.</p>
           </div>
         ) : notifications.map(n => {
-          const { Icon, iconColor, iconBg } = TYPE_STYLE[n.type] ?? TYPE_STYLE.info;
+          const { Icon, iconColor } = TYPE_STYLE[n.type] ?? TYPE_STYLE.info;
           return (
             <div key={n.id} style={{
-              border: "1px solid #E5E7EB", borderRadius: 10, background: "#fff",
+              border: "1px solid #E2E8F0", borderRadius: 10, background: "#fff",
               marginBottom: 10, overflow: "hidden",
             }}>
-              <div style={{ padding: "14px 16px" }}>
+              <div style={{ padding: "16px" }}>
                 <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                  {/* Circle icon */}
-                  <div style={{
-                    width: 32, height: 32, borderRadius: "50%", background: iconBg,
-                    display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1,
-                  }}>
-                    <Icon size={16} color={iconColor} />
+                  {/* Circle icon - no background */}
+                  <div style={{ marginTop: 2, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Icon size={18} color={iconColor} strokeWidth={2} />
                   </div>
 
                   {/* Content */}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#101828", marginBottom: 6 }}>{n.title}</div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "#111827", marginBottom: 6 }}>{n.title}</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: 12 }}>
                       {(n.details || []).map((d, i) => (
                         <div key={i} style={{ fontSize: 12, color: "#475569" }}>
                           {d.label}: {d.value}
@@ -90,21 +87,21 @@ const NotificationPanel = ({ notifications = [], onClose, onAction }) => (
                     </div>
 
                     {/* Footer row */}
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
-                      <span style={{ fontSize: 11, color: "#94A3B8" }}>{n.time || "Just now"}</span>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                      <span style={{ fontSize: 11, color: "#9CA3AF" }}>{n.time || "Just now"}</span>
                       {n.actionText && (
                         <button
                           onClick={() => { onAction?.(n); onClose?.(); }}
                           style={{
                             display: "inline-flex", alignItems: "center", gap: 6,
-                            padding: "7px 14px", border: "none", borderRadius: 6,
+                            padding: "6px 14px", border: "none", borderRadius: 6,
                             background: "#0F172A", color: "#fff", fontSize: 12, fontWeight: 600,
                             cursor: "pointer", fontFamily: FONT,
                           }}
                           onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
                           onMouseLeave={e => e.currentTarget.style.opacity = "1"}
                         >
-                          {n.actionText} <ArrowRight size={13} />
+                          {n.actionText} {n.actionText.toLowerCase().includes("rfp") || n.actionText.toLowerCase().includes("received") ? <ArrowRight size={13} /> : null}
                         </button>
                       )}
                     </div>
