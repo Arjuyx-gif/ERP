@@ -77,8 +77,14 @@ const TeamsNotified = ({ teams, checked, onChange, showAdd }) => (
 const QueryResponseModal = ({ card, onClose, onUpdate }) => {
   const [remarks, setRemarks] = useState("");
   const [file, setFile] = useState(null);
+  // Only prefill the Query Document for the original (non-post-bid) flow.
+  // In the post-bid Round 2 flow, Round 1's document is shown separately
+  // (read-only, in Round1Section below) and Round 2 should start empty so
+  // the user can actually upload the new round's query document.
   const [queryFile, setQueryFile] = useState(
-    card?.isAwaitingResponse ? { name: "Query_Document_RFP_2026_006.pdf", _prefilled: true } : null
+    card?.isAwaitingResponse && !card?.isPostBidQueryPending
+      ? { name: "Query_Document_RFP_2026_006.pdf", _prefilled: true }
+      : null
   );
   const [errorMsg, setErrorMsg] = useState("");
   const [isPreBidSubmitted, setIsPreBidSubmitted] = useState(false);
@@ -112,8 +118,15 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
 
   const handleSubmit = () => {
     if (card?.isPreBidQueryPending && !isPreBidSubmitted) {
+      // Finalize locally only — do NOT call onUpdate here. The parent
+      // (RFPFormPanel) closes this modal as soon as onUpdate fires, which
+      // would skip straight past the "sent for review" read-only view.
+      // onUpdate fires instead when the user clicks Close below.
       setIsPreBidSubmitted(true);
       setErrorMsg("");
+      // Response doc mirrors the query doc once sent for review, so the
+      // finalized view (Teams Notified + read-only cards) has something to show.
+      setFile(prev => prev ?? { name: queryFile?.name || "Query_Document_RFP_2026_006.pdf", _prefilled: true });
       return;
     }
 
@@ -714,6 +727,9 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
                     <div style={{ fontSize: 12, color: "#6B7280" }}>PDF or Word files accepted</div>
                   </div>
                 </div>
+              ) : isPreBidSubmitted ? (
+                // Finalized (Submit & Send for Review already clicked) — read-only, download-only card.
+                <DocCard fileName={file.name} />
               ) : (
                 <div style={{
                   border: "1px solid #D1D5DB", borderRadius: 8, padding: "16px",
@@ -732,6 +748,11 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
               )}
               <input onChange={handleFileChange} ref={fileInputRef} type="file" accept=".pdf,.doc,.docx" style={{ display: "none" }} />
             </div>
+          )}
+
+          {/* Teams Notified — shown once the pre-bid query has been sent for review */}
+          {card?.isPreBidQueryPending && isPreBidSubmitted && (
+            <TeamsNotified teams={DEFAULT_TEAMS} checked={checkedTeams} onChange={handleTeamToggle} showAdd={true} />
           )}
 
         </div>
@@ -757,6 +778,22 @@ const QueryResponseModal = ({ card, onClose, onUpdate }) => {
             >
               Approved
             </div>
+          ) : card?.isPreBidQueryPending && isPreBidSubmitted ? (
+            /* Sent for review — read-only, single Close action */
+            <button
+              type="button"
+              onClick={() => {
+                onUpdate?.({ cardId: card.id, status: "Approval Pending", remarks });
+                onClose?.();
+              }}
+              style={{
+                padding: "10px 28px", border: "1px solid #D1D5DB", borderRadius: 8,
+                background: "#fff", fontSize: 14, fontWeight: 600, color: "#111827",
+                cursor: "pointer", fontFamily: FONT,
+              }}
+            >
+              Close
+            </button>
           ) : isApprovalMode ? (
             <>
               <button
