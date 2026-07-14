@@ -5,6 +5,7 @@ import DailyActivityModal from "./DailyActivityModal";
 import VisitReportModal from "./VisitReportModal";
 import TendersListModal from "./TendersListModal";
 import SMNewRFPModal from "./SMNewRFPModal";
+import SMFullTableModal from "./SMFullTableModal";
 
 const FONT = "'Inter','Segoe UI',sans-serif";
 
@@ -56,10 +57,12 @@ const TaskDashboardSM = ({ onViewRFP }) => {
   const [showVisitReportModal, setShowVisitReportModal] = useState(false);
   const [selectedSalesperson, setSelectedSalesperson] = useState(null);
   const [showNewRFPModal, setShowNewRFPModal] = useState(true);
+  const [showFullTableModal, setShowFullTableModal] = useState(false);
 
   return (
     <div style={{ fontFamily: FONT, display: "flex", flexDirection: "column", gap: 20 }}>
       {showNewRFPModal && <SMNewRFPModal onClose={() => setShowNewRFPModal(false)} onApprove={() => setShowNewRFPModal(false)} />}
+      {showFullTableModal && <SMFullTableModal onClose={() => setShowFullTableModal(false)} onViewRFP={onViewRFP} />}
       {showSummaryModal && <BusinessSummaryModal onClose={() => setShowSummaryModal(false)} />}
       {showDailyActivityModal && <DailyActivityModal onClose={() => setShowDailyActivityModal(false)} />}
       {showVisitReportModal && <VisitReportModal onClose={() => setShowVisitReportModal(false)} />}
@@ -258,7 +261,9 @@ const TaskDashboardSM = ({ onViewRFP }) => {
               <option>By Deadline</option>
             </select>
           </div>
-          <button style={{ 
+          <button 
+            onClick={() => setShowFullTableModal(true)}
+            style={{ 
             background: "#fff", color: "#374151", border: "1px solid #D1D5DB", borderRadius: 6,
             padding: "8px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer",
             display: "flex", alignItems: "center", gap: 6

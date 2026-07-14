@@ -538,7 +538,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
             </Section>
 
             {/* Remark - Rejected (shown for all rejected-status cards) */}
-            {(card.status === "Rejected" || card.rejectionRemark) && (
+            {(card.status === "Rejected" || card.rejectionRemark || taskPhase === "rejected") && (
               <div style={{
                 background: "#FEF2F2", borderRadius: 10, padding: "16px 18px",
                 border: "1px solid #FECACA", marginBottom: 14,
@@ -600,6 +600,24 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
                 </button>
               </div>
             ) : null}
+            {/* Send to MD Sir Remarks */}
+            {card.action === "Send to MD Sir" && (
+              <div style={{ marginTop: 24, marginBottom: 8 }}>
+                <div style={{ fontSize: 16, fontWeight: 700, color: "#101828", marginBottom: 16 }}>
+                  Remarks
+                </div>
+                <textarea
+                  rows={6}
+                  placeholder="Enter any additional remarks......"
+                  style={{
+                    width: "100%", border: "1px solid #D1D5DB", borderRadius: 8,
+                    padding: "12px", fontSize: 13, color: "#374151", fontFamily: FONT,
+                    boxSizing: "border-box", outline: "none", background: "#fff",
+                    resize: "none",
+                  }}
+                />
+              </div>
+            )}
 
           </div>
 
@@ -770,6 +788,33 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
                   <CheckCircle size={16} /> Approved
                 </button>
               </>
+            ) : card.action === "Send to MD Sir" ? (
+              /* Send to MD Sir flow */
+              <>
+                <button
+                  type="button"
+                  style={{
+                    padding: "9px 20px", border: "1px solid #E2E8F0", borderRadius: 8,
+                    background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151",
+                    cursor: "pointer", fontFamily: FONT,
+                    display: "flex", alignItems: "center", gap: 6,
+                  }}
+                >
+                  <Download size={15} /> Download
+                </button>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  style={{
+                    padding: "9px 24px", border: "none", borderRadius: 8,
+                    background: "#00A63E", fontSize: 13, fontWeight: 600, color: "#fff",
+                    cursor: "pointer", fontFamily: FONT,
+                    display: "flex", alignItems: "center", gap: 6,
+                  }}
+                >
+                  <Send size={15} /> Send to MD Sir
+                </button>
+              </>
             ) : (
               /* View-only — just close */
               <button
@@ -796,6 +841,7 @@ const RFPFormPanel = ({ card, onClose, onReject, onSendNotification, onCompleteT
             setShowRejectModal(false);
             if (card.action === "Approve RFP") {
               setTaskPhase("rejected");
+              setRejectionNote(reason);
             } else {
               onReject?.(card, reason);
               onClose?.();
